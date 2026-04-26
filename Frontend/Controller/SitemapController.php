@@ -1,0 +1,54 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Module\Editorial\Frontend\Controller;
+
+use App\Core\Frontend\Service\FrontContext;
+use App\Module\Editorial\Seo\Service\RssFeedBuilder;
+use App\Module\Editorial\Seo\Service\SitemapBuilder;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+
+class SitemapController extends AbstractController
+{
+    public function __construct(
+        private readonly SitemapBuilder $sitemapBuilder,
+        private readonly RssFeedBuilder $rssFeedBuilder,
+        private readonly FrontContext $frontContext,
+    ) {}
+
+    #[Route('/sitemap.xml', name: 'front_sitemap', priority: 11)]
+    public function sitemap(): Response
+    {
+        return new Response(
+            $this->sitemapBuilder->buildXml(),
+            Response::HTTP_OK,
+            ['Content-Type' => 'application/xml'],
+        );
+    }
+
+    #[Route('/robots.txt', name: 'front_robots', priority: 11)]
+    public function robots(): Response
+    {
+        $siteUrl = $this->frontContext->siteUrl();
+        $body = "User-agent: *\nAllow: /\nDisallow: /admin/\nDisallow: /dev/\n\nSitemap: {$siteUrl}/sitemap.xml\n";
+
+        return new Response($body, Response::HTTP_OK, ['Content-Type' => 'text/plain']);
+    }
+
+    #[Route('/{locale}/feed.xml', name: 'front_rss', requirements: ['locale' => '[a-z]{2}'], priority: 12)]
+    public function rss(string $locale): Response
+    {
+        if (!$this->frontContext->isLocaleActive($locale)) {
+            throw $this->createNotFoundException();
+        }
+
+        return new Response(
+            $this->rssFeedBuilder->buildXml($locale),
+            Response::HTTP_OK,
+            ['Content-Type' => 'application/rss+xml'],
+        );
+    }
+}

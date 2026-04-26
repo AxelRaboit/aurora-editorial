@@ -1,0 +1,94 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Module\Editorial\Post\Serializer;
+
+use App\Module\Editorial\Post\Entity\Post;
+use DateTimeInterface;
+
+final readonly class PostSerializer
+{
+    /**
+     * Compact projection used by reference pickers (post link block, related posts…).
+     * Falls back to the first available translation when the default locale has none.
+     */
+    public function serializeReference(Post $post): array
+    {
+        return [
+            'id' => $post->getId(),
+            'title' => $post->getTranslation('fr')?->getTitle() ?? ($post->getTranslations()->first() ?: null)?->getTitle(),
+            'status' => $post->getStatus()->value,
+            'postTypeId' => $post->getPostType()->getId(),
+            'postType' => $post->getPostType()->getLabel(),
+        ];
+    }
+
+    public function serialize(Post $post): array
+    {
+        $defaultTranslation = $post->getTranslation('fr');
+
+        return [
+            'id' => $post->getId(),
+            'version' => $post->getVersion(),
+            'status' => $post->getStatus()->value,
+            'postType' => [
+                'id' => $post->getPostType()->getId(),
+                'label' => $post->getPostType()->getLabel(),
+                'slug' => $post->getPostType()->getSlug(),
+            ],
+            'title' => $defaultTranslation?->getTitle(),
+            'slug' => $defaultTranslation?->getSlug(),
+            'termIds' => $post->getTerms()->map(fn (object $term): ?int => $term->getId())->toArray(),
+            'relatedPostIds' => $post->getRelatedPosts()->map(fn (Post $related): ?int => $related->getId())->toArray(),
+            'publishedAt' => $post->getPublishedAt()?->format(DateTimeInterface::ATOM),
+            'scheduledAt' => $post->getScheduledAt()?->format(DateTimeInterface::ATOM),
+            'deletedAt' => $post->getDeletedAt()?->format(DateTimeInterface::ATOM),
+            'trashed' => $post->isTrashed(),
+            'commentsEnabled' => $post->isCommentsEnabled(),
+            'createdAt' => $post->getCreatedAt()->format(DateTimeInterface::ATOM),
+            'updatedAt' => $post->getUpdatedAt()->format(DateTimeInterface::ATOM),
+        ];
+    }
+
+    public function serializeFull(Post $post): array
+    {
+        $translations = [];
+        foreach ($post->getTranslations() as $locale => $translation) {
+            $translations[(string) $locale] = [
+                'title' => $translation->getTitle(),
+                'slug' => $translation->getSlug(),
+                'blocks' => $translation->getBlocks(),
+                'metaTitle' => $translation->getMetaTitle(),
+                'metaDescription' => $translation->getMetaDescription(),
+                'customFields' => $translation->getCustomFields(),
+                'ogImageMediaId' => $translation->getOgImage()?->getId(),
+                'ogImageUrl' => $translation->getOgImage()?->getPublicUrl(),
+                'ogImageFocalPosition' => $translation->getOgImage()?->getFocalPositionCss(),
+                'canonicalUrl' => $translation->getCanonicalUrl(),
+                'noindex' => $translation->isNoindex(),
+                'focusKeyword' => $translation->getFocusKeyword(),
+                'jsonLd' => $translation->getJsonLd(),
+            ];
+        }
+
+        $relatedPosts = [];
+        foreach ($post->getRelatedPosts() as $related) {
+            $relatedPosts[] = [
+                'id' => $related->getId(),
+                'title' => $related->getTranslation('fr')?->getTitle() ?? ($related->getTranslations()->first() ?: null)?->getTitle(),
+                'status' => $related->getStatus()->value,
+                'postType' => $related->getPostType()->getLabel(),
+            ];
+        }
+
+        return [
+            ...$this->serialize($post),
+            'featuredMediaId' => $post->getFeaturedMedia()?->getId(),
+            'featuredMediaUrl' => $post->getFeaturedMedia()?->getPublicUrl(),
+            'featuredMediaFocalPosition' => $post->getFeaturedMedia()?->getFocalPositionCss(),
+            'translations' => $translations,
+            'relatedPosts' => $relatedPosts,
+        ];
+    }
+}

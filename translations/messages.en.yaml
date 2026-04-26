@@ -1,0 +1,23 @@
+admin:
+  postTypes:
+    errors:
+      slug_taken: A post type with slug "{slug}" already exists.
+      builtin_protected: Built-in post types cannot be deleted.
+      has_posts: This post type contains posts and cannot be deleted.
+      field_name_taken: A field named "{name}" already exists on this post type.
+  posts:
+    errors:
+      post_type_not_found: 'Post type #{id} not found.'
+  taxonomies:
+    errors:
+      slug_taken: A taxonomy with slug "{slug}" already exists.
+      builtin_protected: Built-in taxonomies cannot be deleted.
+      term_self_nested: A term cannot be nested under itself or one of its descendants.
+      reorder_cycle: 'Reorder would create a cycle involving term #{id}.'
+      parent_wrong_taxonomy: 'Parent term #{parentId} does not belong to taxonomy "{taxonomy}".'
+  nav:
+    comments: Comments
+    postTypes: Post types
+    posts: Content
+    tags: Tags
+    taxonomies: Taxonomies

@@ -1,0 +1,163 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Module\Editorial\Comment\Controller\Front;
+
+use App\Core\Frontend\Controller\FrontLocaleTrait;
+use App\Core\Frontend\Service\FrontContext;
+use App\Core\Setting\Repository\SettingRepository;
+use App\Module\Editorial\Comment\Contract\CommentManagerInterface;
+use App\Module\Editorial\Comment\Entity\Comment;
+use App\Module\Editorial\Comment\Enum\ReactionTypeEnum;
+use App\Module\Editorial\Comment\Manager\CommentReactionManager;
+use App\Module\Editorial\Comment\Repository\CommentReactionRepository;
+use App\Module\Editorial\Comment\Repository\CommentRepository;
+use App\Module\Editorial\Comment\Serializer\CommentSerializer;
+use App\Module\Editorial\Comment\Service\CommentSubmissionValidator;
+use App\Module\Editorial\Post\Entity\Post;
+use App\Module\Editorial\Post\Repository\PostRepository;
+use App\Module\Editorial\Post\Service\PostPageRenderer;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+
+class CommentController extends AbstractController
+{
+    use FrontLocaleTrait;
+
+    public function __construct(
+        private readonly PostRepository $postRepository,
+        private readonly CommentRepository $commentRepository,
+        private readonly CommentReactionRepository $commentReactionRepository,
+        private readonly CommentManagerInterface $commentManager,
+        private readonly CommentReactionManager $commentReactionManager,
+        private readonly CommentSerializer $commentSerializer,
+        private readonly CommentSubmissionValidator $commentValidator,
+        private readonly SettingRepository $settingRepository,
+        private readonly FrontContext $frontContext,
+        private readonly PostPageRenderer $postPageRenderer,
+    ) {}
+
+    #[Route('/{locale}/{postTypeSlug}/{slug}/comment', name: 'front_post_comment', requirements: ['locale' => '[a-z]{2}'], methods: ['POST'], priority: 6)]
+    public function submit(string $locale, string $postTypeSlug, string $slug, Request $request): Response
+    {
+        $this->assertActiveLocale($this->frontContext, $locale);
+        $request->setLocale($locale);
+
+        $post = $this->postRepository->findPublishedBySlug($slug, $locale);
+        if (!$post instanceof Post) {
+            throw $this->createNotFoundException();
+        }
+
+        if (!$this->areCommentsEnabled($post)) {
+            return $this->redirectToRoute('front_post', ['locale' => $locale, 'postTypeSlug' => $postTypeSlug, 'slug' => $slug]);
+        }
+
+        $isJson = str_contains((string) $request->headers->get('Content-Type', ''), 'application/json');
+        $payload = $isJson ? $request->toArray() : $request->request->all();
+
+        $authorName = mb_trim((string) ($payload['authorName'] ?? ''));
+        $authorEmail = mb_trim((string) ($payload['authorEmail'] ?? ''));
+        $content = mb_trim((string) ($payload['content'] ?? ''));
+
+        $errors = $this->commentValidator->validate($authorName, $authorEmail, $content);
+        if ([] !== $errors) {
+            return $isJson
+                ? $this->json(['ok' => false, 'errors' => $errors])
+                : $this->postPageRenderer->render($post, $locale, $errors);
+        }
+
+        $parentComment = $this->resolveParent($post, (int) ($payload['parent_id'] ?? 0));
+        $this->commentManager->submit($post, $authorName, $authorEmail, $content, $parentComment);
+
+        if ($isJson) {
+            return $this->json(['ok' => true]);
+        }
+
+        $this->addFlash('commentSuccess', 'comment.success');
+
+        return $this->redirectToRoute('front_post', ['locale' => $locale, 'postTypeSlug' => $postTypeSlug, 'slug' => $slug]);
+    }
+
+    #[Route('/{locale}/{postTypeSlug}/{slug}/comments', name: 'front_post_comments_list', requirements: ['locale' => '[a-z]{2}'], methods: ['GET'], priority: 5)]
+    public function list(string $locale, string $postTypeSlug, string $slug): JsonResponse
+    {
+        $this->assertActiveLocale($this->frontContext, $locale);
+
+        $post = $this->postRepository->findPublishedBySlug($slug, $locale);
+        if (!$post instanceof Post) {
+            return $this->json(['ok' => false], Response::HTTP_NOT_FOUND);
+        }
+
+        if (!$this->areCommentsEnabled($post)) {
+            return $this->json(['ok' => true, 'roots' => [], 'replies' => [], 'reactionEmojis' => []]);
+        }
+
+        $allComments = $this->commentRepository->findApprovedByPost($post->getId());
+
+        $allCommentIds = array_map(static fn (Comment $comment): int => (int) $comment->getId(), $allComments);
+        $reactionCountsMap = [] !== $allCommentIds
+            ? $this->commentReactionRepository->countByComments($allCommentIds)
+            : [];
+
+        $tree = $this->commentSerializer->buildFrontTree($allComments, $reactionCountsMap);
+
+        return $this->json(['ok' => true, ...$tree]);
+    }
+
+    #[Route('/{locale}/{postTypeSlug}/{slug}/comment/{commentId}/react', name: 'front_comment_react', requirements: ['locale' => '[a-z]{2}'], methods: ['POST'], priority: 5)]
+    public function react(string $locale, string $postTypeSlug, string $slug, int $commentId, Request $request): JsonResponse
+    {
+        $this->assertActiveLocale($this->frontContext, $locale);
+
+        $post = $this->postRepository->findPublishedBySlug($slug, $locale);
+        if (!$post instanceof Post) {
+            return $this->json(['ok' => false], Response::HTTP_NOT_FOUND);
+        }
+
+        $comment = $this->commentRepository->find($commentId);
+        if (!$this->isPubliclyOnPost($comment, $post)) {
+            return $this->json(['ok' => false], Response::HTTP_NOT_FOUND);
+        }
+
+        $typeValue = str_contains((string) $request->headers->get('Content-Type', ''), 'application/json')
+            ? (string) ($request->toArray()['type'] ?? '')
+            : (string) $request->request->get('type', '');
+
+        $reactionType = ReactionTypeEnum::tryFrom($typeValue);
+        if (null === $reactionType) {
+            return $this->json(['ok' => false, 'error' => 'Invalid reaction type'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $fingerprint = $this->commentReactionManager->generateFingerprint($request);
+        $updatedCounts = $this->commentReactionManager->toggle($comment, $reactionType, $fingerprint);
+
+        return $this->json(['ok' => true, 'counts' => $updatedCounts]);
+    }
+
+    private function areCommentsEnabled(Post $post): bool
+    {
+        return $this->settingRepository->getBoolean('comments_enabled') && $post->isCommentsEnabled();
+    }
+
+    private function resolveParent(Post $post, int $parentId): ?Comment
+    {
+        if ($parentId <= 0) {
+            return null;
+        }
+
+        $parent = $this->commentRepository->find($parentId);
+
+        return $this->isPubliclyOnPost($parent, $post) ? $parent : null;
+    }
+
+    private function isPubliclyOnPost(?Comment $comment, Post $post): bool
+    {
+        return $comment instanceof Comment
+            && $comment->getPost()->getId() === $post->getId()
+            && 'approved' === $comment->getStatus()->value;
+    }
+}

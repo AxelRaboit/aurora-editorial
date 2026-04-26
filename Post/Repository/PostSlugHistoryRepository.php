@@ -1,0 +1,51 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Module\Editorial\Post\Repository;
+
+use App\Module\Editorial\Post\Entity\Post;
+use App\Module\Editorial\Post\Entity\PostSlugHistory;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+
+/**
+ * @extends ServiceEntityRepository<PostSlugHistory>
+ */
+class PostSlugHistoryRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, PostSlugHistory::class);
+    }
+
+    public function findOneByLocaleAndSlug(string $locale, string $slug): ?PostSlugHistory
+    {
+        return $this->findOneBy(['locale' => $locale, 'slug' => $slug]);
+    }
+
+    /**
+     * Remove any historical entry that shadows a slug the caller is about to
+     * re-use (e.g. renaming a post back to its original slug).
+     */
+    public function removeByLocaleAndSlug(string $locale, string $slug): void
+    {
+        $entry = $this->findOneByLocaleAndSlug($locale, $slug);
+        if ($entry instanceof PostSlugHistory) {
+            $this->getEntityManager()->remove($entry);
+        }
+    }
+
+    public function recordIfNew(Post $post, string $locale, string $oldSlug): void
+    {
+        if ($this->findOneByLocaleAndSlug($locale, $oldSlug) instanceof PostSlugHistory) {
+            return;
+        }
+
+        $entry = new PostSlugHistory();
+        $entry->setPost($post);
+        $entry->setLocale($locale);
+        $entry->setSlug($oldSlug);
+        $this->getEntityManager()->persist($entry);
+    }
+}

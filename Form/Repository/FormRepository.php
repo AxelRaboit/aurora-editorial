@@ -1,0 +1,38 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Module\Editorial\Form\Repository;
+
+use App\Core\Repository\Trait\PaginationTrait;
+use App\Module\Editorial\Form\Entity\Form;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Order;
+use Doctrine\Persistence\ManagerRegistry;
+
+/**
+ * @extends ServiceEntityRepository<Form>
+ */
+class FormRepository extends ServiceEntityRepository
+{
+    use PaginationTrait;
+
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Form::class);
+    }
+
+    /**
+     * @return array{items: Form[], total: int, page: int, totalPages: int}
+     */
+    public function findPaginated(int $page, int $limit): array
+    {
+        $queryBuilder = $this->createQueryBuilder('f')
+            ->leftJoin('f.translations', 't')
+            ->addSelect('t')
+            ->orderBy('f.createdAt', Order::Descending->value);
+        $countQueryBuilder = $this->createQueryBuilder('f')->select('COUNT(f.id)');
+
+        return $this->paginate($queryBuilder, $countQueryBuilder, $page, $limit);
+    }
+}

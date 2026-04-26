@@ -1,0 +1,23 @@
+admin:
+  postTypes:
+    errors:
+      slug_taken: Ya existe un tipo de contenido con el slug "{slug}".
+      builtin_protected: Los tipos de contenido integrados no se pueden eliminar.
+      has_posts: Este tipo de contenido tiene contenidos y no se puede eliminar.
+      field_name_taken: Ya existe un campo con el nombre "{name}" en este tipo de contenido.
+  posts:
+    errors:
+      post_type_not_found: 'Tipo de contenido #{id} no encontrado.'
+  taxonomies:
+    errors:
+      slug_taken: Ya existe una taxonomía con el slug "{slug}".
+      builtin_protected: Las taxonomías integradas no se pueden eliminar.
+      term_self_nested: Un término no puede anidarse bajo sí mismo o uno de sus descendientes.
+      reorder_cycle: 'La reorganización crearía un ciclo que involucra al término #{id}.'
+      parent_wrong_taxonomy: 'El término padre #{parentId} no pertenece a la taxonomía "{taxonomy}".'
+  nav:
+    comments: Comentarios
+    postTypes: Tipos de contenido
+    posts: Contenido
+    tags: Etiquetas
+    taxonomies: Taxonomías
