@@ -83,9 +83,9 @@ class PostRepository extends ServiceEntityRepository
     public function fullTextPostIds(string $search, int $limit = 200): array
     {
         $sql = <<<'SQL'
-                SELECT pt.post_id, MAX(ts_rank(pt.search_vector, websearch_to_tsquery('simple', :q))) AS rank
+                SELECT pt.post_id, MAX(ts_rank(to_tsvector('simple', coalesce(pt.search_content, '')), websearch_to_tsquery('simple', :q))) AS rank
                 FROM post_translations pt
-                WHERE pt.search_vector @@ websearch_to_tsquery('simple', :q)
+                WHERE to_tsvector('simple', coalesce(pt.search_content, '')) @@ websearch_to_tsquery('simple', :q)
                 GROUP BY pt.post_id
                 ORDER BY rank DESC
                 LIMIT :max
