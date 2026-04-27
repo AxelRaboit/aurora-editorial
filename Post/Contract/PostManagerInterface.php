@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Post\Contract;
+namespace Aurora\Module\Editorial\Post\Contract;
 
-use App\Module\Editorial\Post\DTO\PostInput;
-use App\Module\Editorial\Post\Entity\Post;
-use App\Module\Editorial\Post\Entity\PostRevision;
+use Aurora\Module\Editorial\Post\DTO\PostInput;
+use Aurora\Module\Editorial\Post\Entity\Post;
+use Aurora\Module\Editorial\Post\Entity\PostRevision;
 
 interface PostManagerInterface
 {

@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Post\Controller\Admin;
+namespace Aurora\Module\Editorial\Post\Controller\Admin;
 
-use App\Core\Enum\HttpMethodEnum;
-use App\Core\Frontend\Controller\JsonRequestTrait;
-use App\Core\Validation\Service\PayloadValidator;
-use App\Module\Editorial\Post\Contract\PostTypeManagerInterface;
-use App\Module\Editorial\Post\DTO\PostTypeFieldInput;
-use App\Module\Editorial\Post\DTO\PostTypeInput;
-use App\Module\Editorial\Post\Entity\PostType;
-use App\Module\Editorial\Post\Entity\PostTypeField;
-use App\Module\Editorial\Post\Repository\PostTypeRepository;
-use App\Module\Editorial\Post\Serializer\PostTypeSerializer;
-use App\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
-use App\Module\Editorial\Taxonomy\Serializer\TaxonomySerializer;
+use Aurora\Core\Enum\HttpMethodEnum;
+use Aurora\Core\Frontend\Controller\JsonRequestTrait;
+use Aurora\Core\Validation\Service\PayloadValidator;
+use Aurora\Module\Editorial\Post\Contract\PostTypeManagerInterface;
+use Aurora\Module\Editorial\Post\DTO\PostTypeFieldInput;
+use Aurora\Module\Editorial\Post\DTO\PostTypeInput;
+use Aurora\Module\Editorial\Post\Entity\PostType;
+use Aurora\Module\Editorial\Post\Entity\PostTypeField;
+use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
+use Aurora\Module\Editorial\Post\Serializer\PostTypeSerializer;
+use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
+use Aurora\Module\Editorial\Taxonomy\Serializer\TaxonomySerializer;
 use InvalidArgumentException;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

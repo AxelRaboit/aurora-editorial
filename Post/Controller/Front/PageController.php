@@ -2,25 +2,25 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Post\Controller\Front;
+namespace Aurora\Module\Editorial\Post\Controller\Front;
 
-use App\Core\Frontend\Controller\FrontLocaleTrait;
-use App\Core\Frontend\Service\FrontContext;
-use App\Core\Frontend\Service\HttpCacheService;
-use App\Core\Setting\Enum\ApplicationParameterEnum;
-use App\Core\Theme\Service\ThemeContext;
-use App\Core\Theme\Service\ThemeResolver;
-use App\Module\Editorial\Post\Entity\Post;
-use App\Module\Editorial\Post\Entity\PostSlugHistory;
-use App\Module\Editorial\Post\Entity\PostTranslation;
-use App\Module\Editorial\Post\Repository\PostRepository;
-use App\Module\Editorial\Post\Repository\PostSlugHistoryRepository;
-use App\Module\Editorial\Post\Repository\PostTypeRepository;
-use App\Module\Editorial\Post\Service\PostPageRenderer;
-use App\Module\Editorial\Seo\Service\AlternatesBuilder;
-use App\Module\Editorial\Taxonomy\Entity\Taxonomy;
-use App\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
-use App\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
+use Aurora\Core\Frontend\Controller\FrontLocaleTrait;
+use Aurora\Core\Frontend\Service\FrontContext;
+use Aurora\Core\Frontend\Service\HttpCacheService;
+use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
+use Aurora\Core\Theme\Service\ThemeContext;
+use Aurora\Core\Theme\Service\ThemeResolver;
+use Aurora\Module\Editorial\Post\Entity\Post;
+use Aurora\Module\Editorial\Post\Entity\PostSlugHistory;
+use Aurora\Module\Editorial\Post\Entity\PostTranslation;
+use Aurora\Module\Editorial\Post\Repository\PostRepository;
+use Aurora\Module\Editorial\Post\Repository\PostSlugHistoryRepository;
+use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
+use Aurora\Module\Editorial\Post\Service\PostPageRenderer;
+use Aurora\Module\Editorial\Seo\Service\AlternatesBuilder;
+use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
+use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
+use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;

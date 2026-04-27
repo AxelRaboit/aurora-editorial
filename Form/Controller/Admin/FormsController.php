@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Form\Controller\Admin;
+namespace Aurora\Module\Editorial\Form\Controller\Admin;
 
-use App\Core\Enum\HttpMethodEnum;
-use App\Core\Frontend\Controller\JsonRequestTrait;
-use App\Core\Validation\DTO\PaginationRequest;
-use App\Core\Validation\Service\PayloadValidator;
-use App\Module\Editorial\Form\Contract\FormManagerInterface;
-use App\Module\Editorial\Form\DTO\FormFieldInput;
-use App\Module\Editorial\Form\DTO\FormInput;
-use App\Module\Editorial\Form\DTO\ReorderFieldsInput;
-use App\Module\Editorial\Form\Entity\Form;
-use App\Module\Editorial\Form\Entity\FormField;
-use App\Module\Editorial\Form\Repository\FormRepository;
-use App\Module\Editorial\Form\Repository\FormSubmissionRepository;
-use App\Module\Editorial\Form\Serializer\FormSerializer;
-use App\Module\Editorial\Form\Service\FormSubmissionExporter;
+use Aurora\Core\Enum\HttpMethodEnum;
+use Aurora\Core\Frontend\Controller\JsonRequestTrait;
+use Aurora\Core\Validation\DTO\PaginationRequest;
+use Aurora\Core\Validation\Service\PayloadValidator;
+use Aurora\Module\Editorial\Form\Contract\FormManagerInterface;
+use Aurora\Module\Editorial\Form\DTO\FormFieldInput;
+use Aurora\Module\Editorial\Form\DTO\FormInput;
+use Aurora\Module\Editorial\Form\DTO\ReorderFieldsInput;
+use Aurora\Module\Editorial\Form\Entity\Form;
+use Aurora\Module\Editorial\Form\Entity\FormField;
+use Aurora\Module\Editorial\Form\Repository\FormRepository;
+use Aurora\Module\Editorial\Form\Repository\FormSubmissionRepository;
+use Aurora\Module\Editorial\Form\Serializer\FormSerializer;
+use Aurora\Module\Editorial\Form\Service\FormSubmissionExporter;
 use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Form\Contract;
+namespace Aurora\Module\Editorial\Form\Contract;
 
-use App\Module\Editorial\Form\DTO\FormFieldInput;
-use App\Module\Editorial\Form\DTO\FormInput;
-use App\Module\Editorial\Form\Entity\Form;
-use App\Module\Editorial\Form\Entity\FormField;
-use App\Module\Editorial\Form\Entity\FormSubmission;
+use Aurora\Module\Editorial\Form\DTO\FormFieldInput;
+use Aurora\Module\Editorial\Form\DTO\FormInput;
+use Aurora\Module\Editorial\Form\Entity\Form;
+use Aurora\Module\Editorial\Form\Entity\FormField;
+use Aurora\Module\Editorial\Form\Entity\FormSubmission;
 
 interface FormManagerInterface
 {

@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Form\Controller\Front;
+namespace Aurora\Module\Editorial\Form\Controller\Front;
 
-use App\Core\Frontend\Controller\FrontLocaleTrait;
-use App\Core\Frontend\Service\FrontContext;
-use App\Core\Theme\Service\ThemeContext;
-use App\Core\Theme\Service\ThemeResolver;
-use App\Module\Editorial\Form\Contract\FormManagerInterface;
-use App\Module\Editorial\Form\Entity\FormTranslation;
-use App\Module\Editorial\Form\Repository\FormTranslationRepository;
-use App\Module\Editorial\Form\Serializer\FormSerializer;
-use App\Module\Editorial\Form\Service\FormSubmissionValidator;
+use Aurora\Core\Frontend\Controller\FrontLocaleTrait;
+use Aurora\Core\Frontend\Service\FrontContext;
+use Aurora\Core\Theme\Service\ThemeContext;
+use Aurora\Core\Theme\Service\ThemeResolver;
+use Aurora\Module\Editorial\Form\Contract\FormManagerInterface;
+use Aurora\Module\Editorial\Form\Entity\FormTranslation;
+use Aurora\Module\Editorial\Form\Repository\FormTranslationRepository;
+use Aurora\Module\Editorial\Form\Serializer\FormSerializer;
+use Aurora\Module\Editorial\Form\Service\FormSubmissionValidator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

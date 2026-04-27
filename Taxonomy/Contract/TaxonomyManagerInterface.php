@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Taxonomy\Contract;
+namespace Aurora\Module\Editorial\Taxonomy\Contract;
 
-use App\Module\Editorial\Taxonomy\DTO\TaxonomyInput;
-use App\Module\Editorial\Taxonomy\DTO\TaxonomyTermInput;
-use App\Module\Editorial\Taxonomy\Entity\Taxonomy;
-use App\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
+use Aurora\Module\Editorial\Taxonomy\DTO\TaxonomyInput;
+use Aurora\Module\Editorial\Taxonomy\DTO\TaxonomyTermInput;
+use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
+use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
 
 interface TaxonomyManagerInterface
 {

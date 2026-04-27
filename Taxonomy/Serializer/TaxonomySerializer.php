@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Taxonomy\Serializer;
+namespace Aurora\Module\Editorial\Taxonomy\Serializer;
 
-use App\Module\Editorial\Taxonomy\Entity\Taxonomy;
+use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
 
 final readonly class TaxonomySerializer
 {

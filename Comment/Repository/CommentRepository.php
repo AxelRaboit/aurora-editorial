@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Comment\Repository;
+namespace Aurora\Module\Editorial\Comment\Repository;
 
-use App\Core\Repository\Trait\PaginationTrait;
-use App\Module\Editorial\Comment\Entity\Comment;
-use App\Module\Editorial\Comment\Enum\CommentStatusEnum;
+use Aurora\Core\Repository\Trait\PaginationTrait;
+use Aurora\Module\Editorial\Comment\Entity\Comment;
+use Aurora\Module\Editorial\Comment\Enum\CommentStatusEnum;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Order;
 use Doctrine\Persistence\ManagerRegistry;

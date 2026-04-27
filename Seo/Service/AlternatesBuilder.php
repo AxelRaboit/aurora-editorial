@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Seo\Service;
+namespace Aurora\Module\Editorial\Seo\Service;
 
-use App\Core\Frontend\Service\FrontContext;
-use App\Module\Editorial\Post\Entity\Post;
-use App\Module\Editorial\Post\Entity\PostTranslation;
-use App\Module\Editorial\Taxonomy\Entity\Taxonomy;
-use App\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
-use App\Module\Editorial\Taxonomy\Entity\TaxonomyTermTranslation;
+use Aurora\Core\Frontend\Service\FrontContext;
+use Aurora\Module\Editorial\Post\Entity\Post;
+use Aurora\Module\Editorial\Post\Entity\PostTranslation;
+use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
+use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
+use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTermTranslation;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 final readonly class AlternatesBuilder

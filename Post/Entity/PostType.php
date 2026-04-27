@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Post\Entity;
+namespace Aurora\Module\Editorial\Post\Entity;
 
-use App\Module\Editorial\Post\Repository\PostTypeRepository;
-use App\Module\Editorial\Taxonomy\Entity\Taxonomy;
+use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
+use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Order;

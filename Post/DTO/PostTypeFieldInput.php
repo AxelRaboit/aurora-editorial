@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Post\DTO;
+namespace Aurora\Module\Editorial\Post\DTO;
 
-use App\Core\Support\Str;
-use App\Module\Editorial\Post\Entity\PostTypeField;
+use Aurora\Core\Support\Str;
+use Aurora\Module\Editorial\Post\Entity\PostTypeField;
 use Symfony\Component\Validator\Constraints as Assert;
 
 final readonly class PostTypeFieldInput

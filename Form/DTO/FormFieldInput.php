@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Form\DTO;
+namespace Aurora\Module\Editorial\Form\DTO;
 
-use App\Core\Support\Str;
-use App\Module\Editorial\Form\Enum\FormFieldTypeEnum;
+use Aurora\Core\Support\Str;
+use Aurora\Module\Editorial\Form\Enum\FormFieldTypeEnum;
 use Symfony\Component\Validator\Constraints as Assert;
 
 final readonly class FormFieldInput

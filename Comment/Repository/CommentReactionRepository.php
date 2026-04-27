@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Comment\Repository;
+namespace Aurora\Module\Editorial\Comment\Repository;
 
-use App\Module\Editorial\Comment\Entity\CommentReaction;
-use App\Module\Editorial\Comment\Enum\ReactionTypeEnum;
+use Aurora\Module\Editorial\Comment\Entity\CommentReaction;
+use Aurora\Module\Editorial\Comment\Enum\ReactionTypeEnum;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

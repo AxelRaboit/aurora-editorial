@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Taxonomy\Controller\Admin;
+namespace Aurora\Module\Editorial\Taxonomy\Controller\Admin;
 
-use App\Core\Enum\HttpMethodEnum;
-use App\Core\Frontend\Controller\JsonRequestTrait;
-use App\Core\Validation\Service\PayloadValidator;
-use App\Module\Editorial\Post\Repository\PostTypeRepository;
-use App\Module\Editorial\Post\Serializer\PostTypeSerializer;
-use App\Module\Editorial\Taxonomy\Contract\TaxonomyManagerInterface;
-use App\Module\Editorial\Taxonomy\DTO\TaxonomyInput;
-use App\Module\Editorial\Taxonomy\DTO\TaxonomyTermInput;
-use App\Module\Editorial\Taxonomy\Entity\Taxonomy;
-use App\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
-use App\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
-use App\Module\Editorial\Taxonomy\Serializer\TaxonomySerializer;
+use Aurora\Core\Enum\HttpMethodEnum;
+use Aurora\Core\Frontend\Controller\JsonRequestTrait;
+use Aurora\Core\Validation\Service\PayloadValidator;
+use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
+use Aurora\Module\Editorial\Post\Serializer\PostTypeSerializer;
+use Aurora\Module\Editorial\Taxonomy\Contract\TaxonomyManagerInterface;
+use Aurora\Module\Editorial\Taxonomy\DTO\TaxonomyInput;
+use Aurora\Module\Editorial\Taxonomy\DTO\TaxonomyTermInput;
+use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
+use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
+use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
+use Aurora\Module\Editorial\Taxonomy\Serializer\TaxonomySerializer;
 use InvalidArgumentException;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

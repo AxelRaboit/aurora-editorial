@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Post\Manager;
+namespace Aurora\Module\Editorial\Post\Manager;
 
-use App\Core\Media\Repository\MediaRepository;
-use App\Core\Setting\Enum\ApplicationParameterEnum;
-use App\Core\Setting\Repository\SettingRepository;
-use App\Core\User\Entity\User;
-use App\Module\Editorial\Post\Contract\PostManagerInterface;
-use App\Module\Editorial\Post\DTO\PostInput;
-use App\Module\Editorial\Post\DTO\PostTranslationInput;
-use App\Module\Editorial\Post\Entity\Post;
-use App\Module\Editorial\Post\Entity\PostRevision;
-use App\Module\Editorial\Post\Enum\PostStatusEnum;
-use App\Module\Editorial\Post\Repository\PostRevisionRepository;
-use App\Module\Editorial\Post\Repository\PostSlugHistoryRepository;
-use App\Module\Editorial\Post\Repository\PostTypeRepository;
-use App\Module\Editorial\Post\Service\PostTextExtractor;
-use App\Module\Editorial\Taxonomy\Repository\TaxonomyTermRepository;
+use Aurora\Core\Media\Repository\MediaRepository;
+use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
+use Aurora\Core\Setting\Repository\SettingRepository;
+use Aurora\Core\User\Entity\User;
+use Aurora\Module\Editorial\Post\Contract\PostManagerInterface;
+use Aurora\Module\Editorial\Post\DTO\PostInput;
+use Aurora\Module\Editorial\Post\DTO\PostTranslationInput;
+use Aurora\Module\Editorial\Post\Entity\Post;
+use Aurora\Module\Editorial\Post\Entity\PostRevision;
+use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
+use Aurora\Module\Editorial\Post\Repository\PostRevisionRepository;
+use Aurora\Module\Editorial\Post\Repository\PostSlugHistoryRepository;
+use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
+use Aurora\Module\Editorial\Post\Service\PostTextExtractor;
+use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyTermRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;

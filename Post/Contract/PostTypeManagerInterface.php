@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Post\Contract;
+namespace Aurora\Module\Editorial\Post\Contract;
 
-use App\Module\Editorial\Post\DTO\PostTypeFieldInput;
-use App\Module\Editorial\Post\DTO\PostTypeInput;
-use App\Module\Editorial\Post\Entity\PostType;
-use App\Module\Editorial\Post\Entity\PostTypeField;
+use Aurora\Module\Editorial\Post\DTO\PostTypeFieldInput;
+use Aurora\Module\Editorial\Post\DTO\PostTypeInput;
+use Aurora\Module\Editorial\Post\Entity\PostType;
+use Aurora\Module\Editorial\Post\Entity\PostTypeField;
 
 interface PostTypeManagerInterface
 {

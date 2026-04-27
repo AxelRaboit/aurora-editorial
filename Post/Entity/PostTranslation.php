@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Post\Entity;
+namespace Aurora\Module\Editorial\Post\Entity;
 
-use App\Core\Media\Entity\Media;
-use App\Module\Editorial\Post\Repository\PostTranslationRepository;
+use Aurora\Core\Media\Entity\Media;
+use Aurora\Module\Editorial\Post\Repository\PostTranslationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 

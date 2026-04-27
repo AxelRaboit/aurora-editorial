@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Post\Repository;
+namespace Aurora\Module\Editorial\Post\Repository;
 
-use App\Core\Repository\Trait\PaginationTrait;
-use App\Module\Editorial\Post\Entity\Post;
-use App\Module\Editorial\Post\Enum\PostStatusEnum;
+use Aurora\Core\Repository\Trait\PaginationTrait;
+use Aurora\Module\Editorial\Post\Entity\Post;
+use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Order;

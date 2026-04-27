@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Form\Entity;
+namespace Aurora\Module\Editorial\Form\Entity;
 
-use App\Module\Editorial\Form\Repository\FormTranslationRepository;
+use Aurora\Module\Editorial\Form\Repository\FormTranslationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 

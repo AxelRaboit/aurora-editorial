@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Form\Repository;
+namespace Aurora\Module\Editorial\Form\Repository;
 
-use App\Module\Editorial\Form\Entity\FormTranslation;
+use Aurora\Module\Editorial\Form\Entity\FormTranslation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

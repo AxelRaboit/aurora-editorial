@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Post\Serializer;
+namespace Aurora\Module\Editorial\Post\Serializer;
 
-use App\Core\User\Entity\User;
-use App\Module\Editorial\Post\Entity\PostRevision;
+use Aurora\Core\User\Entity\User;
+use Aurora\Module\Editorial\Post\Entity\PostRevision;
 use DateTimeInterface;
 
 final readonly class PostRevisionSerializer

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Comment\Manager;
+namespace Aurora\Module\Editorial\Comment\Manager;
 
-use App\Module\Editorial\Comment\Entity\Comment;
-use App\Module\Editorial\Comment\Entity\CommentReaction;
-use App\Module\Editorial\Comment\Enum\ReactionTypeEnum;
-use App\Module\Editorial\Comment\Repository\CommentReactionRepository;
+use Aurora\Module\Editorial\Comment\Entity\Comment;
+use Aurora\Module\Editorial\Comment\Entity\CommentReaction;
+use Aurora\Module\Editorial\Comment\Enum\ReactionTypeEnum;
+use Aurora\Module\Editorial\Comment\Repository\CommentReactionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 

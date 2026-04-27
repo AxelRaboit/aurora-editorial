@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Post\DTO;
+namespace Aurora\Module\Editorial\Post\DTO;
 
-use App\Core\Support\Str;
+use Aurora\Core\Support\Str;
 
 final readonly class PostTranslationInput
 {

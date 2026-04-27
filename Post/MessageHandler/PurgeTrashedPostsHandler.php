@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Post\MessageHandler;
+namespace Aurora\Module\Editorial\Post\MessageHandler;
 
-use App\Core\Setting\Enum\ApplicationParameterEnum;
-use App\Core\Setting\Repository\SettingRepository;
-use App\Module\Editorial\Post\Message\PurgeTrashedPostsMessage;
-use App\Module\Editorial\Post\Repository\PostRepository;
+use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
+use Aurora\Core\Setting\Repository\SettingRepository;
+use Aurora\Module\Editorial\Post\Message\PurgeTrashedPostsMessage;
+use Aurora\Module\Editorial\Post\Repository\PostRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;

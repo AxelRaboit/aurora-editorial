@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Post\Enum;
+namespace Aurora\Module\Editorial\Post\Enum;
 
 enum PostStatusEnum: string
 {

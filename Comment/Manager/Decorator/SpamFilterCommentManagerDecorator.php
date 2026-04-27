@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Comment\Manager\Decorator;
+namespace Aurora\Module\Editorial\Comment\Manager\Decorator;
 
-use App\Module\Editorial\Comment\Contract\CommentManagerInterface;
-use App\Module\Editorial\Comment\Entity\Comment;
-use App\Module\Editorial\Post\Entity\Post;
+use Aurora\Module\Editorial\Comment\Contract\CommentManagerInterface;
+use Aurora\Module\Editorial\Comment\Entity\Comment;
+use Aurora\Module\Editorial\Post\Entity\Post;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
 

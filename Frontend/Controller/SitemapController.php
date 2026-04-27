@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Frontend\Controller;
+namespace Aurora\Module\Editorial\Frontend\Controller;
 
-use App\Core\Frontend\Service\FrontContext;
-use App\Module\Editorial\Seo\Service\RssFeedBuilder;
-use App\Module\Editorial\Seo\Service\SitemapBuilder;
+use Aurora\Core\Frontend\Service\FrontContext;
+use Aurora\Module\Editorial\Seo\Service\RssFeedBuilder;
+use Aurora\Module\Editorial\Seo\Service\SitemapBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;

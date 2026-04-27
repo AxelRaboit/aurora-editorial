@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Post\Service;
+namespace Aurora\Module\Editorial\Post\Service;
 
-use App\Module\Editorial\Post\Entity\PostTranslation;
-use App\Module\Editorial\Post\Entity\PostTypeField;
+use Aurora\Module\Editorial\Post\Entity\PostTranslation;
+use Aurora\Module\Editorial\Post\Entity\PostTypeField;
 
 final readonly class PostTextExtractor
 {
-    private const TEXT_FIELD_TYPES = ['text', 'textarea', 'url', 'email'];
+    private const array TEXT_FIELD_TYPES = ['text', 'textarea', 'url', 'email'];
 
     /**
      * Build the search_content string for a post translation by concatenating

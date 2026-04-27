@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Comment\Enum;
+namespace Aurora\Module\Editorial\Comment\Enum;
 
 enum ReactionTypeEnum: string
 {

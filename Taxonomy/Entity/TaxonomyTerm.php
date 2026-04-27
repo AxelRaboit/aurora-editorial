@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Taxonomy\Entity;
+namespace Aurora\Module\Editorial\Taxonomy\Entity;
 
-use App\Module\Editorial\Post\Entity\Post;
-use App\Module\Editorial\Taxonomy\Repository\TaxonomyTermRepository;
+use Aurora\Module\Editorial\Post\Entity\Post;
+use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyTermRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;

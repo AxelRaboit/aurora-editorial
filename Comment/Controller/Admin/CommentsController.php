@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Comment\Controller\Admin;
+namespace Aurora\Module\Editorial\Comment\Controller\Admin;
 
-use App\Core\Enum\HttpMethodEnum;
-use App\Core\Setting\Enum\ApplicationParameterEnum;
-use App\Core\Setting\Repository\SettingRepository;
-use App\Core\Validation\DTO\PaginationRequest;
-use App\Module\Editorial\Comment\Contract\CommentManagerInterface;
-use App\Module\Editorial\Comment\Entity\Comment;
-use App\Module\Editorial\Comment\Repository\CommentRepository;
-use App\Module\Editorial\Comment\Serializer\CommentSerializer;
+use Aurora\Core\Enum\HttpMethodEnum;
+use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
+use Aurora\Core\Setting\Repository\SettingRepository;
+use Aurora\Core\Validation\DTO\PaginationRequest;
+use Aurora\Module\Editorial\Comment\Contract\CommentManagerInterface;
+use Aurora\Module\Editorial\Comment\Entity\Comment;
+use Aurora\Module\Editorial\Comment\Repository\CommentRepository;
+use Aurora\Module\Editorial\Comment\Serializer\CommentSerializer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

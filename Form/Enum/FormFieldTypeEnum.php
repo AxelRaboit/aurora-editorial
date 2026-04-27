@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Form\Enum;
+namespace Aurora\Module\Editorial\Form\Enum;
 
 enum FormFieldTypeEnum: string
 {

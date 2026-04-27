@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Seo\Service;
+namespace Aurora\Module\Editorial\Seo\Service;
 
-use App\Core\Frontend\Service\FrontContext;
-use App\Module\Editorial\Post\Repository\PostRepository;
-use App\Module\Editorial\Post\Repository\PostTypeRepository;
-use App\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
+use Aurora\Core\Frontend\Service\FrontContext;
+use Aurora\Module\Editorial\Post\Repository\PostRepository;
+use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
+use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
 use DateTimeInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Post\Serializer;
+namespace Aurora\Module\Editorial\Post\Serializer;
 
-use App\Module\Editorial\Post\Entity\PostType;
-use App\Module\Editorial\Post\Entity\PostTypeField;
+use Aurora\Module\Editorial\Post\Entity\PostType;
+use Aurora\Module\Editorial\Post\Entity\PostTypeField;
 
 final readonly class PostTypeSerializer
 {

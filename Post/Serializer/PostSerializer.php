@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Post\Serializer;
+namespace Aurora\Module\Editorial\Post\Serializer;
 
-use App\Module\Editorial\Post\Entity\Post;
+use Aurora\Module\Editorial\Post\Entity\Post;
 use DateTimeInterface;
 
 final readonly class PostSerializer

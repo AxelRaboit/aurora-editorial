@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Comment\Manager;
+namespace Aurora\Module\Editorial\Comment\Manager;
 
-use App\Core\Setting\Enum\ApplicationParameterEnum;
-use App\Core\Setting\Repository\SettingRepository;
-use App\Module\Editorial\Comment\Contract\CommentManagerInterface;
-use App\Module\Editorial\Comment\Entity\Comment;
-use App\Module\Editorial\Comment\Enum\CommentStatusEnum;
-use App\Module\Editorial\Post\Entity\Post;
+use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
+use Aurora\Core\Setting\Repository\SettingRepository;
+use Aurora\Module\Editorial\Comment\Contract\CommentManagerInterface;
+use Aurora\Module\Editorial\Comment\Entity\Comment;
+use Aurora\Module\Editorial\Comment\Enum\CommentStatusEnum;
+use Aurora\Module\Editorial\Post\Entity\Post;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 

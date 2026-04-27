@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Form\Entity;
+namespace Aurora\Module\Editorial\Form\Entity;
 
-use App\Module\Editorial\Form\Enum\FormFieldTypeEnum;
+use Aurora\Module\Editorial\Form\Enum\FormFieldTypeEnum;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;

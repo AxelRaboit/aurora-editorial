@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Form\Repository;
+namespace Aurora\Module\Editorial\Form\Repository;
 
-use App\Core\Repository\Trait\PaginationTrait;
-use App\Module\Editorial\Form\Entity\Form;
+use Aurora\Core\Repository\Trait\PaginationTrait;
+use Aurora\Module\Editorial\Form\Entity\Form;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Order;
 use Doctrine\Persistence\ManagerRegistry;

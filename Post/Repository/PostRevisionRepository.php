@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Post\Repository;
+namespace Aurora\Module\Editorial\Post\Repository;
 
-use App\Module\Editorial\Post\Entity\Post;
-use App\Module\Editorial\Post\Entity\PostRevision;
+use Aurora\Module\Editorial\Post\Entity\Post;
+use Aurora\Module\Editorial\Post\Entity\PostRevision;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Order;
 use Doctrine\Persistence\ManagerRegistry;

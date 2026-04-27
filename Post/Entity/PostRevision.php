@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Post\Entity;
+namespace Aurora\Module\Editorial\Post\Entity;
 
-use App\Core\User\Entity\User;
-use App\Module\Editorial\Post\Enum\PostStatusEnum;
-use App\Module\Editorial\Post\Repository\PostRevisionRepository;
+use Aurora\Core\User\Entity\User;
+use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
+use Aurora\Module\Editorial\Post\Repository\PostRevisionRepository;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;

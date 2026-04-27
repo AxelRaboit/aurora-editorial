@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Comment\Entity;
+namespace Aurora\Module\Editorial\Comment\Entity;
 
-use App\Module\Editorial\Comment\Enum\ReactionTypeEnum;
-use App\Module\Editorial\Comment\Repository\CommentReactionRepository;
+use Aurora\Module\Editorial\Comment\Enum\ReactionTypeEnum;
+use Aurora\Module\Editorial\Comment\Repository\CommentReactionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CommentReactionRepository::class)]

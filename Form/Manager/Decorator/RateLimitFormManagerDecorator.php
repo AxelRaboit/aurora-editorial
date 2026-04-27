@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Form\Manager\Decorator;
+namespace Aurora\Module\Editorial\Form\Manager\Decorator;
 
-use App\Module\Editorial\Form\Contract\FormManagerInterface;
-use App\Module\Editorial\Form\DTO\FormFieldInput;
-use App\Module\Editorial\Form\DTO\FormInput;
-use App\Module\Editorial\Form\Entity\Form;
-use App\Module\Editorial\Form\Entity\FormField;
-use App\Module\Editorial\Form\Entity\FormSubmission;
+use Aurora\Module\Editorial\Form\Contract\FormManagerInterface;
+use Aurora\Module\Editorial\Form\DTO\FormFieldInput;
+use Aurora\Module\Editorial\Form\DTO\FormInput;
+use Aurora\Module\Editorial\Form\Entity\Form;
+use Aurora\Module\Editorial\Form\Entity\FormField;
+use Aurora\Module\Editorial\Form\Entity\FormSubmission;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;

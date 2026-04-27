@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Taxonomy\Entity;
+namespace Aurora\Module\Editorial\Taxonomy\Entity;
 
-use App\Module\Editorial\Taxonomy\Repository\TaxonomyTranslationRepository;
+use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyTranslationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TaxonomyTranslationRepository::class)]

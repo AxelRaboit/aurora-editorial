@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Comment\Contract;
+namespace Aurora\Module\Editorial\Comment\Contract;
 
-use App\Module\Editorial\Comment\Entity\Comment;
-use App\Module\Editorial\Post\Entity\Post;
+use Aurora\Module\Editorial\Comment\Entity\Comment;
+use Aurora\Module\Editorial\Post\Entity\Post;
 
 interface CommentManagerInterface
 {

@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Post\Manager;
+namespace Aurora\Module\Editorial\Post\Manager;
 
-use App\Module\Editorial\Post\Contract\PostTypeManagerInterface;
-use App\Module\Editorial\Post\DTO\PostTypeFieldInput;
-use App\Module\Editorial\Post\DTO\PostTypeInput;
-use App\Module\Editorial\Post\Entity\PostType;
-use App\Module\Editorial\Post\Entity\PostTypeField;
-use App\Module\Editorial\Post\Repository\PostTypeRepository;
-use App\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
+use Aurora\Module\Editorial\Post\Contract\PostTypeManagerInterface;
+use Aurora\Module\Editorial\Post\DTO\PostTypeFieldInput;
+use Aurora\Module\Editorial\Post\DTO\PostTypeInput;
+use Aurora\Module\Editorial\Post\Entity\PostType;
+use Aurora\Module\Editorial\Post\Entity\PostTypeField;
+use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
+use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use RuntimeException;
@@ -33,7 +33,7 @@ final readonly class PostTypeManager implements PostTypeManagerInterface
             throw new InvalidArgumentException($this->translator->trans('admin.postTypes.errors.slug_taken', ['{slug}' => $input->slug]));
         }
 
-        $postType = (new PostType())
+        $postType = new PostType()
             ->setSlug($input->slug)
             ->setLabel($input->label)
             ->setIcon($input->icon)
@@ -87,7 +87,7 @@ final readonly class PostTypeManager implements PostTypeManagerInterface
     {
         $this->assertFieldNameIsUnique($postType, $input->name);
 
-        $field = (new PostTypeField())
+        $field = new PostTypeField()
             ->setName($input->name)
             ->setLabel($input->label)
             ->setType($input->type)

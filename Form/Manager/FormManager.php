@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Form\Manager;
+namespace Aurora\Module\Editorial\Form\Manager;
 
-use App\Core\Setting\Enum\ApplicationParameterEnum;
-use App\Core\Setting\Repository\SettingRepository;
-use App\Module\Editorial\Form\Contract\FormManagerInterface;
-use App\Module\Editorial\Form\DTO\FormFieldInput;
-use App\Module\Editorial\Form\DTO\FormInput;
-use App\Module\Editorial\Form\Entity\Form;
-use App\Module\Editorial\Form\Entity\FormField;
-use App\Module\Editorial\Form\Entity\FormFieldTranslation;
-use App\Module\Editorial\Form\Entity\FormSubmission;
-use App\Module\Editorial\Form\Entity\FormTranslation;
-use App\Module\Editorial\Form\Repository\FormTranslationRepository;
+use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
+use Aurora\Core\Setting\Repository\SettingRepository;
+use Aurora\Module\Editorial\Form\Contract\FormManagerInterface;
+use Aurora\Module\Editorial\Form\DTO\FormFieldInput;
+use Aurora\Module\Editorial\Form\DTO\FormInput;
+use Aurora\Module\Editorial\Form\Entity\Form;
+use Aurora\Module\Editorial\Form\Entity\FormField;
+use Aurora\Module\Editorial\Form\Entity\FormFieldTranslation;
+use Aurora\Module\Editorial\Form\Entity\FormSubmission;
+use Aurora\Module\Editorial\Form\Entity\FormTranslation;
+use Aurora\Module\Editorial\Form\Repository\FormTranslationRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
@@ -235,7 +235,7 @@ final readonly class FormManager implements FormManagerInterface
             $rows,
         );
 
-        $this->mailer->send((new Email())
+        $this->mailer->send(new Email()
             ->from($this->mailerFrom)
             ->to((string) $form->getNotifyEmail())
             ->subject(sprintf('[%s] Nouvelle soumission : %s', $siteName, $formTitle))

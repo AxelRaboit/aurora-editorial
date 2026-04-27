@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Form\Serializer;
+namespace Aurora\Module\Editorial\Form\Serializer;
 
-use App\Module\Editorial\Form\Entity\Form;
-use App\Module\Editorial\Form\Entity\FormField;
-use App\Module\Editorial\Form\Entity\FormFieldTranslation;
-use App\Module\Editorial\Form\Entity\FormSubmission;
+use Aurora\Module\Editorial\Form\Entity\Form;
+use Aurora\Module\Editorial\Form\Entity\FormField;
+use Aurora\Module\Editorial\Form\Entity\FormFieldTranslation;
+use Aurora\Module\Editorial\Form\Entity\FormSubmission;
 
 use const DATE_ATOM;
 

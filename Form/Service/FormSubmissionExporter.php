@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Form\Service;
+namespace Aurora\Module\Editorial\Form\Service;
 
-use App\Module\Editorial\Form\Entity\Form;
-use App\Module\Editorial\Form\Entity\FormField;
-use App\Module\Editorial\Form\Entity\FormFieldTranslation;
-use App\Module\Editorial\Form\Entity\FormTranslation;
-use App\Module\Editorial\Form\Repository\FormSubmissionRepository;
+use Aurora\Module\Editorial\Form\Entity\Form;
+use Aurora\Module\Editorial\Form\Entity\FormField;
+use Aurora\Module\Editorial\Form\Entity\FormFieldTranslation;
+use Aurora\Module\Editorial\Form\Entity\FormTranslation;
+use Aurora\Module\Editorial\Form\Repository\FormSubmissionRepository;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
@@ -33,7 +33,7 @@ final readonly class FormSubmissionExporter
             }
 
             fwrite($handle, "\xEF\xBB\xBF");
-            fputcsv($handle, array_merge(['ID', 'Date', 'Locale', 'IP'], $labels), ';');
+            fputcsv($handle, array_merge(['ID', 'Date', 'Locale', 'IP'], $labels), ';', escape: '\\');
             foreach ($submissions as $submission) {
                 $row = [
                     (string) $submission->getId(),
@@ -46,7 +46,7 @@ final readonly class FormSubmissionExporter
                     $row[] = is_array($value) ? implode(', ', $value) : (string) $value;
                 }
 
-                fputcsv($handle, $row, ';');
+                fputcsv($handle, $row, ';', escape: '\\');
             }
 
             fclose($handle);

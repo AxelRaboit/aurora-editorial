@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Comment\Serializer;
+namespace Aurora\Module\Editorial\Comment\Serializer;
 
-use App\Module\Editorial\Comment\Entity\Comment;
-use App\Module\Editorial\Comment\Enum\ReactionTypeEnum;
-use App\Module\Editorial\Comment\Repository\CommentReactionRepository;
+use Aurora\Module\Editorial\Comment\Entity\Comment;
+use Aurora\Module\Editorial\Comment\Enum\ReactionTypeEnum;
+use Aurora\Module\Editorial\Comment\Repository\CommentReactionRepository;
 
 use const DATE_ATOM;
 

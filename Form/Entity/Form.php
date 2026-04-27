@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Form\Entity;
+namespace Aurora\Module\Editorial\Form\Entity;
 
-use App\Module\Editorial\Form\Repository\FormRepository;
+use Aurora\Module\Editorial\Form\Repository\FormRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

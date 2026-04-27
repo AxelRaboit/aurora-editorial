@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Post\MessageHandler;
+namespace Aurora\Module\Editorial\Post\MessageHandler;
 
-use App\Module\Editorial\Post\Enum\PostStatusEnum;
-use App\Module\Editorial\Post\Message\PublishScheduledPostsMessage;
-use App\Module\Editorial\Post\Repository\PostRepository;
+use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
+use Aurora\Module\Editorial\Post\Message\PublishScheduledPostsMessage;
+use Aurora\Module\Editorial\Post\Repository\PostRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;

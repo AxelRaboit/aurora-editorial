@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Comment\Entity;
+namespace Aurora\Module\Editorial\Comment\Entity;
 
-use App\Module\Editorial\Comment\Enum\CommentStatusEnum;
-use App\Module\Editorial\Comment\Repository\CommentRepository;
-use App\Module\Editorial\Post\Entity\Post;
+use Aurora\Module\Editorial\Comment\Enum\CommentStatusEnum;
+use Aurora\Module\Editorial\Comment\Repository\CommentRepository;
+use Aurora\Module\Editorial\Post\Entity\Post;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

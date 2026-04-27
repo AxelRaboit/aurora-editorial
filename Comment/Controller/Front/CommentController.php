@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Comment\Controller\Front;
+namespace Aurora\Module\Editorial\Comment\Controller\Front;
 
-use App\Core\Frontend\Controller\FrontLocaleTrait;
-use App\Core\Frontend\Service\FrontContext;
-use App\Core\Setting\Repository\SettingRepository;
-use App\Module\Editorial\Comment\Contract\CommentManagerInterface;
-use App\Module\Editorial\Comment\Entity\Comment;
-use App\Module\Editorial\Comment\Enum\ReactionTypeEnum;
-use App\Module\Editorial\Comment\Manager\CommentReactionManager;
-use App\Module\Editorial\Comment\Repository\CommentReactionRepository;
-use App\Module\Editorial\Comment\Repository\CommentRepository;
-use App\Module\Editorial\Comment\Serializer\CommentSerializer;
-use App\Module\Editorial\Comment\Service\CommentSubmissionValidator;
-use App\Module\Editorial\Post\Entity\Post;
-use App\Module\Editorial\Post\Repository\PostRepository;
-use App\Module\Editorial\Post\Service\PostPageRenderer;
+use Aurora\Core\Frontend\Controller\FrontLocaleTrait;
+use Aurora\Core\Frontend\Service\FrontContext;
+use Aurora\Core\Setting\Repository\SettingRepository;
+use Aurora\Module\Editorial\Comment\Contract\CommentManagerInterface;
+use Aurora\Module\Editorial\Comment\Entity\Comment;
+use Aurora\Module\Editorial\Comment\Enum\ReactionTypeEnum;
+use Aurora\Module\Editorial\Comment\Manager\CommentReactionManager;
+use Aurora\Module\Editorial\Comment\Repository\CommentReactionRepository;
+use Aurora\Module\Editorial\Comment\Repository\CommentRepository;
+use Aurora\Module\Editorial\Comment\Serializer\CommentSerializer;
+use Aurora\Module\Editorial\Comment\Service\CommentSubmissionValidator;
+use Aurora\Module\Editorial\Post\Entity\Post;
+use Aurora\Module\Editorial\Post\Repository\PostRepository;
+use Aurora\Module\Editorial\Post\Service\PostPageRenderer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

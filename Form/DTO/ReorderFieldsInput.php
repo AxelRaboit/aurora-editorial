@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Form\DTO;
+namespace Aurora\Module\Editorial\Form\DTO;
 
 final readonly class ReorderFieldsInput
 {

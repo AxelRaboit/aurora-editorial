@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Post\Service;
+namespace Aurora\Module\Editorial\Post\Service;
 
-use App\Core\Frontend\Service\FrontContext;
-use App\Core\Setting\Repository\SettingRepository;
-use App\Core\Theme\Service\ThemeContext;
-use App\Core\Theme\Service\ThemeResolver;
-use App\Module\Editorial\Post\Entity\Post;
-use App\Module\Editorial\Post\Entity\PostTranslation;
-use App\Module\Editorial\Seo\Service\AlternatesBuilder;
+use Aurora\Core\Frontend\Service\FrontContext;
+use Aurora\Core\Setting\Repository\SettingRepository;
+use Aurora\Core\Theme\Service\ThemeContext;
+use Aurora\Core\Theme\Service\ThemeResolver;
+use Aurora\Module\Editorial\Post\Entity\Post;
+use Aurora\Module\Editorial\Post\Entity\PostTranslation;
+use Aurora\Module\Editorial\Seo\Service\AlternatesBuilder;
 use LogicException;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;

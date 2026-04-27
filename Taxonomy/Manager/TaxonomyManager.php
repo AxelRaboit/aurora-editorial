@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Taxonomy\Manager;
+namespace Aurora\Module\Editorial\Taxonomy\Manager;
 
-use App\Module\Editorial\Post\Repository\PostTypeRepository;
-use App\Module\Editorial\Taxonomy\Contract\TaxonomyManagerInterface;
-use App\Module\Editorial\Taxonomy\DTO\TaxonomyInput;
-use App\Module\Editorial\Taxonomy\DTO\TaxonomyTermInput;
-use App\Module\Editorial\Taxonomy\Entity\Taxonomy;
-use App\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
-use App\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
-use App\Module\Editorial\Taxonomy\Repository\TaxonomyTermRepository;
+use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
+use Aurora\Module\Editorial\Taxonomy\Contract\TaxonomyManagerInterface;
+use Aurora\Module\Editorial\Taxonomy\DTO\TaxonomyInput;
+use Aurora\Module\Editorial\Taxonomy\DTO\TaxonomyTermInput;
+use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
+use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
+use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
+use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyTermRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use RuntimeException;
@@ -37,7 +37,7 @@ final readonly class TaxonomyManager implements TaxonomyManagerInterface
             throw new InvalidArgumentException($this->translator->trans('admin.taxonomies.errors.slug_taken', ['{slug}' => $input->slug]));
         }
 
-        $taxonomy = (new Taxonomy())
+        $taxonomy = new Taxonomy()
             ->setSlug($input->slug)
             ->setHierarchical($input->hierarchical)
             ->setIsBuiltIn(false);
@@ -83,7 +83,7 @@ final readonly class TaxonomyManager implements TaxonomyManagerInterface
 
     public function createTerm(Taxonomy $taxonomy, TaxonomyTermInput $input): TaxonomyTerm
     {
-        $term = (new TaxonomyTerm())->setTaxonomy($taxonomy);
+        $term = new TaxonomyTerm()->setTaxonomy($taxonomy);
 
         $parent = $this->resolveParent($taxonomy, $input->parentId);
         $term->setParent($parent);

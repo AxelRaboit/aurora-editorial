@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Post\Service;
+namespace Aurora\Module\Editorial\Post\Service;
 
-use App\Core\Media\Entity\Media;
-use App\Module\Ecommerce\Listing\Entity\Listing;
-use App\Module\Ecommerce\Listing\Repository\ListingRepository;
-use App\Module\Editorial\Post\Entity\Post;
-use App\Module\Editorial\Post\Entity\PostTranslation;
-use App\Module\Editorial\Post\Enum\PostStatusEnum;
-use App\Module\Editorial\Post\Repository\PostRepository;
-use App\Module\Editorial\Post\Repository\PostTypeRepository;
+use Aurora\Core\Media\Entity\Media;
+use Aurora\Module\Ecommerce\Listing\Entity\Listing;
+use Aurora\Module\Ecommerce\Listing\Repository\ListingRepository;
+use Aurora\Module\Editorial\Post\Entity\Post;
+use Aurora\Module\Editorial\Post\Entity\PostTranslation;
+use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
+use Aurora\Module\Editorial\Post\Repository\PostRepository;
+use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
 use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;

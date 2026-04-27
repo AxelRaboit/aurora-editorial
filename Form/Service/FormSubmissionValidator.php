@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Form\Service;
+namespace Aurora\Module\Editorial\Form\Service;
 
-use App\Module\Editorial\Form\Entity\Form;
-use App\Module\Editorial\Form\Enum\FormFieldTypeEnum;
+use Aurora\Module\Editorial\Form\Entity\Form;
+use Aurora\Module\Editorial\Form\Enum\FormFieldTypeEnum;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Validator\ValidatorInterface;

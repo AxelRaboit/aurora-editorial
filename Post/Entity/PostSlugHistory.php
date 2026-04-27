@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Post\Entity;
+namespace Aurora\Module\Editorial\Post\Entity;
 
-use App\Module\Editorial\Post\Repository\PostSlugHistoryRepository;
+use Aurora\Module\Editorial\Post\Repository\PostSlugHistoryRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
 use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;

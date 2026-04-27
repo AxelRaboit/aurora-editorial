@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Post\Entity;
+namespace Aurora\Module\Editorial\Post\Entity;
 
-use App\Core\Media\Entity\Media;
-use App\Core\User\Entity\User;
-use App\Module\Editorial\Post\Enum\PostStatusEnum;
-use App\Module\Editorial\Post\Repository\PostRepository;
-use App\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
+use Aurora\Core\Media\Entity\Media;
+use Aurora\Core\User\Entity\User;
+use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
+use Aurora\Module\Editorial\Post\Repository\PostRepository;
+use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

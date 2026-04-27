@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Editorial\Post\Security;
+namespace Aurora\Module\Editorial\Post\Security;
 
-use App\Core\User\Entity\User;
-use App\Core\User\Enum\UserRoleEnum;
-use App\Module\Editorial\Post\Entity\Post;
+use Aurora\Core\User\Entity\User;
+use Aurora\Core\User\Enum\UserRoleEnum;
+use Aurora\Module\Editorial\Post\Entity\Post;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Vote;
