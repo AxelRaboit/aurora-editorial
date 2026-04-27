@@ -6,6 +6,7 @@ admin:
       has_posts: Dieser Beitragstyp enthält Beiträge und kann nicht gelöscht werden.
       field_name_taken: Ein Feld mit dem Namen "{name}" existiert bereits in diesem Beitragstyp.
   posts:
+    selectFromLibrary: Aus Medienbibliothek auswählen
     errors:
       post_type_not_found: 'Beitragstyp #{id} nicht gefunden.'
   taxonomies:

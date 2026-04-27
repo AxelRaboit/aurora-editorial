@@ -6,6 +6,7 @@ admin:
       has_posts: This post type contains posts and cannot be deleted.
       field_name_taken: A field named "{name}" already exists on this post type.
   posts:
+    selectFromLibrary: Select from library
     errors:
       post_type_not_found: 'Post type #{id} not found.'
   taxonomies:

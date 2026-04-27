@@ -6,6 +6,7 @@ admin:
       has_posts: Este tipo de contenido tiene contenidos y no se puede eliminar.
       field_name_taken: Ya existe un campo con el nombre "{name}" en este tipo de contenido.
   posts:
+    selectFromLibrary: Seleccionar de la biblioteca
     errors:
       post_type_not_found: 'Tipo de contenido #{id} no encontrado.'
   taxonomies:

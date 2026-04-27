@@ -6,6 +6,7 @@ admin:
       has_posts: Ce type de contenu contient des contenus et ne peut pas être supprimé.
       field_name_taken: Un champ nommé "{name}" existe déjà sur ce type de contenu.
   posts:
+    selectFromLibrary: Sélectionner depuis la médiathèque
     errors:
       post_type_not_found: 'Type de contenu #{id} introuvable.'
   taxonomies:
