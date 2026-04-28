@@ -14,6 +14,7 @@ use Aurora\Module\Editorial\Post\Contract\PostManagerInterface;
 use Aurora\Module\Editorial\Post\DTO\PostInput;
 use Aurora\Module\Editorial\Post\Entity\Post;
 use Aurora\Module\Editorial\Post\Entity\PostRevision;
+use Aurora\Module\Editorial\Post\Entity\PostTranslation;
 use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
 use Aurora\Module\Editorial\Post\Repository\PostRepository;
 use Aurora\Module\Editorial\Post\Repository\PostRevisionRepository;
@@ -22,6 +23,7 @@ use Aurora\Module\Editorial\Post\Security\PostVoter;
 use Aurora\Module\Editorial\Post\Serializer\PostRevisionSerializer;
 use Aurora\Module\Editorial\Post\Serializer\PostSerializer;
 use Aurora\Module\Editorial\Post\Serializer\PostTypeSerializer;
+use Aurora\Module\Editorial\Post\Service\PostPageRenderer;
 use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
 use Aurora\Module\Editorial\Taxonomy\Serializer\TaxonomySerializer;
 use Doctrine\DBAL\LockMode;
@@ -52,6 +54,7 @@ class PostsController extends AbstractController
         private readonly PostRevisionSerializer $revisionSerializer,
         private readonly PayloadValidator $payloadValidator,
         private readonly EntityManagerInterface $entityManager,
+        private readonly PostPageRenderer $postPageRenderer,
     ) {}
 
     #[Route('', name: '', methods: [HttpMethodEnum::Get->value])]
@@ -91,6 +94,18 @@ class PostsController extends AbstractController
             'success' => true,
             'results' => array_map($this->postSerializer->serializeReference(...), $results),
         ]);
+    }
+
+    #[Route('/{id}/preview/{locale}', name: '_preview', methods: [HttpMethodEnum::Get->value])]
+    public function preview(Post $post, string $locale, Request $request): Response
+    {
+        if (!$post->getTranslation($locale) instanceof PostTranslation) {
+            throw $this->createNotFoundException();
+        }
+
+        $request->setLocale($locale);
+
+        return $this->postPageRenderer->render($post, $locale);
     }
 
     #[Route('/{id}', name: '_show', methods: [HttpMethodEnum::Get->value])]
