@@ -7,6 +7,7 @@ namespace Aurora\Module\Editorial\Post\Service;
 use Aurora\Core\Media\Entity\Media;
 use Aurora\Module\Ecommerce\Listing\Entity\Listing;
 use Aurora\Module\Ecommerce\Listing\Repository\ListingRepository;
+use Aurora\Module\Ecommerce\Service\EcommerceContext;
 use Aurora\Module\Editorial\Post\Entity\Post;
 use Aurora\Module\Editorial\Post\Entity\PostTranslation;
 use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
@@ -29,6 +30,7 @@ final readonly class BlocksRenderer
         private UrlGeneratorInterface $urlGenerator,
         private RequestStack $requestStack,
         private ListingRepository $listingRepository,
+        private EcommerceContext $ecommerceContext,
     ) {}
 
     /**
@@ -81,6 +83,10 @@ final readonly class BlocksRenderer
      */
     private function renderProductGrid(array $data, string $locale): string
     {
+        if (!$this->ecommerceContext->isFrontEnabled()) {
+            return '';
+        }
+
         $listingIds = array_values(array_filter(
             array_map(intval(...), (array) ($data['listingIds'] ?? [])),
             static fn (int $id): bool => $id > 0,
