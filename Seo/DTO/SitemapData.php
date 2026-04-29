@@ -15,10 +15,10 @@ use DateTimeImmutable;
 final readonly class SitemapData
 {
     /**
-     * @param Counts                $counts     URL count per top-level section
-     * @param array<string, int>    $byPostType URL count per post type slug (posts only)
-     * @param array<string, int>    $byLocale   URL count per locale code (all sections)
-     * @param int                   $noindex    Post translations skipped due to noindex flag
+     * @param Counts             $counts     URL count per top-level section
+     * @param array<string, int> $byPostType URL count per post type slug (posts only)
+     * @param array<string, int> $byLocale   URL count per locale code (all sections)
+     * @param int                $noindex    Post translations skipped due to noindex flag
      */
     public function __construct(
         public string $xml,
@@ -36,6 +36,6 @@ final readonly class SitemapData
 
     public function sizeBytes(): int
     {
-        return strlen($this->xml);
+        return mb_strlen($this->xml);
     }
 }

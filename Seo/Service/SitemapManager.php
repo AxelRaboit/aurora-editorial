@@ -21,6 +21,7 @@ use Symfony\Contracts\Cache\ItemInterface;
 final readonly class SitemapManager
 {
     private const string CACHE_KEY = 'editorial.sitemap.data';
+
     private const int TTL_SECONDS = 3600;
 
     public function __construct(

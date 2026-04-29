@@ -9,6 +9,7 @@ use Aurora\Core\User\Enum\UserRoleEnum;
 use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
 use Aurora\Module\Editorial\Seo\DTO\SitemapData;
 use Aurora\Module\Editorial\Seo\Service\SitemapManager;
+use DateTimeInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -69,7 +70,7 @@ final class SitemapAdminController extends AbstractController
             'total' => $data->totalUrls(),
             'counts' => $data->counts,
             'sizeBytes' => $data->sizeBytes(),
-            'generatedAt' => $data->generatedAt->format(\DateTimeInterface::ATOM),
+            'generatedAt' => $data->generatedAt->format(DateTimeInterface::ATOM),
             'byPostType' => $byPostType,
             'byLocale' => $byLocale,
             'noindex' => $data->noindex,

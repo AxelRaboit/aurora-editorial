@@ -129,7 +129,11 @@ final readonly class SitemapBuilder
 
             foreach ($post->getTranslations() as $translation) {
                 $slug = $translation->getSlug();
-                if (null === $slug || '' === $slug) {
+                if (null === $slug) {
+                    continue;
+                }
+
+                if ('' === $slug) {
                     continue;
                 }
 
@@ -173,7 +177,11 @@ final readonly class SitemapBuilder
                 foreach ($this->frontContext->activeLocales() as $locale) {
                     $code = $locale->getCode();
                     $translation = $term->getTranslation($code);
-                    if (null === $translation || '' === $translation->getSlug()) {
+                    if (null === $translation) {
+                        continue;
+                    }
+
+                    if ('' === $translation->getSlug()) {
                         continue;
                     }
 

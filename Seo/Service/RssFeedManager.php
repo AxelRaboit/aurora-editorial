@@ -17,6 +17,7 @@ use Symfony\Contracts\Cache\ItemInterface;
 final readonly class RssFeedManager
 {
     private const string CACHE_KEY_PREFIX = 'editorial.rss.feed.';
+
     private const int TTL_SECONDS = 3600;
 
     public function __construct(
