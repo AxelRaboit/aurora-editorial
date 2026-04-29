@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Frontend\Controller;
 
 use Aurora\Core\Frontend\Service\FrontContext;
-use Aurora\Module\Editorial\Seo\Service\RssFeedBuilder;
-use Aurora\Module\Editorial\Seo\Service\SitemapBuilder;
+use Aurora\Module\Editorial\Seo\Service\RssFeedManager;
+use Aurora\Module\Editorial\Seo\Service\SitemapManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -14,8 +14,8 @@ use Symfony\Component\Routing\Attribute\Route;
 class SitemapController extends AbstractController
 {
     public function __construct(
-        private readonly SitemapBuilder $sitemapBuilder,
-        private readonly RssFeedBuilder $rssFeedBuilder,
+        private readonly SitemapManager $sitemapManager,
+        private readonly RssFeedManager $rssFeedManager,
         private readonly FrontContext $frontContext,
     ) {}
 
@@ -23,7 +23,7 @@ class SitemapController extends AbstractController
     public function sitemap(): Response
     {
         return new Response(
-            $this->sitemapBuilder->buildXml(),
+            $this->sitemapManager->getData()->xml,
             Response::HTTP_OK,
             ['Content-Type' => 'application/xml'],
         );
@@ -46,7 +46,7 @@ class SitemapController extends AbstractController
         }
 
         return new Response(
-            $this->rssFeedBuilder->buildXml($locale),
+            $this->rssFeedManager->getXml($locale),
             Response::HTTP_OK,
             ['Content-Type' => 'application/rss+xml'],
         );

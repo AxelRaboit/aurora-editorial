@@ -22,3 +22,26 @@ admin:
     posts: Inhalte
     tags: Tags
     taxonomies: Taxonomien
+  sitemap:
+    totalUrls: Anzahl URLs
+    size: Größe
+    generatedAt: Erstellt am
+    viewXml: XML ansehen
+    regenerate: Neu generieren
+    regenerated: Sitemap neu generiert.
+    cacheHint: Die Sitemap wird 1 Stunde zwischengespeichert, um die Datenbank zu entlasten. Klicke nach einer wichtigen Veröffentlichung auf „Neu generieren", um sofort zu aktualisieren. Andernfalls erneuert sich der Cache automatisch.
+    sections:
+      home: Startseiten
+      archives: Archive
+      posts: Inhalte
+      terms: Begriffe
+    charts:
+      urls: URLs
+      empty: Keine Daten verfügbar.
+      byPostType: URLs nach Inhaltstyp
+      byPostTypeHint: Verteilung indexierter Inhalte nach Typ (alle Sprachen).
+      byLocale: URLs nach Sprache
+      byLocaleHint: Sitemap-Abdeckung pro aktiver Sprache.
+    noindex:
+      label: Ausgeschlossene Übersetzungen (noindex)
+      hint: Als „noindex" markierte Inhaltsübersetzungen, die daher in der Sitemap fehlen.

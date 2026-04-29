@@ -22,3 +22,26 @@ admin:
     posts: Contenido
     tags: Etiquetas
     taxonomies: Taxonomías
+  sitemap:
+    totalUrls: URLs totales
+    size: Tamaño
+    generatedAt: Generado el
+    viewXml: Ver XML
+    regenerate: Regenerar
+    regenerated: Sitemap regenerado.
+    cacheHint: El sitemap se almacena en caché durante 1 hora para aliviar la base de datos. Pulsa «Regenerar» tras una publicación importante para forzar la actualización inmediata. De lo contrario, la caché se renueva automáticamente.
+    sections:
+      home: Páginas de inicio
+      archives: Archivos
+      posts: Contenido
+      terms: Términos
+    charts:
+      urls: URLs
+      empty: No hay datos que mostrar.
+      byPostType: URLs por tipo de contenido
+      byPostTypeHint: Distribución de los contenidos indexados por tipo (todas las locales).
+      byLocale: URLs por idioma
+      byLocaleHint: Cobertura del sitemap por idioma activo.
+    noindex:
+      label: Traducciones excluidas (noindex)
+      hint: Traducciones de contenidos marcadas como «noindex» y, por tanto, ausentes del sitemap.

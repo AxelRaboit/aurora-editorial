@@ -22,3 +22,26 @@ admin:
     posts: Content
     tags: Tags
     taxonomies: Taxonomies
+  sitemap:
+    totalUrls: Total URLs
+    size: Size
+    generatedAt: Generated at
+    viewXml: View XML
+    regenerate: Regenerate
+    regenerated: Sitemap regenerated.
+    cacheHint: The sitemap is cached for 1 hour to ease database load. Click "Regenerate" after a major publish to force an immediate refresh. Otherwise the cache rotates automatically.
+    sections:
+      home: Home pages
+      archives: Archives
+      posts: Content
+      terms: Terms
+    charts:
+      urls: URLs
+      empty: No data to display.
+      byPostType: URLs by post type
+      byPostTypeHint: Indexed content distribution by type (all locales).
+      byLocale: URLs by locale
+      byLocaleHint: Sitemap coverage per active locale.
+    noindex:
+      label: Excluded translations (noindex)
+      hint: Post translations flagged as "noindex" and therefore omitted from the sitemap.

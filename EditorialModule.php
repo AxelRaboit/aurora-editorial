@@ -26,6 +26,7 @@ final class EditorialModule implements ModuleInterface
             new NavPermission('editorial.taxonomies.manage', UserRoleEnum::Admin->value),
             new NavPermission('editorial.comments.manage', UserRoleEnum::Editor->value),
             new NavPermission('editorial.forms.manage', UserRoleEnum::Editor->value),
+            new NavPermission('editorial.sitemap.manage', UserRoleEnum::Editor->value),
         ];
     }
 
@@ -38,6 +39,7 @@ final class EditorialModule implements ModuleInterface
                 new NavItem('admin_taxonomies', 'admin.nav.taxonomies', 'tags'),
                 new NavItem('admin_comments', 'admin.nav.comments', 'message-square', UserRoleEnum::Editor->value),
                 new NavItem('admin_forms', 'admin.nav.forms', 'clipboard-list', UserRoleEnum::Editor->value),
+                new NavItem('admin_sitemap', 'admin.nav.sitemap', 'map', UserRoleEnum::Editor->value),
             ], priority: 30),
         ];
     }

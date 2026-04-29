@@ -7,7 +7,9 @@ namespace Aurora\Module\Editorial\Seo\Service;
 use Aurora\Core\Frontend\Service\FrontContext;
 use Aurora\Module\Editorial\Post\Repository\PostRepository;
 use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
+use Aurora\Module\Editorial\Seo\DTO\SitemapData;
 use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
+use DateTimeImmutable;
 use DateTimeInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -23,27 +25,74 @@ final readonly class SitemapBuilder
 
     public function buildXml(): string
     {
-        $urls = [
-            ...$this->localizedRootUrls(),
-            ...$this->postUrls(),
-            ...$this->termUrls(),
-        ];
-
-        return '<?xml version="1.0" encoding="UTF-8"?>'
-            .'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
-            .implode('', $urls)
-            .'</urlset>';
+        return $this->buildData()->xml;
     }
 
-    /** @return list<string> */
-    private function localizedRootUrls(): array
+    public function buildData(): SitemapData
+    {
+        /** @var array<string, int> $byLocale */
+        $byLocale = [];
+        /** @var array<string, int> $byPostType */
+        $byPostType = [];
+        $noindex = 0;
+
+        $home = $this->localizedHomeEntries($byLocale);
+        $archives = $this->archiveEntries($byLocale);
+        $posts = $this->postUrls($byLocale, $byPostType, $noindex);
+        $terms = $this->termUrls($byLocale);
+
+        arsort($byPostType);
+        ksort($byLocale);
+
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>'
+            .'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+            .implode('', [...$home, ...$archives, ...$posts, ...$terms])
+            .'</urlset>';
+
+        return new SitemapData(
+            xml: $xml,
+            counts: [
+                'home' => count($home),
+                'archives' => count($archives),
+                'posts' => count($posts),
+                'terms' => count($terms),
+            ],
+            byPostType: $byPostType,
+            byLocale: $byLocale,
+            noindex: $noindex,
+            generatedAt: new DateTimeImmutable(),
+        );
+    }
+
+    /**
+     * @param array<string, int> $byLocale
+     *
+     * @return list<string>
+     */
+    private function localizedHomeEntries(array &$byLocale): array
     {
         $entries = [];
         foreach ($this->frontContext->activeLocales() as $locale) {
+            $code = $locale->getCode();
             $entries[] = $this->urlEntry(
-                $this->urlGenerator->generate('front_home', ['locale' => $locale->getCode()], UrlGeneratorInterface::ABSOLUTE_URL),
+                $this->urlGenerator->generate('front_home', ['locale' => $code], UrlGeneratorInterface::ABSOLUTE_URL),
             );
+            $byLocale[$code] = ($byLocale[$code] ?? 0) + 1;
+        }
 
+        return $entries;
+    }
+
+    /**
+     * @param array<string, int> $byLocale
+     *
+     * @return list<string>
+     */
+    private function archiveEntries(array &$byLocale): array
+    {
+        $entries = [];
+        foreach ($this->frontContext->activeLocales() as $locale) {
+            $code = $locale->getCode();
             foreach ($this->postTypeRepository->findAll() as $postType) {
                 if (!$postType->hasArchive()) {
                     continue;
@@ -51,18 +100,24 @@ final readonly class SitemapBuilder
 
                 $entries[] = $this->urlEntry(
                     $this->urlGenerator->generate('front_archive', [
-                        'locale' => $locale->getCode(),
+                        'locale' => $code,
                         'postTypeSlug' => $postType->getSlug(),
                     ], UrlGeneratorInterface::ABSOLUTE_URL),
                 );
+                $byLocale[$code] = ($byLocale[$code] ?? 0) + 1;
             }
         }
 
         return $entries;
     }
 
-    /** @return list<string> */
-    private function postUrls(): array
+    /**
+     * @param array<string, int> $byLocale
+     * @param array<string, int> $byPostType
+     *
+     * @return list<string>
+     */
+    private function postUrls(array &$byLocale, array &$byPostType, int &$noindex): array
     {
         $entries = [];
         foreach ($this->postRepository->findAllPublishedForSitemap() as $post) {
@@ -70,61 +125,66 @@ final readonly class SitemapBuilder
                 continue;
             }
 
+            $postTypeSlug = $post->getPostType()->getSlug();
+
             foreach ($post->getTranslations() as $translation) {
                 $slug = $translation->getSlug();
-                if (null === $slug) {
-                    continue;
-                }
-
-                if ('' === $slug) {
+                if (null === $slug || '' === $slug) {
                     continue;
                 }
 
                 if ($translation->isNoindex()) {
+                    ++$noindex;
+
                     continue;
                 }
 
-                if (!$this->frontContext->isLocaleActive($translation->getLocale())) {
+                $code = $translation->getLocale();
+                if (!$this->frontContext->isLocaleActive($code)) {
                     continue;
                 }
 
                 $entries[] = $this->urlEntry(
                     $this->urlGenerator->generate('front_post', [
-                        'locale' => $translation->getLocale(),
-                        'postTypeSlug' => $post->getPostType()->getSlug(),
+                        'locale' => $code,
+                        'postTypeSlug' => $postTypeSlug,
                         'slug' => $slug,
                     ], UrlGeneratorInterface::ABSOLUTE_URL),
                     $post->getUpdatedAt()->format(DateTimeInterface::ATOM),
                 );
+                $byLocale[$code] = ($byLocale[$code] ?? 0) + 1;
+                $byPostType[$postTypeSlug] = ($byPostType[$postTypeSlug] ?? 0) + 1;
             }
         }
 
         return $entries;
     }
 
-    /** @return list<string> */
-    private function termUrls(): array
+    /**
+     * @param array<string, int> $byLocale
+     *
+     * @return list<string>
+     */
+    private function termUrls(array &$byLocale): array
     {
         $entries = [];
         foreach ($this->taxonomyRepository->findAll() as $taxonomy) {
             foreach ($taxonomy->getTerms() as $term) {
                 foreach ($this->frontContext->activeLocales() as $locale) {
-                    $translation = $term->getTranslation($locale->getCode());
-                    if (null === $translation) {
-                        continue;
-                    }
-
-                    if ('' === $translation->getSlug()) {
+                    $code = $locale->getCode();
+                    $translation = $term->getTranslation($code);
+                    if (null === $translation || '' === $translation->getSlug()) {
                         continue;
                     }
 
                     $entries[] = $this->urlEntry(
                         $this->urlGenerator->generate('front_term', [
-                            'locale' => $locale->getCode(),
+                            'locale' => $code,
                             'taxonomySlug' => $taxonomy->getSlug(),
                             'termSlug' => $translation->getSlug(),
                         ], UrlGeneratorInterface::ABSOLUTE_URL),
                     );
+                    $byLocale[$code] = ($byLocale[$code] ?? 0) + 1;
                 }
             }
         }
