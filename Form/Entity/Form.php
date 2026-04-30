@@ -8,6 +8,7 @@ use Aurora\Module\Editorial\Form\Repository\FormRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Order;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -32,7 +33,7 @@ class Form
 
     /** @var Collection<int, FormField> */
     #[ORM\OneToMany(targetEntity: FormField::class, mappedBy: 'form', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    #[ORM\OrderBy(['position' => 'ASC'])]
+    #[ORM\OrderBy(['position' => Order::Ascending->value])]
     private Collection $fields;
 
     /** @var Collection<int, FormSubmission> */

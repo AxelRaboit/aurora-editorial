@@ -6,16 +6,15 @@ namespace Aurora\Module\Editorial\Post\Controller\Admin;
 
 use Aurora\Core\Enum\HttpMethodEnum;
 use Aurora\Core\Frontend\Controller\JsonRequestTrait;
+use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Validation\Service\PayloadValidator;
 use Aurora\Module\Editorial\Post\Contract\PostTypeManagerInterface;
 use Aurora\Module\Editorial\Post\DTO\PostTypeFieldInput;
 use Aurora\Module\Editorial\Post\DTO\PostTypeInput;
 use Aurora\Module\Editorial\Post\Entity\PostType;
 use Aurora\Module\Editorial\Post\Entity\PostTypeField;
-use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
 use Aurora\Module\Editorial\Post\Serializer\PostTypeSerializer;
-use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
-use Aurora\Module\Editorial\Taxonomy\Serializer\TaxonomySerializer;
+use Aurora\Module\Editorial\Post\View\PostTypesViewBuilder;
 use InvalidArgumentException;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,33 +29,19 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class PostTypesController extends AbstractController
 {
     use JsonRequestTrait;
+    use JsonResponseTrait;
 
     public function __construct(
-        private readonly PostTypeRepository $postTypeRepository,
-        private readonly TaxonomyRepository $taxonomyRepository,
         private readonly PostTypeManagerInterface $postTypeManager,
         private readonly PostTypeSerializer $postTypeSerializer,
-        private readonly TaxonomySerializer $taxonomySerializer,
         private readonly PayloadValidator $payloadValidator,
+        private readonly PostTypesViewBuilder $viewBuilder,
     ) {}
 
     #[Route('', name: '', methods: [HttpMethodEnum::Get->value])]
     public function index(): Response
     {
-        $postTypes = array_map(
-            $this->postTypeSerializer->serialize(...),
-            $this->postTypeRepository->findBy([], ['slug' => 'ASC']),
-        );
-
-        $taxonomies = array_map(
-            $this->taxonomySerializer->serialize(...),
-            $this->taxonomyRepository->findBy([], ['slug' => 'ASC']),
-        );
-
-        return $this->render('@Editorial/admin/post_types/index.html.twig', [
-            'postTypes' => $postTypes,
-            'taxonomies' => $taxonomies,
-        ]);
+        return $this->render('@Editorial/admin/post_types/index.html.twig', $this->viewBuilder->indexView());
     }
 
     #[Route('', name: '_create', methods: [HttpMethodEnum::Post->value])]
@@ -65,16 +50,16 @@ class PostTypesController extends AbstractController
         $input = PostTypeInput::fromArray($this->decodeJson($request));
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
-            return $this->json(['success' => false, 'errors' => $errors]);
+            return $this->jsonInvalidInput($errors, Response::HTTP_OK);
         }
 
         try {
             $postType = $this->postTypeManager->create($input);
         } catch (InvalidArgumentException $invalidArgumentException) {
-            return $this->json(['success' => false, 'errors' => ['slug' => $invalidArgumentException->getMessage()]]);
+            return $this->jsonInvalidInput(['slug' => $invalidArgumentException->getMessage()], Response::HTTP_OK);
         }
 
-        return $this->json(['success' => true, 'postType' => $this->postTypeSerializer->serialize($postType)]);
+        return $this->jsonSuccess(['postType' => $this->postTypeSerializer->serialize($postType)]);
     }
 
     #[Route('/{id}/edit', name: '_edit', methods: [HttpMethodEnum::Post->value])]
@@ -83,16 +68,16 @@ class PostTypesController extends AbstractController
         $input = PostTypeInput::fromArray($this->decodeJson($request));
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
-            return $this->json(['success' => false, 'errors' => $errors]);
+            return $this->jsonInvalidInput($errors, Response::HTTP_OK);
         }
 
         try {
             $this->postTypeManager->update($postType, $input);
         } catch (InvalidArgumentException $invalidArgumentException) {
-            return $this->json(['success' => false, 'errors' => ['slug' => $invalidArgumentException->getMessage()]]);
+            return $this->jsonInvalidInput(['slug' => $invalidArgumentException->getMessage()], Response::HTTP_OK);
         }
 
-        return $this->json(['success' => true, 'postType' => $this->postTypeSerializer->serialize($postType)]);
+        return $this->jsonSuccess(['postType' => $this->postTypeSerializer->serialize($postType)]);
     }
 
     #[Route('/{id}/delete', name: '_delete', methods: [HttpMethodEnum::Post->value])]
@@ -101,10 +86,10 @@ class PostTypesController extends AbstractController
         try {
             $this->postTypeManager->delete($postType);
         } catch (RuntimeException $runtimeException) {
-            return $this->json(['success' => false, 'error' => $runtimeException->getMessage()], Response::HTTP_CONFLICT);
+            return $this->jsonFailure($runtimeException->getMessage(), Response::HTTP_CONFLICT);
         }
 
-        return $this->json(['success' => true]);
+        return $this->jsonSuccess();
     }
 
     #[Route('/{id}/fields', name: '_field_create', methods: [HttpMethodEnum::Post->value])]
@@ -113,16 +98,16 @@ class PostTypesController extends AbstractController
         $input = PostTypeFieldInput::fromArray($this->decodeJson($request));
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
-            return $this->json(['success' => false, 'errors' => $errors]);
+            return $this->jsonInvalidInput($errors, Response::HTTP_OK);
         }
 
         try {
             $this->postTypeManager->createField($postType, $input);
         } catch (InvalidArgumentException $invalidArgumentException) {
-            return $this->json(['success' => false, 'errors' => ['name' => $invalidArgumentException->getMessage()]]);
+            return $this->jsonInvalidInput(['name' => $invalidArgumentException->getMessage()], Response::HTTP_OK);
         }
 
-        return $this->json(['success' => true, 'postType' => $this->postTypeSerializer->serialize($postType)]);
+        return $this->jsonSuccess(['postType' => $this->postTypeSerializer->serialize($postType)]);
     }
 
     #[Route('/{id}/fields/{fieldId}/edit', name: '_field_edit', methods: [HttpMethodEnum::Post->value])]
@@ -136,16 +121,16 @@ class PostTypesController extends AbstractController
         $input = PostTypeFieldInput::fromArray($this->decodeJson($request));
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
-            return $this->json(['success' => false, 'errors' => $errors]);
+            return $this->jsonInvalidInput($errors, Response::HTTP_OK);
         }
 
         try {
             $this->postTypeManager->updateField($field, $input);
         } catch (InvalidArgumentException $invalidArgumentException) {
-            return $this->json(['success' => false, 'errors' => ['name' => $invalidArgumentException->getMessage()]]);
+            return $this->jsonInvalidInput(['name' => $invalidArgumentException->getMessage()], Response::HTTP_OK);
         }
 
-        return $this->json(['success' => true, 'postType' => $this->postTypeSerializer->serialize($postType)]);
+        return $this->jsonSuccess(['postType' => $this->postTypeSerializer->serialize($postType)]);
     }
 
     #[Route('/{id}/fields/{fieldId}/delete', name: '_field_delete', methods: [HttpMethodEnum::Post->value])]
@@ -158,7 +143,7 @@ class PostTypesController extends AbstractController
 
         $this->postTypeManager->deleteField($field);
 
-        return $this->json(['success' => true, 'postType' => $this->postTypeSerializer->serialize($postType)]);
+        return $this->jsonSuccess(['postType' => $this->postTypeSerializer->serialize($postType)]);
     }
 
     #[Route('/{id}/fields/reorder', name: '_field_reorder', methods: [HttpMethodEnum::Post->value])]
@@ -172,6 +157,6 @@ class PostTypesController extends AbstractController
 
         $this->postTypeManager->reorderFields($postType, $orderedIds);
 
-        return $this->json(['success' => true, 'postType' => $this->postTypeSerializer->serialize($postType)]);
+        return $this->jsonSuccess(['postType' => $this->postTypeSerializer->serialize($postType)]);
     }
 }

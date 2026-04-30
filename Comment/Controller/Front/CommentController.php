@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Comment\Controller\Front;
 
 use Aurora\Core\Frontend\Controller\FrontLocaleTrait;
+use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Frontend\Service\FrontContext;
 use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Module\Editorial\Comment\Contract\CommentManagerInterface;
@@ -27,6 +28,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class CommentController extends AbstractController
 {
     use FrontLocaleTrait;
+    use JsonResponseTrait;
 
     public function __construct(
         private readonly PostRepository $postRepository,
@@ -66,7 +68,7 @@ class CommentController extends AbstractController
         $errors = $this->commentValidator->validate($authorName, $authorEmail, $content);
         if ([] !== $errors) {
             return $isJson
-                ? $this->json(['ok' => false, 'errors' => $errors])
+                ? $this->jsonInvalidInput($errors, Response::HTTP_OK)
                 : $this->postPageRenderer->render($post, $locale, $errors);
         }
 
@@ -74,7 +76,7 @@ class CommentController extends AbstractController
         $this->commentManager->submit($post, $authorName, $authorEmail, $content, $parentComment);
 
         if ($isJson) {
-            return $this->json(['ok' => true]);
+            return $this->jsonSuccess();
         }
 
         $this->addFlash('commentSuccess', 'comment.success');
@@ -89,11 +91,11 @@ class CommentController extends AbstractController
 
         $post = $this->postRepository->findPublishedBySlug($slug, $locale);
         if (!$post instanceof Post) {
-            return $this->json(['ok' => false], Response::HTTP_NOT_FOUND);
+            return $this->json(['success' => false], Response::HTTP_NOT_FOUND);
         }
 
         if (!$this->areCommentsEnabled($post)) {
-            return $this->json(['ok' => true, 'roots' => [], 'replies' => [], 'reactionEmojis' => []]);
+            return $this->jsonSuccess(['roots' => [], 'replies' => [], 'reactionEmojis' => []]);
         }
 
         $allComments = $this->commentRepository->findApprovedByPost($post->getId());
@@ -105,7 +107,7 @@ class CommentController extends AbstractController
 
         $tree = $this->commentSerializer->buildFrontTree($allComments, $reactionCountsMap);
 
-        return $this->json(['ok' => true, ...$tree]);
+        return $this->jsonSuccess($tree);
     }
 
     #[Route('/{locale}/{postTypeSlug}/{slug}/comment/{commentId}/react', name: 'front_comment_react', requirements: ['locale' => '[a-z]{2}'], methods: ['POST'], priority: 5)]
@@ -115,12 +117,12 @@ class CommentController extends AbstractController
 
         $post = $this->postRepository->findPublishedBySlug($slug, $locale);
         if (!$post instanceof Post) {
-            return $this->json(['ok' => false], Response::HTTP_NOT_FOUND);
+            return $this->json(['success' => false], Response::HTTP_NOT_FOUND);
         }
 
         $comment = $this->commentRepository->find($commentId);
         if (!$this->isPubliclyOnPost($comment, $post)) {
-            return $this->json(['ok' => false], Response::HTTP_NOT_FOUND);
+            return $this->json(['success' => false], Response::HTTP_NOT_FOUND);
         }
 
         $typeValue = str_contains((string) $request->headers->get('Content-Type', ''), 'application/json')
@@ -129,13 +131,13 @@ class CommentController extends AbstractController
 
         $reactionType = ReactionTypeEnum::tryFrom($typeValue);
         if (null === $reactionType) {
-            return $this->json(['ok' => false, 'error' => 'Invalid reaction type'], Response::HTTP_BAD_REQUEST);
+            return $this->jsonFailure('Invalid reaction type');
         }
 
         $fingerprint = $this->commentReactionManager->generateFingerprint($request);
         $updatedCounts = $this->commentReactionManager->toggle($comment, $reactionType, $fingerprint);
 
-        return $this->json(['ok' => true, 'counts' => $updatedCounts]);
+        return $this->jsonSuccess(['counts' => $updatedCounts]);
     }
 
     private function areCommentsEnabled(Post $post): bool

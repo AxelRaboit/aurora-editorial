@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Seo\Controller\Admin;
 
 use Aurora\Core\Enum\HttpMethodEnum;
+use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\User\Enum\UserRoleEnum;
-use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
-use Aurora\Module\Editorial\Seo\DTO\SitemapData;
 use Aurora\Module\Editorial\Seo\Service\SitemapManager;
-use DateTimeInterface;
+use Aurora\Module\Editorial\Seo\View\SitemapAdminViewBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,17 +19,17 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted(UserRoleEnum::Editor->value)]
 final class SitemapAdminController extends AbstractController
 {
+    use JsonResponseTrait;
+
     public function __construct(
         private readonly SitemapManager $sitemapManager,
-        private readonly PostTypeRepository $postTypeRepository,
+        private readonly SitemapAdminViewBuilder $viewBuilder,
     ) {}
 
     #[Route('', name: '', methods: [HttpMethodEnum::Get->value])]
     public function index(): Response
     {
-        return $this->render('@Editorial/admin/sitemap/index.html.twig', [
-            'stats' => $this->serialize($this->sitemapManager->getData()),
-        ]);
+        return $this->render('@Editorial/admin/sitemap/index.html.twig', $this->viewBuilder->indexView());
     }
 
     #[Route('/invalidate', name: '_invalidate', methods: [HttpMethodEnum::Post->value])]
@@ -38,42 +37,8 @@ final class SitemapAdminController extends AbstractController
     {
         $this->sitemapManager->invalidate();
 
-        return $this->json([
-            'ok' => true,
-            'stats' => $this->serialize($this->sitemapManager->getData()),
+        return $this->jsonSuccess([
+            'stats' => $this->viewBuilder->serialize($this->sitemapManager->getData()),
         ]);
-    }
-
-    /** @return array<string, mixed> */
-    private function serialize(SitemapData $data): array
-    {
-        $labelsBySlug = [];
-        foreach ($this->postTypeRepository->findAll() as $postType) {
-            $labelsBySlug[$postType->getSlug()] = $postType->getLabel();
-        }
-
-        $byPostType = [];
-        foreach ($data->byPostType as $slug => $count) {
-            $byPostType[] = [
-                'slug' => $slug,
-                'label' => $labelsBySlug[$slug] ?? $slug,
-                'count' => $count,
-            ];
-        }
-
-        $byLocale = [];
-        foreach ($data->byLocale as $code => $count) {
-            $byLocale[] = ['code' => $code, 'count' => $count];
-        }
-
-        return [
-            'total' => $data->totalUrls(),
-            'counts' => $data->counts,
-            'sizeBytes' => $data->sizeBytes(),
-            'generatedAt' => $data->generatedAt->format(DateTimeInterface::ATOM),
-            'byPostType' => $byPostType,
-            'byLocale' => $byLocale,
-            'noindex' => $data->noindex,
-        ];
     }
 }

@@ -8,7 +8,6 @@ use Aurora\Core\Frontend\Controller\FrontLocaleTrait;
 use Aurora\Core\Frontend\Service\FrontContext;
 use Aurora\Core\Frontend\Service\HttpCacheService;
 use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
-use Aurora\Core\Theme\Service\ThemeContext;
 use Aurora\Core\Theme\Service\ThemeResolver;
 use Aurora\Module\Editorial\Post\Entity\Post;
 use Aurora\Module\Editorial\Post\Entity\PostSlugHistory;
@@ -17,7 +16,7 @@ use Aurora\Module\Editorial\Post\Repository\PostRepository;
 use Aurora\Module\Editorial\Post\Repository\PostSlugHistoryRepository;
 use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
 use Aurora\Module\Editorial\Post\Service\PostPageRenderer;
-use Aurora\Module\Editorial\Seo\Service\AlternatesBuilder;
+use Aurora\Module\Editorial\Post\View\PageViewBuilder;
 use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
 use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
@@ -38,10 +37,9 @@ class PageController extends AbstractController
         private readonly TaxonomyRepository $taxonomyRepository,
         private readonly FrontContext $frontContext,
         private readonly ThemeResolver $themeResolver,
-        private readonly ThemeContext $themeContext,
-        private readonly AlternatesBuilder $alternatesBuilder,
         private readonly HttpCacheService $httpCache,
         private readonly PostPageRenderer $postPageRenderer,
+        private readonly PageViewBuilder $viewBuilder,
     ) {}
 
     #[Route('/', name: 'front_root', priority: 10)]
@@ -70,14 +68,7 @@ class PageController extends AbstractController
             ? $this->postRepository->findPublishedByPostType($postType->getId(), (int) $request->query->get('page', 1), $this->postsPerPage(), $locale)
             : ['items' => [], 'total' => 0, 'page' => 1, 'totalPages' => 1];
 
-        $response = $this->render($this->themeResolver->resolve('home'), [
-            'locale' => $locale,
-            'context' => $this->frontContext,
-            'themeContext' => $this->themeContext,
-            'posts' => $result,
-            'postType' => $postType,
-            'alternates' => $this->alternatesBuilder->forRoute('front_home'),
-        ]);
+        $response = $this->render($this->themeResolver->resolve('home'), $this->viewBuilder->homeView($locale, $result, $postType));
 
         return $this->withI18nHeaders($response, $locale);
     }
@@ -132,14 +123,7 @@ class PageController extends AbstractController
         $page = max(1, (int) $request->query->get('page', 1));
         $result = $this->postRepository->findPublishedByPostType($postType->getId(), $page, $this->postsPerPage(), $locale);
 
-        $response = $this->render($this->themeResolver->resolve('archive'), [
-            'locale' => $locale,
-            'context' => $this->frontContext,
-            'themeContext' => $this->themeContext,
-            'postType' => $postType,
-            'posts' => $result,
-            'alternates' => $this->alternatesBuilder->forRoute('front_archive', ['postTypeSlug' => $postType->getSlug()]),
-        ]);
+        $response = $this->render($this->themeResolver->resolve('archive'), $this->viewBuilder->archiveView($locale, $postType, $result));
 
         $this->httpCache->setSharedCache($response);
 
@@ -172,15 +156,7 @@ class PageController extends AbstractController
         $page = max(1, (int) $request->query->get('page', 1));
         $result = $this->postRepository->findPublishedByTerm($term->getId(), $page, $this->postsPerPage(), $locale);
 
-        $response = $this->render($this->themeResolver->resolve('term'), [
-            'locale' => $locale,
-            'context' => $this->frontContext,
-            'themeContext' => $this->themeContext,
-            'taxonomy' => $taxonomy,
-            'term' => $term,
-            'posts' => $result,
-            'alternates' => $this->alternatesBuilder->forTerm($taxonomy, $term),
-        ]);
+        $response = $this->render($this->themeResolver->resolve('term'), $this->viewBuilder->termView($locale, $taxonomy, $term, $result));
 
         $this->httpCache->setSharedCache($response);
 

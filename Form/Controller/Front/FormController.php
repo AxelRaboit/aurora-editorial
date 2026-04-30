@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Form\Controller\Front;
 
 use Aurora\Core\Frontend\Controller\FrontLocaleTrait;
+use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Frontend\Service\FrontContext;
-use Aurora\Core\Theme\Service\ThemeContext;
 use Aurora\Core\Theme\Service\ThemeResolver;
 use Aurora\Module\Editorial\Form\Contract\FormManagerInterface;
 use Aurora\Module\Editorial\Form\Entity\FormTranslation;
 use Aurora\Module\Editorial\Form\Repository\FormTranslationRepository;
-use Aurora\Module\Editorial\Form\Serializer\FormSerializer;
 use Aurora\Module\Editorial\Form\Service\FormSubmissionValidator;
+use Aurora\Module\Editorial\Form\View\FormViewBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,15 +22,15 @@ use Symfony\Component\Routing\Attribute\Route;
 class FormController extends AbstractController
 {
     use FrontLocaleTrait;
+    use JsonResponseTrait;
 
     public function __construct(
         private readonly FormTranslationRepository $formTranslationRepository,
         private readonly FormManagerInterface $formManager,
-        private readonly FormSerializer $formSerializer,
         private readonly FormSubmissionValidator $formSubmissionValidator,
         private readonly FrontContext $frontContext,
-        private readonly ThemeContext $themeContext,
         private readonly ThemeResolver $themeResolver,
+        private readonly FormViewBuilder $viewBuilder,
     ) {}
 
     #[Route('/{locale}/forms/{slug}', name: 'front_form', requirements: ['locale' => '[a-z]{2}'], priority: 7)]
@@ -44,20 +44,7 @@ class FormController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $form = $translation->getForm();
-        $fields = array_values(array_map(
-            fn ($field): array => $this->formSerializer->serializeFieldForLocale($field, $locale),
-            $form->getFields()->toArray(),
-        ));
-
-        $response = $this->render($this->themeResolver->resolve('form'), [
-            'locale' => $locale,
-            'context' => $this->frontContext,
-            'themeContext' => $this->themeContext,
-            'form' => $form,
-            'translation' => $translation,
-            'fields' => $fields,
-        ]);
+        $response = $this->render($this->themeResolver->resolve('form'), $this->viewBuilder->showView($translation, $locale));
 
         return $this->withI18nHeaders($response, $locale);
     }
@@ -70,7 +57,7 @@ class FormController extends AbstractController
 
         $translation = $this->findActiveFormTranslation($locale, $slug);
         if (!$translation instanceof FormTranslation) {
-            return $this->json(['ok' => false], Response::HTTP_NOT_FOUND);
+            return $this->json(['success' => false], Response::HTTP_NOT_FOUND);
         }
 
         $form = $translation->getForm();
@@ -78,14 +65,14 @@ class FormController extends AbstractController
 
         $errors = $this->formSubmissionValidator->validate($form, $payload);
         if ([] !== $errors) {
-            return $this->json(['ok' => false, 'errors' => $errors]);
+            return $this->jsonInvalidInput($errors, Response::HTTP_OK);
         }
 
         $submittedData = $this->formSubmissionValidator->extractSubmittedData($form, $payload);
         $ip = $request->getClientIp() ?? '';
         $this->formManager->submit($form, $submittedData, $locale, $ip);
 
-        return $this->json(['ok' => true]);
+        return $this->jsonSuccess();
     }
 
     private function findActiveFormTranslation(string $locale, string $slug): ?FormTranslation

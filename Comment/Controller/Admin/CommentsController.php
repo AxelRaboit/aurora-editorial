@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Comment\Controller\Admin;
 
 use Aurora\Core\Enum\HttpMethodEnum;
+use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
 use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Core\Validation\DTO\PaginationRequest;
@@ -12,6 +13,7 @@ use Aurora\Module\Editorial\Comment\Contract\CommentManagerInterface;
 use Aurora\Module\Editorial\Comment\Entity\Comment;
 use Aurora\Module\Editorial\Comment\Repository\CommentRepository;
 use Aurora\Module\Editorial\Comment\Serializer\CommentSerializer;
+use Aurora\Module\Editorial\Comment\View\CommentsViewBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,23 +25,20 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('editorial.comments.manage')]
 final class CommentsController extends AbstractController
 {
+    use JsonResponseTrait;
+
     public function __construct(
         private readonly CommentRepository $commentRepository,
         private readonly CommentManagerInterface $commentManager,
         private readonly CommentSerializer $commentSerializer,
         private readonly SettingRepository $settingRepository,
+        private readonly CommentsViewBuilder $viewBuilder,
     ) {}
 
     #[Route('', name: '', methods: [HttpMethodEnum::Get->value])]
     public function index(): Response
     {
-        $stats = $this->commentRepository->countByStatus();
-        $moderationEnabled = $this->settingRepository->getBoolean(ApplicationParameterEnum::CommentModerationEnabled->value, true);
-
-        return $this->render('@Editorial/admin/comments/index.html.twig', [
-            'stats' => $stats,
-            'moderationEnabled' => $moderationEnabled,
-        ]);
+        return $this->render('@Editorial/admin/comments/index.html.twig', $this->viewBuilder->indexView());
     }
 
     #[Route('/toggle-moderation', name: '_toggle_moderation', methods: [HttpMethodEnum::Post->value])]
@@ -48,7 +47,7 @@ final class CommentsController extends AbstractController
         $current = $this->settingRepository->getBoolean(ApplicationParameterEnum::CommentModerationEnabled->value, true);
         $this->settingRepository->set(ApplicationParameterEnum::CommentModerationEnabled->value, $current ? '0' : '1');
 
-        return $this->json(['ok' => true, 'moderationEnabled' => !$current]);
+        return $this->jsonSuccess(['moderationEnabled' => !$current]);
     }
 
     #[Route('/list', name: '_list', methods: [HttpMethodEnum::Get->value])]
@@ -63,8 +62,7 @@ final class CommentsController extends AbstractController
             $result['items'],
         );
 
-        return $this->json([
-            'ok' => true,
+        return $this->jsonSuccess([
             'items' => $items,
             'total' => $result['total'],
             'page' => $result['page'],
@@ -77,7 +75,7 @@ final class CommentsController extends AbstractController
     {
         $this->commentManager->approve($comment);
 
-        return $this->json(['ok' => true, 'comment' => $this->commentSerializer->serialize($comment)]);
+        return $this->jsonSuccess(['comment' => $this->commentSerializer->serialize($comment)]);
     }
 
     #[Route('/{id}/spam', name: '_spam', methods: [HttpMethodEnum::Post->value])]
@@ -85,7 +83,7 @@ final class CommentsController extends AbstractController
     {
         $this->commentManager->spam($comment);
 
-        return $this->json(['ok' => true, 'comment' => $this->commentSerializer->serialize($comment)]);
+        return $this->jsonSuccess(['comment' => $this->commentSerializer->serialize($comment)]);
     }
 
     #[Route('/{id}/delete', name: '_delete', methods: [HttpMethodEnum::Post->value])]
@@ -93,6 +91,6 @@ final class CommentsController extends AbstractController
     {
         $this->commentManager->delete($comment);
 
-        return $this->json(['ok' => true]);
+        return $this->jsonSuccess();
     }
 }

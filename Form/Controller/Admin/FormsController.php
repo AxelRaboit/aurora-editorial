@@ -6,6 +6,7 @@ namespace Aurora\Module\Editorial\Form\Controller\Admin;
 
 use Aurora\Core\Enum\HttpMethodEnum;
 use Aurora\Core\Frontend\Controller\JsonRequestTrait;
+use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Validation\DTO\PaginationRequest;
 use Aurora\Core\Validation\Service\PayloadValidator;
 use Aurora\Module\Editorial\Form\Contract\FormManagerInterface;
@@ -18,6 +19,7 @@ use Aurora\Module\Editorial\Form\Repository\FormRepository;
 use Aurora\Module\Editorial\Form\Repository\FormSubmissionRepository;
 use Aurora\Module\Editorial\Form\Serializer\FormSerializer;
 use Aurora\Module\Editorial\Form\Service\FormSubmissionExporter;
+use Aurora\Module\Editorial\Form\View\FormsViewBuilder;
 use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -32,6 +34,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class FormsController extends AbstractController
 {
     use JsonRequestTrait;
+    use JsonResponseTrait;
 
     public function __construct(
         private readonly FormRepository $formRepository,
@@ -40,14 +43,13 @@ final class FormsController extends AbstractController
         private readonly FormSerializer $formSerializer,
         private readonly FormSubmissionExporter $submissionExporter,
         private readonly PayloadValidator $payloadValidator,
+        private readonly FormsViewBuilder $viewBuilder,
     ) {}
 
     #[Route('', name: '', methods: [HttpMethodEnum::Get->value])]
     public function index(): Response
     {
-        return $this->render('@Editorial/admin/forms/index.html.twig', [
-            'locales' => $this->getParameter('kernel.enabled_locales'),
-        ]);
+        return $this->render('@Editorial/admin/forms/index.html.twig', $this->viewBuilder->indexView());
     }
 
     #[Route('/list', name: '_list', methods: [HttpMethodEnum::Get->value])]
@@ -55,8 +57,7 @@ final class FormsController extends AbstractController
     {
         $result = $this->formRepository->findPaginated($pagination->page, $pagination->limit);
 
-        return $this->json([
-            'ok' => true,
+        return $this->jsonSuccess([
             'items' => array_map(fn (Form $form): array => $this->formSerializer->serialize($form, false), $result['items']),
             'total' => $result['total'],
             'page' => $result['page'],
@@ -67,7 +68,7 @@ final class FormsController extends AbstractController
     #[Route('/{id}', name: '_get', methods: [HttpMethodEnum::Get->value])]
     public function get(Form $form): JsonResponse
     {
-        return $this->json(['ok' => true, 'form' => $this->formSerializer->serialize($form)]);
+        return $this->jsonSuccess(['form' => $this->formSerializer->serialize($form)]);
     }
 
     #[Route('', name: '_create', methods: [HttpMethodEnum::Post->value])]
@@ -81,10 +82,10 @@ final class FormsController extends AbstractController
         try {
             $form = $this->formManager->create($input);
         } catch (InvalidArgumentException $invalidArgumentException) {
-            return $this->json(['ok' => false, 'errors' => $this->mapManagerException($invalidArgumentException)], Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->jsonInvalidInput($this->mapManagerException($invalidArgumentException));
         }
 
-        return $this->json(['ok' => true, 'form' => $this->formSerializer->serialize($form)], Response::HTTP_CREATED);
+        return $this->jsonSuccess(['form' => $this->formSerializer->serialize($form)], Response::HTTP_CREATED);
     }
 
     #[Route('/{id}/edit', name: '_update', methods: [HttpMethodEnum::Post->value])]
@@ -98,10 +99,10 @@ final class FormsController extends AbstractController
         try {
             $this->formManager->update($form, $input);
         } catch (InvalidArgumentException $invalidArgumentException) {
-            return $this->json(['ok' => false, 'errors' => $this->mapManagerException($invalidArgumentException)], Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->jsonInvalidInput($this->mapManagerException($invalidArgumentException));
         }
 
-        return $this->json(['ok' => true, 'form' => $this->formSerializer->serialize($form)]);
+        return $this->jsonSuccess(['form' => $this->formSerializer->serialize($form)]);
     }
 
     #[Route('/{id}/delete', name: '_delete', methods: [HttpMethodEnum::Post->value])]
@@ -109,7 +110,7 @@ final class FormsController extends AbstractController
     {
         $this->formManager->delete($form);
 
-        return $this->json(['ok' => true]);
+        return $this->jsonSuccess();
     }
 
     #[Route('/{id}/fields', name: '_field_create', methods: [HttpMethodEnum::Post->value])]
@@ -122,7 +123,7 @@ final class FormsController extends AbstractController
 
         $field = $this->formManager->createField($form, $input);
 
-        return $this->json(['ok' => true, 'field' => $this->formSerializer->serializeField($field)], Response::HTTP_CREATED);
+        return $this->jsonSuccess(['field' => $this->formSerializer->serializeField($field)], Response::HTTP_CREATED);
     }
 
     #[Route('/{id}/fields/{fieldId}/edit', name: '_field_update', methods: [HttpMethodEnum::Post->value])]
@@ -130,7 +131,7 @@ final class FormsController extends AbstractController
     {
         $field = $this->loadField($form, $fieldId);
         if (!$field instanceof FormField) {
-            return $this->json(['ok' => false], Response::HTTP_NOT_FOUND);
+            return $this->json(['success' => false], Response::HTTP_NOT_FOUND);
         }
 
         $input = FormFieldInput::fromArray($this->decodeJson($request));
@@ -140,7 +141,7 @@ final class FormsController extends AbstractController
 
         $this->formManager->updateField($field, $input);
 
-        return $this->json(['ok' => true, 'field' => $this->formSerializer->serializeField($field)]);
+        return $this->jsonSuccess(['field' => $this->formSerializer->serializeField($field)]);
     }
 
     #[Route('/{id}/fields/{fieldId}/delete', name: '_field_delete', methods: [HttpMethodEnum::Post->value])]
@@ -148,12 +149,12 @@ final class FormsController extends AbstractController
     {
         $field = $this->loadField($form, $fieldId);
         if (!$field instanceof FormField) {
-            return $this->json(['ok' => false], Response::HTTP_NOT_FOUND);
+            return $this->json(['success' => false], Response::HTTP_NOT_FOUND);
         }
 
         $this->formManager->deleteField($field);
 
-        return $this->json(['ok' => true]);
+        return $this->jsonSuccess();
     }
 
     #[Route('/{id}/fields/reorder', name: '_field_reorder', methods: [HttpMethodEnum::Post->value])]
@@ -162,7 +163,7 @@ final class FormsController extends AbstractController
         $input = ReorderFieldsInput::fromArray($this->decodeJson($request));
         $this->formManager->reorderFields($form, $input->orderedIds);
 
-        return $this->json(['ok' => true]);
+        return $this->jsonSuccess();
     }
 
     #[Route('/{id}/submissions', name: '_submissions', methods: [HttpMethodEnum::Get->value])]
@@ -170,8 +171,7 @@ final class FormsController extends AbstractController
     {
         $result = $this->formSubmissionRepository->findPaginatedByForm($form, $pagination->page, $pagination->limit);
 
-        return $this->json([
-            'ok' => true,
+        return $this->jsonSuccess([
             'items' => array_map($this->formSerializer->serializeSubmission(...), $result['items']),
             'total' => $result['total'],
             'page' => $result['page'],
@@ -199,7 +199,7 @@ final class FormsController extends AbstractController
             return null;
         }
 
-        return $this->json(['ok' => false, 'errors' => $errors], Response::HTTP_UNPROCESSABLE_ENTITY);
+        return $this->jsonInvalidInput($errors);
     }
 
     private function loadField(Form $form, int $fieldId): ?FormField

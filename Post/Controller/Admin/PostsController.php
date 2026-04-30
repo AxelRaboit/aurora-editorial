@@ -6,6 +6,7 @@ namespace Aurora\Module\Editorial\Post\Controller\Admin;
 
 use Aurora\Core\Enum\HttpMethodEnum;
 use Aurora\Core\Frontend\Controller\JsonRequestTrait;
+use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\User\Entity\User;
 use Aurora\Core\User\Enum\UserRoleEnum;
 use Aurora\Core\Validation\DTO\PaginationRequest;
@@ -18,14 +19,11 @@ use Aurora\Module\Editorial\Post\Entity\PostTranslation;
 use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
 use Aurora\Module\Editorial\Post\Repository\PostRepository;
 use Aurora\Module\Editorial\Post\Repository\PostRevisionRepository;
-use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
 use Aurora\Module\Editorial\Post\Security\PostVoter;
 use Aurora\Module\Editorial\Post\Serializer\PostRevisionSerializer;
 use Aurora\Module\Editorial\Post\Serializer\PostSerializer;
-use Aurora\Module\Editorial\Post\Serializer\PostTypeSerializer;
 use Aurora\Module\Editorial\Post\Service\PostPageRenderer;
-use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
-use Aurora\Module\Editorial\Taxonomy\Serializer\TaxonomySerializer;
+use Aurora\Module\Editorial\Post\View\PostsViewBuilder;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
@@ -41,20 +39,18 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class PostsController extends AbstractController
 {
     use JsonRequestTrait;
+    use JsonResponseTrait;
 
     public function __construct(
         private readonly PostRepository $postRepository,
-        private readonly PostTypeRepository $postTypeRepository,
-        private readonly TaxonomyRepository $taxonomyRepository,
         private readonly PostManagerInterface $postManager,
         private readonly PostSerializer $postSerializer,
-        private readonly PostTypeSerializer $postTypeSerializer,
-        private readonly TaxonomySerializer $taxonomySerializer,
         private readonly PostRevisionRepository $revisionRepository,
         private readonly PostRevisionSerializer $revisionSerializer,
         private readonly PayloadValidator $payloadValidator,
         private readonly EntityManagerInterface $entityManager,
         private readonly PostPageRenderer $postPageRenderer,
+        private readonly PostsViewBuilder $viewBuilder,
     ) {}
 
     #[Route('', name: '', methods: [HttpMethodEnum::Get->value])]
@@ -66,14 +62,7 @@ class PostsController extends AbstractController
             return $this->json($payload);
         }
 
-        return $this->render('@Editorial/admin/posts/index.html.twig', [
-            'posts' => $payload,
-            'search' => $pagination->search ?? '',
-            'postTypes' => array_map($this->postTypeSerializer->serialize(...), $this->postTypeRepository->findAll()),
-            'taxonomies' => array_map($this->taxonomySerializer->serializeFull(...), $this->taxonomyRepository->findBy([], ['slug' => 'ASC'])),
-            'trashed' => $request->query->getBoolean('trashed'),
-            'locales' => $this->getParameter('kernel.enabled_locales'),
-        ]);
+        return $this->render('@Editorial/admin/posts/index.html.twig', $this->viewBuilder->indexView($payload, $pagination, $request->query->getBoolean('trashed')));
     }
 
     #[Route('/search', name: '_search', methods: [HttpMethodEnum::Get->value])]
@@ -90,8 +79,7 @@ class PostsController extends AbstractController
             $results = $this->postRepository->searchForReference($query, $excludeId, $postTypeId);
         }
 
-        return $this->json([
-            'success' => true,
+        return $this->jsonSuccess([
             'results' => array_map($this->postSerializer->serializeReference(...), $results),
         ]);
     }
@@ -111,7 +99,7 @@ class PostsController extends AbstractController
     #[Route('/{id}', name: '_show', methods: [HttpMethodEnum::Get->value])]
     public function show(Post $post): JsonResponse
     {
-        return $this->json(['success' => true, 'post' => $this->postSerializer->serializeFull($post)]);
+        return $this->jsonSuccess(['post' => $this->postSerializer->serializeFull($post)]);
     }
 
     #[Route('', name: '_create', methods: [HttpMethodEnum::Post->value])]
@@ -121,12 +109,12 @@ class PostsController extends AbstractController
 
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
-            return $this->json(['success' => false, 'errors' => $errors]);
+            return $this->jsonInvalidInput($errors, Response::HTTP_OK);
         }
 
         $post = $this->postManager->create($input);
 
-        return $this->json(['success' => true, 'post' => $this->postSerializer->serialize($post)]);
+        return $this->jsonSuccess(['post' => $this->postSerializer->serialize($post)]);
     }
 
     #[Route('/{id}/edit', name: '_edit', methods: [HttpMethodEnum::Post->value])]
@@ -146,12 +134,12 @@ class PostsController extends AbstractController
 
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
-            return $this->json(['success' => false, 'errors' => $errors]);
+            return $this->jsonInvalidInput($errors, Response::HTTP_OK);
         }
 
         $this->postManager->update($post, $input);
 
-        return $this->json(['success' => true, 'post' => $this->postSerializer->serialize($post)]);
+        return $this->jsonSuccess(['post' => $this->postSerializer->serialize($post)]);
     }
 
     #[Route('/{id}/delete', name: '_delete', methods: [HttpMethodEnum::Post->value])]
@@ -161,7 +149,7 @@ class PostsController extends AbstractController
 
         $this->postManager->delete($post);
 
-        return $this->json(['success' => true]);
+        return $this->jsonSuccess();
     }
 
     #[Route('/{id}/restore', name: '_restore', methods: [HttpMethodEnum::Post->value])]
@@ -169,7 +157,7 @@ class PostsController extends AbstractController
     {
         $this->postManager->restore($post);
 
-        return $this->json(['success' => true, 'post' => $this->postSerializer->serialize($post)]);
+        return $this->jsonSuccess(['post' => $this->postSerializer->serialize($post)]);
     }
 
     #[Route('/{id}/force-delete', name: '_force_delete', methods: [HttpMethodEnum::Post->value])]
@@ -177,7 +165,7 @@ class PostsController extends AbstractController
     {
         $this->postManager->forceDelete($post);
 
-        return $this->json(['success' => true]);
+        return $this->jsonSuccess();
     }
 
     #[Route('/empty-trash', name: '_empty_trash', methods: [HttpMethodEnum::Post->value])]
@@ -188,14 +176,13 @@ class PostsController extends AbstractController
             $this->postManager->forceDelete($post);
         }
 
-        return $this->json(['success' => true, 'count' => count($posts)]);
+        return $this->jsonSuccess(['count' => count($posts)]);
     }
 
     #[Route('/{id}/revisions', name: '_revisions', methods: [HttpMethodEnum::Get->value])]
     public function listRevisions(Post $post): JsonResponse
     {
-        return $this->json([
-            'success' => true,
+        return $this->jsonSuccess([
             'revisions' => array_map($this->revisionSerializer->serialize(...), $this->revisionRepository->findByPost($post)),
         ]);
     }
@@ -208,7 +195,7 @@ class PostsController extends AbstractController
             return $this->json(['success' => false], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->json(['success' => true, 'revision' => $this->revisionSerializer->serializeFull($revision)]);
+        return $this->jsonSuccess(['revision' => $this->revisionSerializer->serializeFull($revision)]);
     }
 
     #[Route('/{id}/revisions/{revisionId}/restore', name: '_revision_restore', methods: [HttpMethodEnum::Post->value])]
@@ -221,10 +208,10 @@ class PostsController extends AbstractController
 
         $this->postManager->restoreRevision($post, $revision);
 
-        return $this->json(['success' => true, 'post' => $this->postSerializer->serialize($post)]);
+        return $this->jsonSuccess(['post' => $this->postSerializer->serialize($post)]);
     }
 
-    /** @return array{ok: bool, items: list<array<string, mixed>>, total: int, page: int, totalPages: int} */
+    /** @return array{success: bool, items: list<array<string, mixed>>, total: int, page: int, totalPages: int} */
     private function buildListPayload(PaginationRequest $pagination, Request $request): array
     {
         $postTypeId = $request->query->getInt('postTypeId') ?: null;
@@ -234,7 +221,7 @@ class PostsController extends AbstractController
         $result = $this->postRepository->findPaginated($pagination->page, 10, $pagination->search, $postTypeId, trashed: $trashed, authorId: $authorId);
 
         return [
-            'ok' => true,
+            'success' => true,
             'items' => array_map($this->postSerializer->serialize(...), $result['items']),
             'total' => $result['total'],
             'page' => $result['page'],

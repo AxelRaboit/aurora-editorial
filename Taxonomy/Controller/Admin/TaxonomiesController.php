@@ -6,16 +6,15 @@ namespace Aurora\Module\Editorial\Taxonomy\Controller\Admin;
 
 use Aurora\Core\Enum\HttpMethodEnum;
 use Aurora\Core\Frontend\Controller\JsonRequestTrait;
+use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Validation\Service\PayloadValidator;
-use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
-use Aurora\Module\Editorial\Post\Serializer\PostTypeSerializer;
 use Aurora\Module\Editorial\Taxonomy\Contract\TaxonomyManagerInterface;
 use Aurora\Module\Editorial\Taxonomy\DTO\TaxonomyInput;
 use Aurora\Module\Editorial\Taxonomy\DTO\TaxonomyTermInput;
 use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
-use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
 use Aurora\Module\Editorial\Taxonomy\Serializer\TaxonomySerializer;
+use Aurora\Module\Editorial\Taxonomy\View\TaxonomiesViewBuilder;
 use InvalidArgumentException;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,34 +29,19 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class TaxonomiesController extends AbstractController
 {
     use JsonRequestTrait;
+    use JsonResponseTrait;
 
     public function __construct(
-        private readonly TaxonomyRepository $taxonomyRepository,
-        private readonly PostTypeRepository $postTypeRepository,
         private readonly TaxonomyManagerInterface $taxonomyManager,
         private readonly TaxonomySerializer $taxonomySerializer,
-        private readonly PostTypeSerializer $postTypeSerializer,
         private readonly PayloadValidator $payloadValidator,
+        private readonly TaxonomiesViewBuilder $viewBuilder,
     ) {}
 
     #[Route('', name: '', methods: [HttpMethodEnum::Get->value])]
     public function index(): Response
     {
-        $taxonomies = array_map(
-            $this->taxonomySerializer->serializeFull(...),
-            $this->taxonomyRepository->findBy([], ['slug' => 'ASC']),
-        );
-
-        $postTypes = array_map(
-            $this->postTypeSerializer->serialize(...),
-            $this->postTypeRepository->findAll(),
-        );
-
-        return $this->render('@Editorial/admin/taxonomies/index.html.twig', [
-            'taxonomies' => $taxonomies,
-            'postTypes' => $postTypes,
-            'locales' => $this->getParameter('kernel.enabled_locales'),
-        ]);
+        return $this->render('@Editorial/admin/taxonomies/index.html.twig', $this->viewBuilder->indexView());
     }
 
     #[Route('', name: '_create', methods: [HttpMethodEnum::Post->value])]
@@ -67,16 +51,16 @@ class TaxonomiesController extends AbstractController
 
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
-            return $this->json(['success' => false, 'errors' => $errors]);
+            return $this->jsonInvalidInput($errors, Response::HTTP_OK);
         }
 
         try {
             $taxonomy = $this->taxonomyManager->create($input);
         } catch (InvalidArgumentException $invalidArgumentException) {
-            return $this->json(['success' => false, 'errors' => ['slug' => $invalidArgumentException->getMessage()]]);
+            return $this->jsonInvalidInput(['slug' => $invalidArgumentException->getMessage()], Response::HTTP_OK);
         }
 
-        return $this->json(['success' => true, 'taxonomy' => $this->taxonomySerializer->serializeFull($taxonomy)]);
+        return $this->jsonSuccess(['taxonomy' => $this->taxonomySerializer->serializeFull($taxonomy)]);
     }
 
     #[Route('/{id}/edit', name: '_edit', methods: [HttpMethodEnum::Post->value])]
@@ -86,16 +70,16 @@ class TaxonomiesController extends AbstractController
 
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
-            return $this->json(['success' => false, 'errors' => $errors]);
+            return $this->jsonInvalidInput($errors, Response::HTTP_OK);
         }
 
         try {
             $this->taxonomyManager->update($taxonomy, $input);
         } catch (InvalidArgumentException $invalidArgumentException) {
-            return $this->json(['success' => false, 'errors' => ['slug' => $invalidArgumentException->getMessage()]]);
+            return $this->jsonInvalidInput(['slug' => $invalidArgumentException->getMessage()], Response::HTTP_OK);
         }
 
-        return $this->json(['success' => true, 'taxonomy' => $this->taxonomySerializer->serializeFull($taxonomy)]);
+        return $this->jsonSuccess(['taxonomy' => $this->taxonomySerializer->serializeFull($taxonomy)]);
     }
 
     #[Route('/{id}/delete', name: '_delete', methods: [HttpMethodEnum::Post->value])]
@@ -104,10 +88,10 @@ class TaxonomiesController extends AbstractController
         try {
             $this->taxonomyManager->delete($taxonomy);
         } catch (RuntimeException $runtimeException) {
-            return $this->json(['success' => false, 'error' => $runtimeException->getMessage()], Response::HTTP_CONFLICT);
+            return $this->jsonFailure($runtimeException->getMessage(), Response::HTTP_CONFLICT);
         }
 
-        return $this->json(['success' => true]);
+        return $this->jsonSuccess();
     }
 
     #[Route('/{id}/terms', name: '_term_create', methods: [HttpMethodEnum::Post->value])]
@@ -117,16 +101,16 @@ class TaxonomiesController extends AbstractController
 
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
-            return $this->json(['success' => false, 'errors' => $errors]);
+            return $this->jsonInvalidInput($errors, Response::HTTP_OK);
         }
 
         try {
             $term = $this->taxonomyManager->createTerm($taxonomy, $input);
         } catch (InvalidArgumentException $invalidArgumentException) {
-            return $this->json(['success' => false, 'errors' => ['parentId' => $invalidArgumentException->getMessage()]]);
+            return $this->jsonInvalidInput(['parentId' => $invalidArgumentException->getMessage()], Response::HTTP_OK);
         }
 
-        return $this->json(['success' => true, 'taxonomy' => $this->taxonomySerializer->serializeFull($taxonomy), 'termId' => $term->getId()]);
+        return $this->jsonSuccess(['taxonomy' => $this->taxonomySerializer->serializeFull($taxonomy), 'termId' => $term->getId()]);
     }
 
     #[Route('/{id}/terms/{termId}/edit', name: '_term_edit', methods: [HttpMethodEnum::Post->value])]
@@ -141,16 +125,16 @@ class TaxonomiesController extends AbstractController
 
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
-            return $this->json(['success' => false, 'errors' => $errors]);
+            return $this->jsonInvalidInput($errors, Response::HTTP_OK);
         }
 
         try {
             $this->taxonomyManager->updateTerm($term, $input);
         } catch (InvalidArgumentException $invalidArgumentException) {
-            return $this->json(['success' => false, 'errors' => ['parentId' => $invalidArgumentException->getMessage()]]);
+            return $this->jsonInvalidInput(['parentId' => $invalidArgumentException->getMessage()], Response::HTTP_OK);
         }
 
-        return $this->json(['success' => true, 'taxonomy' => $this->taxonomySerializer->serializeFull($taxonomy)]);
+        return $this->jsonSuccess(['taxonomy' => $this->taxonomySerializer->serializeFull($taxonomy)]);
     }
 
     #[Route('/{id}/terms/{termId}/delete', name: '_term_delete', methods: [HttpMethodEnum::Post->value])]
@@ -163,7 +147,7 @@ class TaxonomiesController extends AbstractController
 
         $this->taxonomyManager->deleteTerm($term);
 
-        return $this->json(['success' => true, 'taxonomy' => $this->taxonomySerializer->serializeFull($taxonomy)]);
+        return $this->jsonSuccess(['taxonomy' => $this->taxonomySerializer->serializeFull($taxonomy)]);
     }
 
     #[Route('/{id}/terms/reorder', name: '_term_reorder', methods: [HttpMethodEnum::Post->value])]
@@ -191,9 +175,9 @@ class TaxonomiesController extends AbstractController
         try {
             $this->taxonomyManager->reorderTerms($taxonomy, $entries);
         } catch (InvalidArgumentException $invalidArgumentException) {
-            return $this->json(['success' => false, 'error' => $invalidArgumentException->getMessage()], Response::HTTP_BAD_REQUEST);
+            return $this->jsonFailure($invalidArgumentException->getMessage());
         }
 
-        return $this->json(['success' => true, 'taxonomy' => $this->taxonomySerializer->serializeFull($taxonomy)]);
+        return $this->jsonSuccess(['taxonomy' => $this->taxonomySerializer->serializeFull($taxonomy)]);
     }
 }
