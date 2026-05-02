@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Taxonomy\Manager;
 
+use Aurora\Core\Audit\Service\AuditLogger;
 use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
 use Aurora\Module\Editorial\Taxonomy\Contract\TaxonomyManagerInterface;
 use Aurora\Module\Editorial\Taxonomy\DTO\TaxonomyInput;
@@ -29,6 +30,7 @@ final readonly class TaxonomyManager implements TaxonomyManagerInterface
         private PostTypeRepository $postTypeRepository,
         private SluggerInterface $slugger,
         private TranslatorInterface $translator,
+        private AuditLogger $auditLogger,
     ) {}
 
     public function create(TaxonomyInput $input): Taxonomy
@@ -47,6 +49,8 @@ final readonly class TaxonomyManager implements TaxonomyManagerInterface
 
         $this->entityManager->persist($taxonomy);
         $this->entityManager->flush();
+
+        $this->auditLogger->log('editorial', 'taxonomy.created', 'Taxonomy', $taxonomy->getId(), ['slug' => $taxonomy->getSlug()]);
 
         return $taxonomy;
     }
@@ -69,6 +73,8 @@ final readonly class TaxonomyManager implements TaxonomyManagerInterface
         $this->syncPostTypes($taxonomy, $input->postTypeIds);
 
         $this->entityManager->flush();
+
+        $this->auditLogger->log('editorial', 'taxonomy.updated', 'Taxonomy', $taxonomy->getId(), ['slug' => $taxonomy->getSlug()]);
     }
 
     public function delete(Taxonomy $taxonomy): void
@@ -77,8 +83,12 @@ final readonly class TaxonomyManager implements TaxonomyManagerInterface
             throw new RuntimeException($this->translator->trans('admin.taxonomies.errors.builtin_protected'));
         }
 
+        $id = $taxonomy->getId();
+        $slug = $taxonomy->getSlug();
         $this->entityManager->remove($taxonomy);
         $this->entityManager->flush();
+
+        $this->auditLogger->log('editorial', 'taxonomy.deleted', 'Taxonomy', $id, ['slug' => $slug]);
     }
 
     public function createTerm(Taxonomy $taxonomy, TaxonomyTermInput $input): TaxonomyTerm
@@ -94,6 +104,8 @@ final readonly class TaxonomyManager implements TaxonomyManagerInterface
 
         $this->entityManager->persist($term);
         $this->entityManager->flush();
+
+        $this->auditLogger->log('editorial', 'taxonomy.term.created', 'TaxonomyTerm', $term->getId(), ['taxonomySlug' => $taxonomy->getSlug()]);
 
         return $term;
     }
@@ -113,6 +125,8 @@ final readonly class TaxonomyManager implements TaxonomyManagerInterface
         $this->applyTermTranslations($term, $input->translations);
 
         $this->entityManager->flush();
+
+        $this->auditLogger->log('editorial', 'taxonomy.term.updated', 'TaxonomyTerm', $term->getId());
     }
 
     public function deleteTerm(TaxonomyTerm $term): void
@@ -122,8 +136,11 @@ final readonly class TaxonomyManager implements TaxonomyManagerInterface
             $child->setParent($term->getParent());
         }
 
+        $id = $term->getId();
         $this->entityManager->remove($term);
         $this->entityManager->flush();
+
+        $this->auditLogger->log('editorial', 'taxonomy.term.deleted', 'TaxonomyTerm', $id);
     }
 
     public function reorderTerms(Taxonomy $taxonomy, array $entries): void

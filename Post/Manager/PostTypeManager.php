@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Manager;
 
+use Aurora\Core\Audit\Service\AuditLogger;
 use Aurora\Module\Editorial\Post\Contract\PostTypeManagerInterface;
 use Aurora\Module\Editorial\Post\DTO\PostTypeFieldInput;
 use Aurora\Module\Editorial\Post\DTO\PostTypeInput;
@@ -25,6 +26,7 @@ final readonly class PostTypeManager implements PostTypeManagerInterface
         private PostTypeRepository $postTypeRepository,
         private TaxonomyRepository $taxonomyRepository,
         private TranslatorInterface $translator,
+        private AuditLogger $auditLogger,
     ) {}
 
     public function create(PostTypeInput $input): PostType
@@ -45,6 +47,8 @@ final readonly class PostTypeManager implements PostTypeManagerInterface
 
         $this->entityManager->persist($postType);
         $this->entityManager->flush();
+
+        $this->auditLogger->log('editorial', 'post_type.created', 'PostType', $postType->getId(), ['slug' => $postType->getSlug()]);
 
         return $postType;
     }
@@ -67,6 +71,8 @@ final readonly class PostTypeManager implements PostTypeManagerInterface
         $this->syncTaxonomies($postType, $input->taxonomyIds);
 
         $this->entityManager->flush();
+
+        $this->auditLogger->log('editorial', 'post_type.updated', 'PostType', $postType->getId(), ['slug' => $postType->getSlug()]);
     }
 
     public function delete(PostType $postType): void
@@ -79,8 +85,12 @@ final readonly class PostTypeManager implements PostTypeManagerInterface
             throw new RuntimeException($this->translator->trans('admin.postTypes.errors.has_posts'));
         }
 
+        $id = $postType->getId();
+        $slug = $postType->getSlug();
         $this->entityManager->remove($postType);
         $this->entityManager->flush();
+
+        $this->auditLogger->log('editorial', 'post_type.deleted', 'PostType', $id, ['slug' => $slug]);
     }
 
     public function createField(PostType $postType, PostTypeFieldInput $input): PostTypeField

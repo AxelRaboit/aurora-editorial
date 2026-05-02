@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Manager;
 
+use Aurora\Core\Audit\Service\AuditLogger;
 use Aurora\Core\Media\Repository\MediaRepository;
 use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
 use Aurora\Core\Setting\Repository\SettingRepository;
@@ -45,6 +46,7 @@ final readonly class PostManager implements PostManagerInterface
         private Security $security,
         private PostTextExtractor $textExtractor,
         private TranslatorInterface $translator,
+        private AuditLogger $auditLogger,
     ) {}
 
     public function create(PostInput $input): Post
@@ -60,6 +62,10 @@ final readonly class PostManager implements PostManagerInterface
         $this->entityManager->persist($post);
         $this->entityManager->flush();
 
+        $this->auditLogger->log('editorial', 'post.created', 'Post', $post->getId(), [
+            'title' => $post->translate('fr')->getTitle() ?? $post->translate('en')->getTitle(),
+        ]);
+
         return $post;
     }
 
@@ -73,6 +79,11 @@ final readonly class PostManager implements PostManagerInterface
         $this->entityManager->flush();
 
         $this->snapshotRevision($post);
+
+        $this->auditLogger->log('editorial', 'post.updated', 'Post', $post->getId(), [
+            'title' => $post->translate('fr')->getTitle() ?? $post->translate('en')->getTitle(),
+            'status' => $post->getStatus()->value,
+        ]);
     }
 
     public function delete(Post $post): void
@@ -85,6 +96,8 @@ final readonly class PostManager implements PostManagerInterface
         $post->updateTimestamps();
 
         $this->entityManager->flush();
+
+        $this->auditLogger->log('editorial', 'post.deleted', 'Post', $post->getId());
     }
 
     public function restore(Post $post): void
@@ -93,12 +106,17 @@ final readonly class PostManager implements PostManagerInterface
         $post->updateTimestamps();
 
         $this->entityManager->flush();
+
+        $this->auditLogger->log('editorial', 'post.restored', 'Post', $post->getId());
     }
 
     public function forceDelete(Post $post): void
     {
+        $id = $post->getId();
         $this->entityManager->remove($post);
         $this->entityManager->flush();
+
+        $this->auditLogger->log('editorial', 'post.force_deleted', 'Post', $id);
     }
 
     public function restoreRevision(Post $post, PostRevision $revision): void
@@ -151,6 +169,10 @@ final readonly class PostManager implements PostManagerInterface
         $this->entityManager->flush();
 
         $this->snapshotRevision($post);
+
+        $this->auditLogger->log('editorial', 'post.revision_restored', 'Post', $post->getId(), [
+            'revisionId' => $revision->getId(),
+        ]);
     }
 
     private function applyInput(Post $post, PostInput $input): void

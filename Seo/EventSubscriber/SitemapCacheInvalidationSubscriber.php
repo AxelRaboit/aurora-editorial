@@ -35,7 +35,7 @@ use Doctrine\ORM\Events;
  *   PostType                                      → sitemap (archive flag/slug)
  *   TaxonomyTerm / TaxonomyTermTranslation        → sitemap
  *   Taxonomy                                      → sitemap (slug change, deletion)
- *   Locale                                        → sitemap + RSS (active set, defaults)
+ *   LocaleEnum                                        → sitemap + RSS (active set, defaults)
  *   Setting (SiteName/Description/Url)            → RSS (channel metadata)
  */
 #[AsDoctrineListener(event: Events::postPersist)]
