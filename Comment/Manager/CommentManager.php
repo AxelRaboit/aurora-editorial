@@ -10,6 +10,7 @@ use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Module\Editorial\Comment\Contract\CommentManagerInterface;
 use Aurora\Module\Editorial\Comment\Entity\Comment;
 use Aurora\Module\Editorial\Comment\Enum\CommentStatusEnum;
+use Aurora\Module\Editorial\Comment\Service\CommentNotificationService;
 use Aurora\Module\Editorial\Post\Entity\Post;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
@@ -21,6 +22,7 @@ final readonly class CommentManager implements CommentManagerInterface
         private EntityManagerInterface $entityManager,
         private SettingRepository $settingRepository,
         private AuditLogger $auditLogger,
+        private CommentNotificationService $notificationService,
     ) {}
 
     public function submit(Post $post, string $authorName, string $authorEmail, string $content, ?Comment $parent = null): Comment
@@ -46,15 +48,26 @@ final readonly class CommentManager implements CommentManagerInterface
             'authorEmail' => $authorEmail,
         ]);
 
+        if (CommentStatusEnum::Pending === $comment->getStatus()) {
+            $this->notificationService->notifyPendingToAdmin($comment);
+        } else {
+            $this->notificationService->notifyApprovedToAuthor($comment);
+        }
+
         return $comment;
     }
 
     public function approve(Comment $comment): void
     {
+        $wasPending = CommentStatusEnum::Pending === $comment->getStatus();
         $comment->setStatus(CommentStatusEnum::Approved);
         $this->entityManager->flush();
 
         $this->auditLogger->log('editorial', 'comment.approved', 'Comment', $comment->getId());
+
+        if ($wasPending) {
+            $this->notificationService->notifyApprovedToAuthor($comment);
+        }
     }
 
     public function spam(Comment $comment): void

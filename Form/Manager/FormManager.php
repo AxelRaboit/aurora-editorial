@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Form\Manager;
 
-use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
-use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Module\Editorial\Form\Contract\FormManagerInterface;
 use Aurora\Module\Editorial\Form\DTO\FormFieldInput;
 use Aurora\Module\Editorial\Form\DTO\FormInput;
@@ -15,12 +13,11 @@ use Aurora\Module\Editorial\Form\Entity\FormFieldTranslation;
 use Aurora\Module\Editorial\Form\Entity\FormSubmission;
 use Aurora\Module\Editorial\Form\Entity\FormTranslation;
 use Aurora\Module\Editorial\Form\Repository\FormTranslationRepository;
+use Aurora\Module\Editorial\Form\Service\FormNotificationService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AsAlias(FormManagerInterface::class)]
@@ -29,10 +26,8 @@ final readonly class FormManager implements FormManagerInterface
     public function __construct(
         private EntityManagerInterface $entityManager,
         private FormTranslationRepository $formTranslationRepository,
-        private MailerInterface $mailer,
-        private SettingRepository $settingRepository,
         private TranslatorInterface $translator,
-        private string $mailerFrom,
+        private FormNotificationService $notificationService,
     ) {}
 
     public function create(FormInput $input): Form
@@ -120,9 +115,8 @@ final readonly class FormManager implements FormManagerInterface
         $this->entityManager->persist($submission);
         $this->entityManager->flush();
 
-        if (null !== $form->getNotifyEmail()) {
-            $this->sendNotification($form, $submission, $locale);
-        }
+        $this->notificationService->notifyAdmin($form, $submission, $locale);
+        $this->notificationService->notifyAuthorIfPresent($form, $submission, $locale);
 
         return $submission;
     }
@@ -208,42 +202,5 @@ final readonly class FormManager implements FormManagerInterface
         if ($existing instanceof FormTranslation) {
             throw new InvalidArgumentException(sprintf('translations.%s.slug|%s', $locale, $this->translator->trans('admin.forms.errors.slug_taken')));
         }
-    }
-
-    private function sendNotification(Form $form, FormSubmission $submission, string $locale): void
-    {
-        $siteName = $this->settingRepository->getOrDefault(ApplicationParameterEnum::SiteName);
-        $formTranslation = $this->resolveTranslation($form->getTranslation($locale), $form->getTranslations()->first());
-        $formTitle = $formTranslation?->getTitle() ?? '';
-
-        $rows = '';
-        foreach ($form->getFields() as $field) {
-            $fieldTranslation = $this->resolveTranslation($field->getTranslation($locale), $field->getTranslations()->first());
-            $label = $fieldTranslation?->getLabel() ?? '#'.$field->getId();
-            $value = $submission->getData()[(string) $field->getId()] ?? '';
-            $displayValue = is_array($value) ? implode(', ', $value) : (string) $value;
-            $rows .= sprintf(
-                '<tr><td style="padding:6px 12px;font-weight:600;border-bottom:1px solid #eee;">%s</td><td style="padding:6px 12px;border-bottom:1px solid #eee;">%s</td></tr>',
-                htmlspecialchars((string) $label),
-                htmlspecialchars($displayValue),
-            );
-        }
-
-        $html = sprintf(
-            '<p>Une nouvelle soumission a été reçue pour le formulaire <strong>%s</strong>.</p><table border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%%">%s</table>',
-            htmlspecialchars($formTitle),
-            $rows,
-        );
-
-        $this->mailer->send(new Email()
-            ->from($this->mailerFrom)
-            ->to((string) $form->getNotifyEmail())
-            ->subject(sprintf('[%s] Nouvelle soumission : %s', $siteName, $formTitle))
-            ->html($html));
-    }
-
-    private function resolveTranslation(mixed $primary, mixed $fallback): mixed
-    {
-        return is_object($primary) ? $primary : (is_object($fallback) ? $fallback : null);
     }
 }

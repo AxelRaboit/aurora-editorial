@@ -45,3 +45,23 @@ admin:
     noindex:
       label: Traductions exclues (noindex)
       hint: Traductions de contenus marquées « noindex » et donc absentes du sitemap.
+editorial:
+  mail:
+    comment:
+      subject_pending: Nouveau commentaire en attente de modération
+      subject_approved: Nouveau commentaire approuvé sur votre article
+      pending_heading: Commentaire en attente
+      pending_intro: 'Un nouveau commentaire de {name} est en attente de modération.'
+      approved_heading: Nouveau commentaire sur votre article
+      approved_intro: 'Bonjour {author}, un nouveau commentaire vient d''être publié sur votre article.'
+      author: Auteur
+      from: De
+      cta_moderate: Modérer
+    form:
+      subject_admin: 'Nouvelle soumission de formulaire'
+      subject_confirmation: 'Confirmation de votre message'
+      admin_heading: Nouvelle soumission
+      admin_intro: 'Une nouvelle soumission a été reçue pour le formulaire « {title} ».'
+      confirmation_heading: Merci pour votre message
+      confirmation_intro: 'Nous avons bien reçu votre message envoyé via le formulaire « {title} ».'
+      confirmation_outro: Nous vous recontacterons dès que possible.

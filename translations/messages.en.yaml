@@ -45,3 +45,23 @@ admin:
     noindex:
       label: Excluded translations (noindex)
       hint: Post translations flagged as "noindex" and therefore omitted from the sitemap.
+editorial:
+  mail:
+    comment:
+      subject_pending: New comment pending moderation
+      subject_approved: New approved comment on your post
+      pending_heading: Comment pending
+      pending_intro: 'A new comment from {name} is pending moderation.'
+      approved_heading: New comment on your post
+      approved_intro: 'Hello {author}, a new comment has been published on your post.'
+      author: Author
+      from: From
+      cta_moderate: Moderate
+    form:
+      subject_admin: 'New form submission'
+      subject_confirmation: 'Confirmation of your message'
+      admin_heading: New submission
+      admin_intro: 'A new submission has been received for the form "{title}".'
+      confirmation_heading: Thank you for your message
+      confirmation_intro: 'We have received your message sent via the form "{title}".'
+      confirmation_outro: We will get back to you as soon as possible.
