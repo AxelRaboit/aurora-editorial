@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Taxonomy\Manager;
 
 use Aurora\Core\Audit\Service\AuditLogger;
+use Aurora\Core\Sequence\SequenceGenerator;
+use Aurora\Core\Sequence\SequencePrefixEnum;
+use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
+use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
 use Aurora\Module\Editorial\Taxonomy\Contract\TaxonomyManagerInterface;
 use Aurora\Module\Editorial\Taxonomy\DTO\TaxonomyInput;
@@ -31,6 +35,8 @@ final readonly class TaxonomyManager implements TaxonomyManagerInterface
         private SluggerInterface $slugger,
         private TranslatorInterface $translator,
         private AuditLogger $auditLogger,
+        private SequenceGenerator $sequenceGenerator,
+        private SettingRepository $settingRepository,
     ) {}
 
     public function create(TaxonomyInput $input): Taxonomy
@@ -103,6 +109,10 @@ final readonly class TaxonomyManager implements TaxonomyManagerInterface
         $this->applyTermTranslations($term, $input->translations);
 
         $this->entityManager->persist($term);
+        $this->entityManager->flush();
+
+        $termPrefix = $this->settingRepository->get(ApplicationParameterEnum::EditorialTaxonomyTermPrefix->value, SequencePrefixEnum::TaxonomyTerm->value) ?? SequencePrefixEnum::TaxonomyTerm->value;
+        $term->setReference($this->sequenceGenerator->next($termPrefix));
         $this->entityManager->flush();
 
         $this->auditLogger->log('editorial', 'taxonomy.term.created', 'TaxonomyTerm', $term->getId(), ['taxonomySlug' => $taxonomy->getSlug()]);

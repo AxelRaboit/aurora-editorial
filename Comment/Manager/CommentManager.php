@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Comment\Manager;
 
 use Aurora\Core\Audit\Service\AuditLogger;
+use Aurora\Core\Sequence\SequenceGenerator;
+use Aurora\Core\Sequence\SequencePrefixEnum;
 use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
 use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Module\Editorial\Comment\Contract\CommentManagerInterface;
@@ -23,11 +25,13 @@ final readonly class CommentManager implements CommentManagerInterface
         private SettingRepository $settingRepository,
         private AuditLogger $auditLogger,
         private CommentNotificationService $notificationService,
+        private SequenceGenerator $sequenceGenerator,
     ) {}
 
     public function submit(Post $post, string $authorName, string $authorEmail, string $content, ?Comment $parent = null): Comment
     {
         $moderationEnabled = $this->settingRepository->getBoolean(ApplicationParameterEnum::CommentModerationEnabled->value, true);
+        $prefix = $this->settingRepository->get(ApplicationParameterEnum::EditorialCommentPrefix->value, SequencePrefixEnum::Comment->value) ?? SequencePrefixEnum::Comment->value;
 
         $comment = new Comment();
         $comment->setPost($post);
@@ -35,6 +39,7 @@ final readonly class CommentManager implements CommentManagerInterface
         $comment->setAuthorEmail($authorEmail);
         $comment->setContent($content);
         $comment->setStatus($moderationEnabled ? CommentStatusEnum::Pending : CommentStatusEnum::Approved);
+        $comment->setReference($this->sequenceGenerator->next($prefix));
 
         if ($parent instanceof Comment) {
             $comment->setParent($parent);

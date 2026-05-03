@@ -15,7 +15,8 @@ use Doctrine\ORM\Mapping as ORM;
 class PostTranslation
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
+    #[ORM\SequenceGenerator(sequenceName: 'seq_post_translation_id', allocationSize: 1)]
     #[ORM\Column]
     private ?int $id = null;
 

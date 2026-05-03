@@ -6,6 +6,8 @@ namespace Aurora\Module\Editorial\Post\Manager;
 
 use Aurora\Core\Audit\Service\AuditLogger;
 use Aurora\Core\Media\Repository\MediaRepository;
+use Aurora\Core\Sequence\SequenceGenerator;
+use Aurora\Core\Sequence\SequencePrefixEnum;
 use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
 use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Core\User\Entity\User;
@@ -47,6 +49,7 @@ final readonly class PostManager implements PostManagerInterface
         private PostTextExtractor $textExtractor,
         private TranslatorInterface $translator,
         private AuditLogger $auditLogger,
+        private SequenceGenerator $sequenceGenerator,
     ) {}
 
     public function create(PostInput $input): Post
@@ -59,6 +62,8 @@ final readonly class PostManager implements PostManagerInterface
             $post->setAuthor($currentUser);
         }
 
+        $prefix = $this->settingRepository->get(ApplicationParameterEnum::EditorialPostPrefix->value, SequencePrefixEnum::Post->value) ?? SequencePrefixEnum::Post->value;
+        $post->setReference($this->sequenceGenerator->next($prefix));
         $this->entityManager->persist($post);
         $this->entityManager->flush();
 

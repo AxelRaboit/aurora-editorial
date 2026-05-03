@@ -13,7 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
 class FormFieldTranslation
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
+    #[ORM\SequenceGenerator(sequenceName: 'seq_form_field_translation_id', allocationSize: 1)]
     #[ORM\Column]
     private ?int $id = null;
 

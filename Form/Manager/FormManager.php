@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Form\Manager;
 
+use Aurora\Core\Sequence\SequenceGenerator;
+use Aurora\Core\Sequence\SequencePrefixEnum;
+use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
+use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Module\Editorial\Form\Contract\FormManagerInterface;
 use Aurora\Module\Editorial\Form\DTO\FormFieldInput;
 use Aurora\Module\Editorial\Form\DTO\FormInput;
@@ -28,6 +32,8 @@ final readonly class FormManager implements FormManagerInterface
         private FormTranslationRepository $formTranslationRepository,
         private TranslatorInterface $translator,
         private FormNotificationService $notificationService,
+        private SequenceGenerator $sequenceGenerator,
+        private SettingRepository $settingRepository,
     ) {}
 
     public function create(FormInput $input): Form
@@ -35,6 +41,8 @@ final readonly class FormManager implements FormManagerInterface
         $form = new Form();
         $this->applySettings($form, $input);
         $this->applyTranslations($form, $input);
+        $prefix = $this->settingRepository->get(ApplicationParameterEnum::EditorialFormPrefix->value, SequencePrefixEnum::Form->value) ?? SequencePrefixEnum::Form->value;
+        $form->setReference($this->sequenceGenerator->next($prefix));
         $this->entityManager->persist($form);
         $this->entityManager->flush();
 
@@ -64,6 +72,10 @@ final readonly class FormManager implements FormManagerInterface
         $form->addField($field);
         $this->entityManager->persist($field);
         $form->setUpdatedAt(new DateTimeImmutable());
+        $this->entityManager->flush();
+
+        $fieldPrefix = $this->settingRepository->get(ApplicationParameterEnum::EditorialFormFieldPrefix->value, SequencePrefixEnum::FormField->value) ?? SequencePrefixEnum::FormField->value;
+        $field->setReference($this->sequenceGenerator->next($fieldPrefix));
         $this->entityManager->flush();
 
         return $field;
@@ -106,11 +118,14 @@ final readonly class FormManager implements FormManagerInterface
 
     public function submit(Form $form, array $submittedData, string $locale, string $ip): FormSubmission
     {
+        $submissionPrefix = $this->settingRepository->get(ApplicationParameterEnum::EditorialFormSubmissionPrefix->value, SequencePrefixEnum::FormSubmission->value) ?? SequencePrefixEnum::FormSubmission->value;
+
         $submission = new FormSubmission();
         $submission->setForm($form);
         $submission->setData($submittedData);
         $submission->setLocale($locale);
         $submission->setIp($ip);
+        $submission->setReference($this->sequenceGenerator->next($submissionPrefix));
 
         $this->entityManager->persist($submission);
         $this->entityManager->flush();

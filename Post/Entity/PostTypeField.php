@@ -14,7 +14,8 @@ class PostTypeField
     public const TYPES = ['text', 'textarea', 'number', 'date', 'select', 'checkbox', 'media', 'url', 'email', 'reference'];
 
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
+    #[ORM\SequenceGenerator(sequenceName: 'seq_post_type_field_id', allocationSize: 1)]
     #[ORM\Column]
     private ?int $id = null;
 

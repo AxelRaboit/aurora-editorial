@@ -21,7 +21,8 @@ class PostRevision implements TimestampableInterface
     use TimestampableTrait;
 
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
+    #[ORM\SequenceGenerator(sequenceName: 'seq_post_revision_id', allocationSize: 1)]
     #[ORM\Column]
     private ?int $id = null;
 

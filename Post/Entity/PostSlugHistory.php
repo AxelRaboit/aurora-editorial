@@ -18,7 +18,8 @@ class PostSlugHistory implements TimestampableInterface
     use TimestampableTrait;
 
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
+    #[ORM\SequenceGenerator(sequenceName: 'seq_post_slug_history_id', allocationSize: 1)]
     #[ORM\Column]
     private ?int $id = null;
 

@@ -18,9 +18,13 @@ use Doctrine\ORM\Mapping as ORM;
 class Comment
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
+    #[ORM\SequenceGenerator(sequenceName: 'seq_comment_id', allocationSize: 1)]
     #[ORM\Column]
     private ?int $id = null;
+
+    #[ORM\Column(length: 32, unique: true, nullable: true)]
+    private ?string $reference = null;
 
     #[ORM\ManyToOne(targetEntity: Post::class)]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
@@ -58,6 +62,18 @@ class Comment
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getReference(): ?string
+    {
+        return $this->reference;
+    }
+
+    public function setReference(?string $reference): static
+    {
+        $this->reference = $reference;
+
+        return $this;
     }
 
     public function getPost(): Post
