@@ -8,7 +8,6 @@ use Aurora\Core\Module\ModuleInterface;
 use Aurora\Core\Module\NavItem;
 use Aurora\Core\Module\NavPermission;
 use Aurora\Core\Module\NavSection;
-use Aurora\Core\User\Enum\UserRoleEnum;
 
 final class EditorialModule implements ModuleInterface
 {
@@ -20,13 +19,13 @@ final class EditorialModule implements ModuleInterface
     public function getPermissions(): array
     {
         return [
-            new NavPermission('editorial.posts.view', UserRoleEnum::Contributor->value),
-            new NavPermission('editorial.posts.manage', UserRoleEnum::Admin->value),
-            new NavPermission('editorial.post_types.manage', UserRoleEnum::Admin->value),
-            new NavPermission('editorial.taxonomies.manage', UserRoleEnum::Admin->value),
-            new NavPermission('editorial.comments.manage', UserRoleEnum::Editor->value),
-            new NavPermission('editorial.forms.manage', UserRoleEnum::Editor->value),
-            new NavPermission('editorial.sitemap.manage', UserRoleEnum::Editor->value),
+            new NavPermission('editorial.posts.view'),
+            new NavPermission('editorial.posts.manage'),
+            new NavPermission('editorial.post_types.manage'),
+            new NavPermission('editorial.taxonomies.manage'),
+            new NavPermission('editorial.comments.manage'),
+            new NavPermission('editorial.forms.manage'),
+            new NavPermission('editorial.sitemap.manage'),
         ];
     }
 
@@ -37,9 +36,9 @@ final class EditorialModule implements ModuleInterface
                 new NavItem('admin_posts', 'admin.nav.posts', 'file-text'),
                 new NavItem('admin_post_types', 'admin.nav.postTypes', 'layers'),
                 new NavItem('admin_taxonomies', 'admin.nav.taxonomies', 'tags'),
-                new NavItem('admin_comments', 'admin.nav.comments', 'message-square', UserRoleEnum::Editor->value),
-                new NavItem('admin_forms', 'admin.nav.forms', 'clipboard-list', UserRoleEnum::Editor->value),
-                new NavItem('admin_sitemap', 'admin.nav.sitemap', 'map', UserRoleEnum::Editor->value),
+                new NavItem('admin_comments', 'admin.nav.comments', 'message-square'),
+                new NavItem('admin_forms', 'admin.nav.forms', 'clipboard-list'),
+                new NavItem('admin_sitemap', 'admin.nav.sitemap', 'map'),
             ], priority: 30),
         ];
     }

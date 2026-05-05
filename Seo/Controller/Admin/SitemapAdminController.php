@@ -6,7 +6,6 @@ namespace Aurora\Module\Editorial\Seo\Controller\Admin;
 
 use Aurora\Core\Enum\HttpMethodEnum;
 use Aurora\Core\Frontend\Controller\JsonResponseTrait;
-use Aurora\Core\User\Enum\UserRoleEnum;
 use Aurora\Module\Editorial\Seo\Service\SitemapManager;
 use Aurora\Module\Editorial\Seo\View\SitemapAdminViewBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,7 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/sitemap', name: 'admin_sitemap')]
-#[IsGranted(UserRoleEnum::Editor->value)]
+#[IsGranted('editorial.sitemap.manage')]
 final class SitemapAdminController extends AbstractController
 {
     use JsonResponseTrait;

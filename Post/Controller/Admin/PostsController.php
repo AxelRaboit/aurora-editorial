@@ -235,7 +235,8 @@ class PostsController extends AbstractController
      */
     private function scopedAuthorId(): ?int
     {
-        if ($this->isGranted(UserRoleEnum::Editor->value)) {
+        // Dev and Admin see all posts; User with manage privilege sees only own
+        if ($this->isGranted(UserRoleEnum::Dev->value) || $this->isGranted(UserRoleEnum::Admin->value)) {
             return null;
         }
 
@@ -256,7 +257,7 @@ class PostsController extends AbstractController
 
         $allowed = $post instanceof Post
             ? $this->isGranted(PostVoter::PUBLISH, $post)
-            : $this->isGranted(UserRoleEnum::Author->value);
+            : ($this->isGranted(UserRoleEnum::Admin->value) || $this->isGranted(UserRoleEnum::Dev->value));
 
         return $allowed ? $input : $input->withStatus(PostStatusEnum::PendingReview->value);
     }

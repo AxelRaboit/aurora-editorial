@@ -46,24 +46,21 @@ final class PostVoter extends Voter
             return false;
         }
 
-        if ($this->accessDecisionManager->decide($token, [UserRoleEnum::Editor->value])) {
+        // Dev and Admin can do everything
+        if ($this->accessDecisionManager->decide($token, [UserRoleEnum::Dev->value])
+            || $this->accessDecisionManager->decide($token, [UserRoleEnum::Admin->value])) {
             return true;
         }
 
-        $isOwner = $subject->getAuthor() instanceof User && $subject->getAuthor()->getId() === $user->getId();
+        // ROLE_USER with editorial.posts.manage privilege: full access on own posts
+        if ($user->hasPrivilege('editorial.posts.manage')) {
+            $isOwner = $subject->getAuthor() instanceof User
+                && $subject->getAuthor()->getId() === $user->getId();
 
-        if ($this->accessDecisionManager->decide($token, [UserRoleEnum::Author->value])) {
-            return $isOwner;
+            return $isOwner && in_array($attribute, [self::VIEW, self::EDIT], true);
         }
 
-        if ($this->accessDecisionManager->decide($token, [UserRoleEnum::Contributor->value])) {
-            if (!$isOwner) {
-                return false;
-            }
-
-            return self::VIEW === $attribute || self::EDIT === $attribute;
-        }
-
-        return false;
+        // ROLE_USER with editorial.posts.view privilege: view only
+        return self::VIEW === $attribute && $user->hasPrivilege('editorial.posts.view');
     }
 }
