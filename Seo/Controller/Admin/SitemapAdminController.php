@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/backend/sitemap', name: 'admin_sitemap')]
+#[Route('/backend/sitemap', name: 'backend_sitemap')]
 #[IsGranted('editorial.sitemap.manage')]
 final class SitemapAdminController extends AbstractController
 {

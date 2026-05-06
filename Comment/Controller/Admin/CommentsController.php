@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/backend/comments', name: 'admin_comments')]
+#[Route('/backend/comments', name: 'backend_comments')]
 #[IsGranted('editorial.comments.manage')]
 final class CommentsController extends AbstractController
 {

@@ -33,12 +33,12 @@ final class EditorialModule implements ModuleInterface
     {
         return [
             new NavSection('editorial', [
-                new NavItem('admin_posts', 'admin.nav.posts', 'file-text'),
-                new NavItem('admin_post_types', 'admin.nav.postTypes', 'layers'),
-                new NavItem('admin_taxonomies', 'admin.nav.taxonomies', 'tags'),
-                new NavItem('admin_comments', 'admin.nav.comments', 'message-square'),
-                new NavItem('admin_forms', 'admin.nav.forms', 'clipboard-list'),
-                new NavItem('admin_sitemap', 'admin.nav.sitemap', 'map'),
+                new NavItem('backend_posts', 'admin.nav.posts', 'file-text'),
+                new NavItem('backend_post_types', 'admin.nav.postTypes', 'layers'),
+                new NavItem('backend_taxonomies', 'admin.nav.taxonomies', 'tags'),
+                new NavItem('backend_comments', 'admin.nav.comments', 'message-square'),
+                new NavItem('backend_forms', 'admin.nav.forms', 'clipboard-list'),
+                new NavItem('backend_sitemap', 'admin.nav.sitemap', 'map'),
             ], priority: 30),
         ];
     }

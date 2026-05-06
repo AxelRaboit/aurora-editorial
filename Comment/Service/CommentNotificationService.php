@@ -23,7 +23,7 @@ final readonly class CommentNotificationService
             '@Editorial/email/comment_pending.html.twig',
             [
                 'comment' => $comment,
-                'moderationUrl' => $this->urlGenerator->generate('admin_comments', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                'moderationUrl' => $this->urlGenerator->generate('backend_comments', [], UrlGeneratorInterface::ABSOLUTE_URL),
             ],
         );
     }

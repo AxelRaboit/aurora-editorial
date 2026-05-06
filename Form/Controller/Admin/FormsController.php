@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/backend/forms', name: 'admin_forms')]
+#[Route('/backend/forms', name: 'backend_forms')]
 #[IsGranted('editorial.forms.manage')]
 final class FormsController extends AbstractController
 {
