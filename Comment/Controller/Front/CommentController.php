@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Comment\Controller\Front;
 
+use Aurora\Core\Enum\HttpMethodEnum;
 use Aurora\Core\Frontend\Controller\FrontLocaleTrait;
 use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Frontend\Service\FrontContext;
@@ -43,7 +44,7 @@ class CommentController extends AbstractController
         private readonly PostPageRenderer $postPageRenderer,
     ) {}
 
-    #[Route('/{locale}/editorial/{postTypeSlug}/{slug}/comment', name: 'editorial_post_comment', requirements: ['locale' => '[a-z]{2}'], methods: ['POST'], priority: 6)]
+    #[Route('/{locale}/editorial/{postTypeSlug}/{slug}/comment', name: 'editorial_post_comment', requirements: ['locale' => '[a-z]{2}'], methods: [HttpMethodEnum::Post->value], priority: 6)]
     public function submit(string $locale, string $postTypeSlug, string $slug, Request $request): Response
     {
         $this->assertActiveLocale($this->frontContext, $locale);
@@ -84,7 +85,7 @@ class CommentController extends AbstractController
         return $this->redirectToRoute('editorial_post', ['locale' => $locale, 'postTypeSlug' => $postTypeSlug, 'slug' => $slug]);
     }
 
-    #[Route('/{locale}/editorial/{postTypeSlug}/{slug}/comments', name: 'editorial_post_comments_list', requirements: ['locale' => '[a-z]{2}'], methods: ['GET'], priority: 5)]
+    #[Route('/{locale}/editorial/{postTypeSlug}/{slug}/comments', name: 'editorial_post_comments_list', requirements: ['locale' => '[a-z]{2}'], methods: [HttpMethodEnum::Get->value], priority: 5)]
     public function list(string $locale, string $postTypeSlug, string $slug): JsonResponse
     {
         $this->assertActiveLocale($this->frontContext, $locale);
@@ -110,7 +111,7 @@ class CommentController extends AbstractController
         return $this->jsonSuccess($tree);
     }
 
-    #[Route('/{locale}/editorial/{postTypeSlug}/{slug}/comment/{commentId}/react', name: 'editorial_comment_react', requirements: ['locale' => '[a-z]{2}'], methods: ['POST'], priority: 5)]
+    #[Route('/{locale}/editorial/{postTypeSlug}/{slug}/comment/{commentId}/react', name: 'editorial_comment_react', requirements: ['locale' => '[a-z]{2}'], methods: [HttpMethodEnum::Post->value], priority: 5)]
     public function react(string $locale, string $postTypeSlug, string $slug, int $commentId, Request $request): JsonResponse
     {
         $this->assertActiveLocale($this->frontContext, $locale);

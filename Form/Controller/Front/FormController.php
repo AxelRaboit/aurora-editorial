@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Form\Controller\Front;
 
+use Aurora\Core\Enum\HttpMethodEnum;
 use Aurora\Core\Frontend\Controller\FrontLocaleTrait;
 use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Frontend\Service\FrontContext;
@@ -49,7 +50,7 @@ class FormController extends AbstractController
         return $this->withI18nHeaders($response, $locale);
     }
 
-    #[Route('/{locale}/editorial/forms/{slug}/submit', name: 'editorial_form_submit', requirements: ['locale' => '[a-z]{2}'], methods: ['POST'], priority: 8)]
+    #[Route('/{locale}/editorial/forms/{slug}/submit', name: 'editorial_form_submit', requirements: ['locale' => '[a-z]{2}'], methods: [HttpMethodEnum::Post->value], priority: 8)]
     public function submit(string $locale, string $slug, Request $request): JsonResponse
     {
         $this->assertActiveLocale($this->frontContext, $locale);
