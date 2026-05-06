@@ -8,9 +8,12 @@ use Aurora\Core\Module\ModuleInterface;
 use Aurora\Core\Module\NavItem;
 use Aurora\Core\Module\NavPermission;
 use Aurora\Core\Module\NavSection;
+use Aurora\Module\Editorial\Service\EditorialContext;
 
-final class EditorialModule implements ModuleInterface
+final readonly class EditorialModule implements ModuleInterface
 {
+    public function __construct(private EditorialContext $editorialContext) {}
+
     public function getId(): string
     {
         return 'editorial';
@@ -32,6 +35,10 @@ final class EditorialModule implements ModuleInterface
 
     public function getNavSections(): array
     {
+        if (!$this->editorialContext->isAdminEnabled()) {
+            return [];
+        }
+
         return [
             new NavSection('editorial', [
                 new NavItem('backend_posts', 'backend.nav.posts', 'file-text'),
