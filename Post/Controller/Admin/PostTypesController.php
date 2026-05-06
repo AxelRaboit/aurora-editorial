@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/admin/post-types', name: 'admin_post_types')]
+#[Route('/backend/post-types', name: 'admin_post_types')]
 #[IsGranted('editorial.post_types.manage')]
 class PostTypesController extends AbstractController
 {

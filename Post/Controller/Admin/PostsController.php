@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/admin/posts', name: 'admin_posts')]
+#[Route('/backend/posts', name: 'admin_posts')]
 #[IsGranted('editorial.posts.view')]
 class PostsController extends AbstractController
 {
