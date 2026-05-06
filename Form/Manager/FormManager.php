@@ -207,7 +207,7 @@ final readonly class FormManager implements FormManagerInterface
     private function assertSlugValid(string $locale, string $slug, ?int $excludeFormId): void
     {
         if (!preg_match('/^[a-z0-9-]+$/', $slug)) {
-            throw new InvalidArgumentException(sprintf('translations.%s.slug|%s', $locale, $this->translator->trans('admin.forms.errors.slug_format')));
+            throw new InvalidArgumentException(sprintf('translations.%s.slug|%s', $locale, $this->translator->trans('backend.forms.errors.slug_format')));
         }
 
         $existing = null === $excludeFormId
@@ -215,7 +215,7 @@ final readonly class FormManager implements FormManagerInterface
             : $this->formTranslationRepository->findOneByLocaleAndSlugExcluding($locale, $slug, $excludeFormId);
 
         if ($existing instanceof FormTranslation) {
-            throw new InvalidArgumentException(sprintf('translations.%s.slug|%s', $locale, $this->translator->trans('admin.forms.errors.slug_taken')));
+            throw new InvalidArgumentException(sprintf('translations.%s.slug|%s', $locale, $this->translator->trans('backend.forms.errors.slug_taken')));
         }
     }
 }

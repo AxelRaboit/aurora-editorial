@@ -32,7 +32,7 @@ final readonly class PostTypeManager implements PostTypeManagerInterface
     public function create(PostTypeInput $input): PostType
     {
         if (null !== $this->postTypeRepository->findOneBy(['slug' => $input->slug])) {
-            throw new InvalidArgumentException($this->translator->trans('admin.postTypes.errors.slug_taken', ['{slug}' => $input->slug]));
+            throw new InvalidArgumentException($this->translator->trans('backend.postTypes.errors.slug_taken', ['{slug}' => $input->slug]));
         }
 
         $postType = new PostType()
@@ -57,7 +57,7 @@ final readonly class PostTypeManager implements PostTypeManagerInterface
     {
         if (!$postType->isBuiltIn() && $input->slug !== $postType->getSlug()) {
             if (null !== $this->postTypeRepository->findOneBy(['slug' => $input->slug])) {
-                throw new InvalidArgumentException($this->translator->trans('admin.postTypes.errors.slug_taken', ['{slug}' => $input->slug]));
+                throw new InvalidArgumentException($this->translator->trans('backend.postTypes.errors.slug_taken', ['{slug}' => $input->slug]));
             }
 
             $postType->setSlug($input->slug);
@@ -78,11 +78,11 @@ final readonly class PostTypeManager implements PostTypeManagerInterface
     public function delete(PostType $postType): void
     {
         if ($postType->isBuiltIn()) {
-            throw new RuntimeException($this->translator->trans('admin.postTypes.errors.builtin_protected'));
+            throw new RuntimeException($this->translator->trans('backend.postTypes.errors.builtin_protected'));
         }
 
         if ($postType->getPosts()->count() > 0) {
-            throw new RuntimeException($this->translator->trans('admin.postTypes.errors.has_posts'));
+            throw new RuntimeException($this->translator->trans('backend.postTypes.errors.has_posts'));
         }
 
         $id = $postType->getId();
@@ -183,7 +183,7 @@ final readonly class PostTypeManager implements PostTypeManagerInterface
             }
 
             if ($field->getName() === $name) {
-                throw new InvalidArgumentException($this->translator->trans('admin.postTypes.errors.field_name_taken', ['{name}' => $name]));
+                throw new InvalidArgumentException($this->translator->trans('backend.postTypes.errors.field_name_taken', ['{name}' => $name]));
             }
         }
     }

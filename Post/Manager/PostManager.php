@@ -184,7 +184,7 @@ final readonly class PostManager implements PostManagerInterface
     {
         $postType = $this->postTypeRepository->find($input->postTypeId);
         if (null === $postType) {
-            throw new InvalidArgumentException($this->translator->trans('admin.posts.errors.post_type_not_found', ['{id}' => $input->postTypeId]));
+            throw new InvalidArgumentException($this->translator->trans('backend.posts.errors.post_type_not_found', ['{id}' => $input->postTypeId]));
         }
 
         $post->setPostType($postType);
