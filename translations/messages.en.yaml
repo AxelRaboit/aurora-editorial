@@ -1,4 +1,26 @@
 admin:
+  menus:
+    preview:
+      untitled: (untitled)
+      unnamed: (unnamed)
+      post_deleted: ⚠ Post deleted
+      term_deleted: ⚠ Term deleted
+      post_type_deleted: ⚠ Post type deleted
+    targetTypes:
+      post: Post / Page
+      term: Taxonomy term
+      post_type_archive: Post type archive
+      home: Home
+      custom_url: Custom URL
+      frontend_login: Login page
+      frontend_register: Register page
+      frontend_account: My account
+      frontend_shop: Shop
+      frontend_logout: Sign out
+    visibilities:
+      always: Always visible
+      guests_only: Guests only
+      authenticated_only: Authenticated only
   postTypes:
     errors:
       slug_taken: A post type with slug "{slug}" already exists.

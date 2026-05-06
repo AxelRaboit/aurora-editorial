@@ -1,4 +1,26 @@
 admin:
+  menus:
+    preview:
+      untitled: (sans titre)
+      unnamed: (sans nom)
+      post_deleted: ⚠ Article supprimé
+      term_deleted: ⚠ Terme supprimé
+      post_type_deleted: ⚠ Type supprimé
+    targetTypes:
+      post: Article / Page
+      term: Terme de taxonomie
+      post_type_archive: Archive de type
+      home: Accueil
+      custom_url: URL personnalisée
+      frontend_login: Page de connexion
+      frontend_register: Page d'inscription
+      frontend_account: Mon compte
+      frontend_shop: Boutique
+      frontend_logout: Se déconnecter
+    visibilities:
+      always: Toujours visible
+      guests_only: Invités uniquement
+      authenticated_only: Connectés uniquement
   postTypes:
     errors:
       slug_taken: Un type de contenu avec le slug "{slug}" existe déjà.

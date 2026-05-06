@@ -21,6 +21,7 @@ final class EditorialModule implements ModuleInterface
         return [
             new NavPermission('editorial.posts.view'),
             new NavPermission('editorial.posts.manage'),
+            new NavPermission('editorial.menus.manage'),
             new NavPermission('editorial.post_types.manage'),
             new NavPermission('editorial.taxonomies.manage'),
             new NavPermission('editorial.comments.manage'),
@@ -34,6 +35,7 @@ final class EditorialModule implements ModuleInterface
         return [
             new NavSection('editorial', [
                 new NavItem('backend_posts', 'admin.nav.posts', 'file-text'),
+                new NavItem('backend_menus', 'admin.nav.menus', 'menu'),
                 new NavItem('backend_post_types', 'admin.nav.postTypes', 'layers'),
                 new NavItem('backend_taxonomies', 'admin.nav.taxonomies', 'tags'),
                 new NavItem('backend_comments', 'admin.nav.comments', 'message-square'),
