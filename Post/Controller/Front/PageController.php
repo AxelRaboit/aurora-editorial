@@ -42,7 +42,7 @@ class PageController extends AbstractController
         private readonly PageViewBuilder $viewBuilder,
     ) {}
 
-    #[Route('/editorial/{locale}', name: 'editorial_home', requirements: ['locale' => '[a-z]{2}'], priority: 9)]
+    #[Route('/{locale}/editorial', name: 'editorial_home', requirements: ['locale' => '[a-z]{2}'], priority: 9)]
     public function home(string $locale, Request $request): Response
     {
         $this->assertActiveLocale($this->frontContext, $locale);
@@ -67,7 +67,7 @@ class PageController extends AbstractController
         return $this->withI18nHeaders($response, $locale);
     }
 
-    #[Route('/editorial/{locale}/{postTypeSlug}/{slug}', name: 'editorial_post', requirements: ['locale' => '[a-z]{2}'], priority: 5)]
+    #[Route('/{locale}/editorial/{postTypeSlug}/{slug}', name: 'editorial_post', requirements: ['locale' => '[a-z]{2}'], priority: 5)]
     public function post(string $locale, string $postTypeSlug, string $slug, Request $request): Response
     {
         $this->assertActiveLocale($this->frontContext, $locale);
@@ -103,7 +103,7 @@ class PageController extends AbstractController
         return $response;
     }
 
-    #[Route('/editorial/{locale}/{postTypeSlug}', name: 'editorial_archive', requirements: ['locale' => '[a-z]{2}'], priority: 3)]
+    #[Route('/{locale}/editorial/{postTypeSlug}', name: 'editorial_archive', requirements: ['locale' => '[a-z]{2}'], priority: 3)]
     public function archive(string $locale, string $postTypeSlug, Request $request): Response
     {
         $this->assertActiveLocale($this->frontContext, $locale);
@@ -124,7 +124,7 @@ class PageController extends AbstractController
         return $this->withI18nHeaders($response, $locale);
     }
 
-    #[Route('/editorial/{locale}/{taxonomySlug}/{termSlug}', name: 'editorial_term', requirements: ['locale' => '[a-z]{2}'], priority: 4)]
+    #[Route('/{locale}/editorial/{taxonomySlug}/{termSlug}', name: 'editorial_term', requirements: ['locale' => '[a-z]{2}'], priority: 4)]
     public function term(string $locale, string $taxonomySlug, string $termSlug, Request $request): Response
     {
         $this->assertActiveLocale($this->frontContext, $locale);
