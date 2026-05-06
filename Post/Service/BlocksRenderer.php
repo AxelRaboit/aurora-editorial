@@ -440,7 +440,7 @@ final readonly class BlocksRenderer
             return '';
         }
 
-        $url = $this->urlGenerator->generate('frontend_post', [
+        $url = $this->urlGenerator->generate('editorial_post', [
             'locale' => $locale,
             'postTypeSlug' => $post->getPostType()->getSlug(),
             'slug' => $slug,

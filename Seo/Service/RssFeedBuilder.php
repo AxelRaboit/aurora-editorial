@@ -27,7 +27,7 @@ final readonly class RssFeedBuilder
             : [];
 
         $siteUrl = $this->frontContext->siteUrl();
-        $homeUrl = $this->urlGenerator->generate('frontend_home', ['locale' => $locale], UrlGeneratorInterface::ABSOLUTE_URL);
+        $homeUrl = $this->urlGenerator->generate('editorial_home', ['locale' => $locale], UrlGeneratorInterface::ABSOLUTE_URL);
         $siteName = $this->escape($this->frontContext->siteName());
         $siteDesc = $this->escape($this->frontContext->siteDescription() ?? '');
 
@@ -47,7 +47,7 @@ final readonly class RssFeedBuilder
                 continue;
             }
 
-            $link = $this->urlGenerator->generate('frontend_post', [
+            $link = $this->urlGenerator->generate('editorial_post', [
                 'locale' => $locale,
                 'postTypeSlug' => $post->getPostType()->getSlug(),
                 'slug' => $slug,

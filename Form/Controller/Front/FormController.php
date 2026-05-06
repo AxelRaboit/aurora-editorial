@@ -33,7 +33,7 @@ class FormController extends AbstractController
         private readonly FormViewBuilder $viewBuilder,
     ) {}
 
-    #[Route('/{locale}/forms/{slug}', name: 'frontend_form', requirements: ['locale' => '[a-z]{2}'], priority: 7)]
+    #[Route('/editorial/{locale}/forms/{slug}', name: 'editorial_form', requirements: ['locale' => '[a-z]{2}'], priority: 7)]
     public function show(string $locale, string $slug, Request $request): Response
     {
         $this->assertActiveLocale($this->frontContext, $locale);
@@ -49,7 +49,7 @@ class FormController extends AbstractController
         return $this->withI18nHeaders($response, $locale);
     }
 
-    #[Route('/{locale}/forms/{slug}/submit', name: 'frontend_form_submit', requirements: ['locale' => '[a-z]{2}'], methods: ['POST'], priority: 8)]
+    #[Route('/editorial/{locale}/forms/{slug}/submit', name: 'editorial_form_submit', requirements: ['locale' => '[a-z]{2}'], methods: ['POST'], priority: 8)]
     public function submit(string $locale, string $slug, Request $request): JsonResponse
     {
         $this->assertActiveLocale($this->frontContext, $locale);

@@ -35,7 +35,7 @@ final readonly class PageViewBuilder
             'themeContext' => $this->themeContext,
             'posts' => $posts,
             'postType' => $postType,
-            'alternates' => $this->alternatesBuilder->forRoute('frontend_home'),
+            'alternates' => $this->alternatesBuilder->forRoute('editorial_home'),
         ];
     }
 
@@ -52,7 +52,7 @@ final readonly class PageViewBuilder
             'themeContext' => $this->themeContext,
             'postType' => $postType,
             'posts' => $posts,
-            'alternates' => $this->alternatesBuilder->forRoute('frontend_archive', ['postTypeSlug' => $postType->getSlug()]),
+            'alternates' => $this->alternatesBuilder->forRoute('editorial_archive', ['postTypeSlug' => $postType->getSlug()]),
         ];
     }
 

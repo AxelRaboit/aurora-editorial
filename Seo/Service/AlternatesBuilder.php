@@ -42,7 +42,7 @@ final readonly class AlternatesBuilder
 
             $alternates[] = [
                 'locale' => $code,
-                'url' => $this->urlGenerator->generate('frontend_post', [
+                'url' => $this->urlGenerator->generate('editorial_post', [
                     'locale' => $code,
                     'postTypeSlug' => $post->getPostType()->getSlug(),
                     'slug' => $slug,
@@ -89,7 +89,7 @@ final readonly class AlternatesBuilder
 
             $alternates[] = [
                 'locale' => $code,
-                'url' => $this->urlGenerator->generate('frontend_term', [
+                'url' => $this->urlGenerator->generate('editorial_term', [
                     'locale' => $code,
                     'taxonomySlug' => $taxonomy->getSlug(),
                     'termSlug' => $termTranslation->getSlug(),
