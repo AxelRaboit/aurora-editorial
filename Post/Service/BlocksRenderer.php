@@ -139,7 +139,7 @@ final readonly class BlocksRenderer
 
     private function renderListingCard(Listing $listing, string $locale): string
     {
-        $url = $this->urlGenerator->generate('front_shop_product', ['locale' => $locale, 'slug' => $listing->getSlug()]);
+        $url = $this->urlGenerator->generate('frontend_shop_product', ['locale' => $locale, 'slug' => $listing->getSlug()]);
         $title = htmlspecialchars($listing->getDisplayTitle(), ENT_QUOTES, 'UTF-8');
         $product = $listing->getProduct();
         $priceCents = $product->getPriceCents();
@@ -440,7 +440,7 @@ final readonly class BlocksRenderer
             return '';
         }
 
-        $url = $this->urlGenerator->generate('front_post', [
+        $url = $this->urlGenerator->generate('frontend_post', [
             'locale' => $locale,
             'postTypeSlug' => $post->getPostType()->getSlug(),
             'slug' => $slug,

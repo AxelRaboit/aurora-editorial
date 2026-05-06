@@ -19,7 +19,7 @@ class SitemapController extends AbstractController
         private readonly FrontContext $frontContext,
     ) {}
 
-    #[Route('/sitemap.xml', name: 'front_sitemap', priority: 11)]
+    #[Route('/sitemap.xml', name: 'frontend_sitemap', priority: 11)]
     public function sitemap(): Response
     {
         return new Response(
@@ -29,7 +29,7 @@ class SitemapController extends AbstractController
         );
     }
 
-    #[Route('/robots.txt', name: 'front_robots', priority: 11)]
+    #[Route('/robots.txt', name: 'frontend_robots', priority: 11)]
     public function robots(): Response
     {
         $siteUrl = $this->frontContext->siteUrl();
@@ -38,7 +38,7 @@ class SitemapController extends AbstractController
         return new Response($body, Response::HTTP_OK, ['Content-Type' => 'text/plain']);
     }
 
-    #[Route('/{locale}/feed.xml', name: 'front_rss', requirements: ['locale' => '[a-z]{2}'], priority: 12)]
+    #[Route('/{locale}/feed.xml', name: 'frontend_rss', requirements: ['locale' => '[a-z]{2}'], priority: 12)]
     public function rss(string $locale): Response
     {
         if (!$this->frontContext->isLocaleActive($locale)) {

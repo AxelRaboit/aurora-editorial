@@ -75,7 +75,7 @@ final readonly class SitemapBuilder
         foreach ($this->frontContext->activeLocales() as $locale) {
             $code = $locale->getCode();
             $entries[] = $this->urlEntry(
-                $this->urlGenerator->generate('front_home', ['locale' => $code], UrlGeneratorInterface::ABSOLUTE_URL),
+                $this->urlGenerator->generate('frontend_home', ['locale' => $code], UrlGeneratorInterface::ABSOLUTE_URL),
             );
             $byLocale[$code] = ($byLocale[$code] ?? 0) + 1;
         }
@@ -99,7 +99,7 @@ final readonly class SitemapBuilder
                 }
 
                 $entries[] = $this->urlEntry(
-                    $this->urlGenerator->generate('front_archive', [
+                    $this->urlGenerator->generate('frontend_archive', [
                         'locale' => $code,
                         'postTypeSlug' => $postType->getSlug(),
                     ], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -149,7 +149,7 @@ final readonly class SitemapBuilder
                 }
 
                 $entries[] = $this->urlEntry(
-                    $this->urlGenerator->generate('front_post', [
+                    $this->urlGenerator->generate('frontend_post', [
                         'locale' => $code,
                         'postTypeSlug' => $postTypeSlug,
                         'slug' => $slug,
@@ -186,7 +186,7 @@ final readonly class SitemapBuilder
                     }
 
                     $entries[] = $this->urlEntry(
-                        $this->urlGenerator->generate('front_term', [
+                        $this->urlGenerator->generate('frontend_term', [
                             'locale' => $code,
                             'taxonomySlug' => $taxonomy->getSlug(),
                             'termSlug' => $translation->getSlug(),

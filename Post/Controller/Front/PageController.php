@@ -42,13 +42,13 @@ class PageController extends AbstractController
         private readonly PageViewBuilder $viewBuilder,
     ) {}
 
-    #[Route('/', name: 'front_root', priority: 10)]
+    #[Route('/', name: 'frontend_root', priority: 10)]
     public function root(): RedirectResponse
     {
-        return $this->redirectToRoute('front_home', ['locale' => $this->frontContext->defaultLocale()]);
+        return $this->redirectToRoute('frontend_home', ['locale' => $this->frontContext->defaultLocale()]);
     }
 
-    #[Route('/{locale}', name: 'front_home', requirements: ['locale' => '[a-z]{2}'], priority: 9)]
+    #[Route('/{locale}', name: 'frontend_home', requirements: ['locale' => '[a-z]{2}'], priority: 9)]
     public function home(string $locale, Request $request): Response
     {
         $this->assertActiveLocale($this->frontContext, $locale);
@@ -73,7 +73,7 @@ class PageController extends AbstractController
         return $this->withI18nHeaders($response, $locale);
     }
 
-    #[Route('/{locale}/{postTypeSlug}/{slug}', name: 'front_post', requirements: ['locale' => '[a-z]{2}'], priority: 5)]
+    #[Route('/{locale}/{postTypeSlug}/{slug}', name: 'frontend_post', requirements: ['locale' => '[a-z]{2}'], priority: 5)]
     public function post(string $locale, string $postTypeSlug, string $slug, Request $request): Response
     {
         $this->assertActiveLocale($this->frontContext, $locale);
@@ -91,7 +91,7 @@ class PageController extends AbstractController
         }
 
         if ($post->getPostType()->getSlug() !== $postTypeSlug) {
-            return $this->redirectToRoute('front_post', [
+            return $this->redirectToRoute('frontend_post', [
                 'locale' => $locale,
                 'postTypeSlug' => $post->getPostType()->getSlug(),
                 'slug' => $slug,
@@ -109,7 +109,7 @@ class PageController extends AbstractController
         return $response;
     }
 
-    #[Route('/{locale}/{postTypeSlug}', name: 'front_archive', requirements: ['locale' => '[a-z]{2}'], priority: 3)]
+    #[Route('/{locale}/{postTypeSlug}', name: 'frontend_archive', requirements: ['locale' => '[a-z]{2}'], priority: 3)]
     public function archive(string $locale, string $postTypeSlug, Request $request): Response
     {
         $this->assertActiveLocale($this->frontContext, $locale);
@@ -130,7 +130,7 @@ class PageController extends AbstractController
         return $this->withI18nHeaders($response, $locale);
     }
 
-    #[Route('/{locale}/{taxonomySlug}/{termSlug}', name: 'front_term', requirements: ['locale' => '[a-z]{2}'], priority: 4)]
+    #[Route('/{locale}/{taxonomySlug}/{termSlug}', name: 'frontend_term', requirements: ['locale' => '[a-z]{2}'], priority: 4)]
     public function term(string $locale, string $taxonomySlug, string $termSlug, Request $request): Response
     {
         $this->assertActiveLocale($this->frontContext, $locale);
@@ -175,7 +175,7 @@ class PageController extends AbstractController
             return null;
         }
 
-        return $this->redirectToRoute('front_post', [
+        return $this->redirectToRoute('frontend_post', [
             'locale' => $locale,
             'postTypeSlug' => $historyEntry->getPost()->getPostType()->getSlug(),
             'slug' => $currentSlug,

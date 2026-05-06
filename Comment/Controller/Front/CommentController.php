@@ -43,7 +43,7 @@ class CommentController extends AbstractController
         private readonly PostPageRenderer $postPageRenderer,
     ) {}
 
-    #[Route('/{locale}/{postTypeSlug}/{slug}/comment', name: 'front_post_comment', requirements: ['locale' => '[a-z]{2}'], methods: ['POST'], priority: 6)]
+    #[Route('/{locale}/{postTypeSlug}/{slug}/comment', name: 'frontend_post_comment', requirements: ['locale' => '[a-z]{2}'], methods: ['POST'], priority: 6)]
     public function submit(string $locale, string $postTypeSlug, string $slug, Request $request): Response
     {
         $this->assertActiveLocale($this->frontContext, $locale);
@@ -55,7 +55,7 @@ class CommentController extends AbstractController
         }
 
         if (!$this->areCommentsEnabled($post)) {
-            return $this->redirectToRoute('front_post', ['locale' => $locale, 'postTypeSlug' => $postTypeSlug, 'slug' => $slug]);
+            return $this->redirectToRoute('frontend_post', ['locale' => $locale, 'postTypeSlug' => $postTypeSlug, 'slug' => $slug]);
         }
 
         $isJson = str_contains((string) $request->headers->get('Content-Type', ''), 'application/json');
@@ -81,10 +81,10 @@ class CommentController extends AbstractController
 
         $this->addFlash('commentSuccess', 'comment.success');
 
-        return $this->redirectToRoute('front_post', ['locale' => $locale, 'postTypeSlug' => $postTypeSlug, 'slug' => $slug]);
+        return $this->redirectToRoute('frontend_post', ['locale' => $locale, 'postTypeSlug' => $postTypeSlug, 'slug' => $slug]);
     }
 
-    #[Route('/{locale}/{postTypeSlug}/{slug}/comments', name: 'front_post_comments_list', requirements: ['locale' => '[a-z]{2}'], methods: ['GET'], priority: 5)]
+    #[Route('/{locale}/{postTypeSlug}/{slug}/comments', name: 'frontend_post_comments_list', requirements: ['locale' => '[a-z]{2}'], methods: ['GET'], priority: 5)]
     public function list(string $locale, string $postTypeSlug, string $slug): JsonResponse
     {
         $this->assertActiveLocale($this->frontContext, $locale);
@@ -110,7 +110,7 @@ class CommentController extends AbstractController
         return $this->jsonSuccess($tree);
     }
 
-    #[Route('/{locale}/{postTypeSlug}/{slug}/comment/{commentId}/react', name: 'front_comment_react', requirements: ['locale' => '[a-z]{2}'], methods: ['POST'], priority: 5)]
+    #[Route('/{locale}/{postTypeSlug}/{slug}/comment/{commentId}/react', name: 'frontend_comment_react', requirements: ['locale' => '[a-z]{2}'], methods: ['POST'], priority: 5)]
     public function react(string $locale, string $postTypeSlug, string $slug, int $commentId, Request $request): JsonResponse
     {
         $this->assertActiveLocale($this->frontContext, $locale);
