@@ -1,4 +1,4 @@
-admin:
+backend:
   menus:
     preview:
       untitled: (untitled)
@@ -40,8 +40,11 @@ admin:
       parent_wrong_taxonomy: 'Parent term #{parentId} does not belong to taxonomy "{taxonomy}".'
   nav:
     comments: Comments
+    forms: Forms
+    menus: Menus
     postTypes: Post types
     posts: Content
+    sitemap: Sitemap
     tags: Tags
     taxonomies: Taxonomies
   sitemap:
