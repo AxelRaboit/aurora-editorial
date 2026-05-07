@@ -16,19 +16,9 @@ enum FormFieldTypeEnum: string
     case Date = 'date';
     case Tel = 'tel';
 
-    public function label(): string
+    public function getLabelKey(): string
     {
-        return match ($this) {
-            self::Text => 'Texte court',
-            self::Email => 'Email',
-            self::Textarea => 'Texte long',
-            self::Select => 'Liste déroulante',
-            self::Checkbox => 'Cases à cocher',
-            self::Radio => 'Boutons radio',
-            self::Number => 'Nombre',
-            self::Date => 'Date',
-            self::Tel => 'Téléphone',
-        };
+        return 'backend.editorial.forms.fieldType.'.$this->value;
     }
 
     public function hasOptions(): bool

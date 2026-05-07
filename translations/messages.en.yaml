@@ -29,8 +29,40 @@ backend:
       field_name_taken: A field named "{name}" already exists on this post type.
   posts:
     selectFromLibrary: Select from library
+    status: Status
+    statusTrashed: Trash
+    statusOptions:
+      draft: Draft
+      pending_review: Pending review
+      scheduled: Scheduled
+      published: Published
+      archived: Archived
     errors:
       post_type_not_found: 'Post type #{id} not found.'
+  stats:
+    postStatus:
+      draft: Draft
+      pending_review: Pending review
+      scheduled: Scheduled
+      published: Published
+      archived: Archived
+  editorial:
+    comments:
+      status:
+        pending: Pending
+        approved: Approved
+        spam: Spam
+    forms:
+      fieldType:
+        text: Short text
+        email: Email
+        textarea: Long text
+        select: Dropdown
+        checkbox: Checkboxes
+        radio: Radio buttons
+        number: Number
+        date: Date
+        tel: Phone
   taxonomies:
     errors:
       slug_taken: A taxonomy with slug "{slug}" already exists.

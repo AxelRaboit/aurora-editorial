@@ -10,12 +10,8 @@ enum CommentStatusEnum: string
     case Approved = 'approved';
     case Spam = 'spam';
 
-    public function label(): string
+    public function getLabelKey(): string
     {
-        return match ($this) {
-            self::Pending => 'En attente',
-            self::Approved => 'Approuvé',
-            self::Spam => 'Spam',
-        };
+        return 'backend.editorial.comments.status.'.$this->value;
     }
 }

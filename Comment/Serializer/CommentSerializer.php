@@ -7,6 +7,7 @@ namespace Aurora\Module\Editorial\Comment\Serializer;
 use Aurora\Module\Editorial\Comment\Entity\Comment;
 use Aurora\Module\Editorial\Comment\Enum\ReactionTypeEnum;
 use Aurora\Module\Editorial\Comment\Repository\CommentReactionRepository;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 use const DATE_ATOM;
 
@@ -14,6 +15,7 @@ final readonly class CommentSerializer
 {
     public function __construct(
         private CommentReactionRepository $commentReactionRepository,
+        private TranslatorInterface $translator,
     ) {}
 
     /**
@@ -37,7 +39,7 @@ final readonly class CommentSerializer
             'authorEmail' => $comment->getAuthorEmail(),
             'content' => $comment->getContent(),
             'status' => $comment->getStatus()->value,
-            'statusLabel' => $comment->getStatus()->label(),
+            'statusLabel' => $this->translator->trans($comment->getStatus()->getLabelKey()),
             'createdAt' => $comment->getCreatedAt()->format(DATE_ATOM),
             'parentId' => $comment->getParent()?->getId(),
             'parentAuthorName' => $comment->getParent()?->getAuthorName(),

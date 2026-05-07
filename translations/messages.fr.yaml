@@ -29,8 +29,40 @@ backend:
       field_name_taken: Un champ nommé "{name}" existe déjà sur ce type de contenu.
   posts:
     selectFromLibrary: Sélectionner depuis la médiathèque
+    status: Statut
+    statusTrashed: Corbeille
+    statusOptions:
+      draft: Brouillon
+      pending_review: En relecture
+      scheduled: Planifié
+      published: Publié
+      archived: Archivé
     errors:
       post_type_not_found: 'Type de contenu #{id} introuvable.'
+  stats:
+    postStatus:
+      draft: Brouillon
+      pending_review: En relecture
+      scheduled: Planifié
+      published: Publié
+      archived: Archivé
+  editorial:
+    comments:
+      status:
+        pending: En attente
+        approved: Approuvé
+        spam: Spam
+    forms:
+      fieldType:
+        text: Texte court
+        email: Email
+        textarea: Texte long
+        select: Liste déroulante
+        checkbox: Cases à cocher
+        radio: Boutons radio
+        number: Nombre
+        date: Date
+        tel: Téléphone
   taxonomies:
     errors:
       slug_taken: Une taxonomie avec le slug "{slug}" existe déjà.
