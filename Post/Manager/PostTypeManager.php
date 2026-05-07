@@ -167,10 +167,11 @@ final readonly class PostTypeManager implements PostTypeManagerInterface
             }
         }
 
-        foreach ($taxonomyIds as $taxonomyId) {
-            $taxonomy = $this->taxonomyRepository->find($taxonomyId);
-            if (null !== $taxonomy && !$postType->getTaxonomies()->contains($taxonomy)) {
-                $postType->addTaxonomy($taxonomy);
+        if ([] !== $taxonomyIds) {
+            foreach ($this->taxonomyRepository->findBy(['id' => $taxonomyIds]) as $taxonomy) {
+                if (!$postType->getTaxonomies()->contains($taxonomy)) {
+                    $postType->addTaxonomy($taxonomy);
+                }
             }
         }
     }

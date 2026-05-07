@@ -226,13 +226,11 @@ final readonly class PostManager implements PostManagerInterface
         }
 
         $currentTermIds = $post->getTerms()->map(fn ($term): ?int => $term->getId())->toArray();
+        $missingTermIds = array_values(array_filter($termIds, static fn (int $id): bool => !in_array($id, $currentTermIds, true)));
 
-        foreach ($termIds as $termId) {
-            if (!in_array($termId, $currentTermIds, true)) {
-                $term = $this->termRepository->find($termId);
-                if (null !== $term) {
-                    $post->addTerm($term);
-                }
+        if ([] !== $missingTermIds) {
+            foreach ($this->termRepository->findBy(['id' => $missingTermIds]) as $term) {
+                $post->addTerm($term);
             }
         }
     }
@@ -249,14 +247,12 @@ final readonly class PostManager implements PostManagerInterface
         }
 
         $currentIds = $post->getRelatedPosts()->map(fn ($related): ?int => $related->getId())->toArray();
+        $missingIds = array_values(array_filter($relatedPostIds, static fn (int $id): bool => !in_array($id, $currentIds, true)));
 
-        $repository = $this->entityManager->getRepository(Post::class);
-        foreach ($relatedPostIds as $id) {
-            if (!in_array($id, $currentIds, true)) {
-                $related = $repository->find($id);
-                if (null !== $related) {
-                    $post->addRelatedPost($related);
-                }
+        if ([] !== $missingIds) {
+            $repository = $this->entityManager->getRepository(Post::class);
+            foreach ($repository->findBy(['id' => $missingIds]) as $related) {
+                $post->addRelatedPost($related);
             }
         }
     }
