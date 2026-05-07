@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aurora\Module\Editorial\Taxonomy\Controller\Admin;
+namespace Aurora\Module\Editorial\Taxonomy\Controller\Backend;
 
 use Aurora\Core\Enum\HttpMethodEnum;
 use Aurora\Core\Frontend\Controller\JsonRequestTrait;
@@ -41,7 +41,7 @@ class TaxonomiesController extends AbstractController
     #[Route('', name: '', methods: [HttpMethodEnum::Get->value])]
     public function index(): Response
     {
-        return $this->render('@Editorial/admin/taxonomies/index.html.twig', $this->viewBuilder->indexView());
+        return $this->render('@Editorial/backend/taxonomies/index.html.twig', $this->viewBuilder->indexView());
     }
 
     #[Route('', name: '_create', methods: [HttpMethodEnum::Post->value])]

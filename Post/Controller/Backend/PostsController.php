@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aurora\Module\Editorial\Post\Controller\Admin;
+namespace Aurora\Module\Editorial\Post\Controller\Backend;
 
 use Aurora\Core\Enum\HttpMethodEnum;
 use Aurora\Core\Frontend\Controller\JsonRequestTrait;
@@ -62,7 +62,7 @@ class PostsController extends AbstractController
             return $this->json($payload);
         }
 
-        return $this->render('@Editorial/admin/posts/index.html.twig', $this->viewBuilder->indexView($payload, $pagination, $request->query->getBoolean('trashed')));
+        return $this->render('@Editorial/backend/posts/index.html.twig', $this->viewBuilder->indexView($payload, $pagination, $request->query->getBoolean('trashed')));
     }
 
     #[Route('/search', name: '_search', methods: [HttpMethodEnum::Get->value])]

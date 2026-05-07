@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aurora\Module\Editorial\Seo\Controller\Admin;
+namespace Aurora\Module\Editorial\Seo\Controller\Backend;
 
 use Aurora\Core\Enum\HttpMethodEnum;
 use Aurora\Core\Frontend\Controller\JsonResponseTrait;
@@ -28,7 +28,7 @@ final class SitemapAdminController extends AbstractController
     #[Route('', name: '', methods: [HttpMethodEnum::Get->value])]
     public function index(): Response
     {
-        return $this->render('@Editorial/admin/sitemap/index.html.twig', $this->viewBuilder->indexView());
+        return $this->render('@Editorial/backend/sitemap/index.html.twig', $this->viewBuilder->indexView());
     }
 
     #[Route('/invalidate', name: '_invalidate', methods: [HttpMethodEnum::Post->value])]

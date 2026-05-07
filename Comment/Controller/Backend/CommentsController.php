@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aurora\Module\Editorial\Comment\Controller\Admin;
+namespace Aurora\Module\Editorial\Comment\Controller\Backend;
 
 use Aurora\Core\Enum\HttpMethodEnum;
 use Aurora\Core\Frontend\Controller\JsonResponseTrait;
@@ -38,7 +38,7 @@ final class CommentsController extends AbstractController
     #[Route('', name: '', methods: [HttpMethodEnum::Get->value])]
     public function index(): Response
     {
-        return $this->render('@Editorial/admin/comments/index.html.twig', $this->viewBuilder->indexView());
+        return $this->render('@Editorial/backend/comments/index.html.twig', $this->viewBuilder->indexView());
     }
 
     #[Route('/toggle-moderation', name: '_toggle_moderation', methods: [HttpMethodEnum::Post->value])]

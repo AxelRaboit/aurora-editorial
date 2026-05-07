@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aurora\Module\Editorial\Post\Controller\Admin;
+namespace Aurora\Module\Editorial\Post\Controller\Backend;
 
 use Aurora\Core\Enum\HttpMethodEnum;
 use Aurora\Core\Frontend\Controller\JsonRequestTrait;
@@ -41,7 +41,7 @@ class PostTypesController extends AbstractController
     #[Route('', name: '', methods: [HttpMethodEnum::Get->value])]
     public function index(): Response
     {
-        return $this->render('@Editorial/admin/post_types/index.html.twig', $this->viewBuilder->indexView());
+        return $this->render('@Editorial/backend/post_types/index.html.twig', $this->viewBuilder->indexView());
     }
 
     #[Route('', name: '_create', methods: [HttpMethodEnum::Post->value])]
