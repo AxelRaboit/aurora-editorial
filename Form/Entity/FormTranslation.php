@@ -9,7 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FormTranslationRepository::class)]
-#[ORM\Table(name: 'form_translations')]
+#[ORM\Table(name: 'core_form_translations')]
 #[ORM\UniqueConstraint(columns: ['form_id', 'locale'])]
 #[ORM\UniqueConstraint(columns: ['locale', 'slug'])]
 class FormTranslation

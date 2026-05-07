@@ -10,7 +10,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FormSubmissionRepository::class)]
-#[ORM\Table(name: 'form_submissions')]
+#[ORM\Table(name: 'core_form_submissions')]
 class FormSubmission
 {
     #[ORM\Id]

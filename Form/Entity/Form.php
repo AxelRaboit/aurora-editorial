@@ -13,7 +13,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FormRepository::class)]
-#[ORM\Table(name: 'forms')]
+#[ORM\Table(name: 'core_forms')]
 class Form
 {
     #[ORM\Id]

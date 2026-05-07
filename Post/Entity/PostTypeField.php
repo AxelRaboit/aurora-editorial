@@ -8,7 +8,7 @@ use Aurora\Module\Editorial\Post\Repository\PostTypeFieldRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PostTypeFieldRepository::class)]
-#[ORM\Table(name: 'post_type_fields')]
+#[ORM\Table(name: 'core_post_type_fields')]
 class PostTypeField
 {
     public const TYPES = ['text', 'textarea', 'number', 'date', 'select', 'checkbox', 'media', 'url', 'email', 'reference'];

@@ -9,7 +9,7 @@ use Aurora\Module\Editorial\Comment\Repository\CommentReactionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CommentReactionRepository::class)]
-#[ORM\Table(name: 'comment_reactions')]
+#[ORM\Table(name: 'core_comment_reactions')]
 #[ORM\UniqueConstraint(name: 'uniq_comment_fingerprint', columns: ['comment_id', 'fingerprint'])]
 class CommentReaction
 {

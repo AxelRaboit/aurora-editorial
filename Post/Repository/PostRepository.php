@@ -84,7 +84,7 @@ class PostRepository extends ServiceEntityRepository
     {
         $sql = <<<'SQL'
                 SELECT pt.post_id, MAX(ts_rank(to_tsvector('simple', coalesce(pt.search_content, '')), websearch_to_tsquery('simple', :q))) AS rank
-                FROM post_translations pt
+                FROM core_post_translations pt
                 WHERE to_tsvector('simple', coalesce(pt.search_content, '')) @@ websearch_to_tsquery('simple', :q)
                 GROUP BY pt.post_id
                 ORDER BY rank DESC
@@ -248,7 +248,7 @@ class PostRepository extends ServiceEntityRepository
     {
         $sqlQuery = <<<'SQL'
                 SELECT TO_CHAR(created_at, 'YYYY-MM') AS month, COUNT(*) AS count
-                FROM posts
+                FROM core_posts
                 WHERE created_at >= :since
                 GROUP BY month
                 ORDER BY month ASC

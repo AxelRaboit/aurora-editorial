@@ -13,7 +13,7 @@ use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
 use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
 
 #[ORM\Entity(repositoryClass: TaxonomyRepository::class)]
-#[ORM\Table(name: 'taxonomies')]
+#[ORM\Table(name: 'core_taxonomies')]
 class Taxonomy implements TimestampableInterface
 {
     use TimestampableTrait;

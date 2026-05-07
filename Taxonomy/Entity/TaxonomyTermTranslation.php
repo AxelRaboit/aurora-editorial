@@ -8,7 +8,7 @@ use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyTermTranslationRepositor
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TaxonomyTermTranslationRepository::class)]
-#[ORM\Table(name: 'taxonomy_term_translations')]
+#[ORM\Table(name: 'core_taxonomy_term_translations')]
 #[ORM\UniqueConstraint(columns: ['term_id', 'locale'])]
 #[ORM\UniqueConstraint(name: 'UNIQ_term_locale_slug', columns: ['locale', 'slug'])]
 class TaxonomyTermTranslation

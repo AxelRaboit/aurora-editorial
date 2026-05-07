@@ -18,7 +18,7 @@ use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
 use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
-#[ORM\Table(name: 'posts')]
+#[ORM\Table(name: 'core_posts')]
 class Post implements TimestampableInterface
 {
     use TimestampableTrait;
@@ -70,7 +70,7 @@ class Post implements TimestampableInterface
      * @var Collection<int, TaxonomyTerm>
      */
     #[ORM\ManyToMany(targetEntity: TaxonomyTerm::class, inversedBy: 'posts')]
-    #[ORM\JoinTable(name: 'post_terms')]
+    #[ORM\JoinTable(name: 'core_post_terms')]
     private Collection $terms;
 
     /**
@@ -86,7 +86,7 @@ class Post implements TimestampableInterface
      * @var Collection<int, Post>
      */
     #[ORM\ManyToMany(targetEntity: Post::class)]
-    #[ORM\JoinTable(name: 'post_related_posts')]
+    #[ORM\JoinTable(name: 'core_post_related_posts')]
     #[ORM\JoinColumn(name: 'post_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'related_post_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private Collection $relatedPosts;

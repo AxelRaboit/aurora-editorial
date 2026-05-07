@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'form_fields')]
+#[ORM\Table(name: 'core_form_fields')]
 class FormField
 {
     #[ORM\Id]

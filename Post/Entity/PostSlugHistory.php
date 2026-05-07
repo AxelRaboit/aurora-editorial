@@ -10,7 +10,7 @@ use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
 use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
 
 #[ORM\Entity(repositoryClass: PostSlugHistoryRepository::class)]
-#[ORM\Table(name: 'post_slug_history')]
+#[ORM\Table(name: 'core_post_slug_history')]
 #[ORM\UniqueConstraint(name: 'UNIQ_post_slug_history_locale_slug', columns: ['locale', 'slug'])]
 #[ORM\Index(name: 'IDX_post_slug_history_post', columns: ['post_id'])]
 class PostSlugHistory implements TimestampableInterface

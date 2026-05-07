@@ -8,7 +8,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'form_field_translations')]
+#[ORM\Table(name: 'core_form_field_translations')]
 #[ORM\UniqueConstraint(columns: ['field_id', 'locale'])]
 class FormFieldTranslation
 {

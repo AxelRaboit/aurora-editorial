@@ -14,7 +14,7 @@ use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
 use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
 
 #[ORM\Entity(repositoryClass: PostRevisionRepository::class)]
-#[ORM\Table(name: 'post_revisions')]
+#[ORM\Table(name: 'core_post_revisions')]
 #[ORM\Index(name: 'IDX_post_revision_post_created', columns: ['post_id', 'created_at'])]
 class PostRevision implements TimestampableInterface
 {

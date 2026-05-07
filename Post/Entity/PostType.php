@@ -12,7 +12,7 @@ use Doctrine\Common\Collections\Order;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PostTypeRepository::class)]
-#[ORM\Table(name: 'post_types')]
+#[ORM\Table(name: 'core_post_types')]
 class PostType
 {
     #[ORM\Id]
@@ -49,7 +49,7 @@ class PostType
 
     /** @var Collection<int, Taxonomy> */
     #[ORM\ManyToMany(targetEntity: Taxonomy::class, inversedBy: 'postTypes')]
-    #[ORM\JoinTable(name: 'post_type_taxonomies')]
+    #[ORM\JoinTable(name: 'core_post_type_taxonomies')]
     private Collection $taxonomies;
 
     public function __construct()

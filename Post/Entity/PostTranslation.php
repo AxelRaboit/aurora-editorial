@@ -10,7 +10,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PostTranslationRepository::class)]
-#[ORM\Table(name: 'post_translations')]
+#[ORM\Table(name: 'core_post_translations')]
 #[ORM\UniqueConstraint(columns: ['post_id', 'locale'])]
 class PostTranslation
 {
