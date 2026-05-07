@@ -41,13 +41,13 @@ final readonly class EditorialModule implements ModuleInterface
 
         return [
             new NavSection('editorial', [
-                new NavItem('backend_posts', 'backend.nav.posts', 'file-text'),
-                new NavItem('backend_menus', 'backend.nav.menus', 'menu'),
-                new NavItem('backend_post_types', 'backend.nav.postTypes', 'layers'),
-                new NavItem('backend_taxonomies', 'backend.nav.taxonomies', 'tags'),
-                new NavItem('backend_comments', 'backend.nav.comments', 'message-square'),
-                new NavItem('backend_forms', 'backend.nav.forms', 'clipboard-list'),
-                new NavItem('backend_sitemap', 'backend.nav.sitemap', 'map'),
+                new NavItem('backend_posts', 'backend.nav.posts', 'file-text', descriptionKey: 'backend.nav.posts_description'),
+                new NavItem('backend_menus', 'backend.nav.menus', 'menu', descriptionKey: 'backend.nav.menus_description'),
+                new NavItem('backend_post_types', 'backend.nav.postTypes', 'layers', descriptionKey: 'backend.nav.postTypes_description'),
+                new NavItem('backend_taxonomies', 'backend.nav.taxonomies', 'tags', descriptionKey: 'backend.nav.taxonomies_description'),
+                new NavItem('backend_comments', 'backend.nav.comments', 'message-square', descriptionKey: 'backend.nav.comments_description'),
+                new NavItem('backend_forms', 'backend.nav.forms', 'clipboard-list', descriptionKey: 'backend.nav.forms_description'),
+                new NavItem('backend_sitemap', 'backend.nav.sitemap', 'map', descriptionKey: 'backend.nav.sitemap_description'),
             ], priority: 30),
         ];
     }

@@ -72,13 +72,20 @@ backend:
       parent_wrong_taxonomy: 'Parent term #{parentId} does not belong to taxonomy "{taxonomy}".'
   nav:
     comments: Comments
+    comments_description: Moderate comments posted on the public site
     forms: Forms
+    forms_description: Build and manage contact forms and their submissions
     menus: Menus
+    menus_description: Build the public site's navigation menus
     postTypes: Post types
+    postTypes_description: Define custom content types (articles, pages, etc.)
     posts: Content
+    posts_description: Write and publish articles, pages and other editorial content
     sitemap: Sitemap
+    sitemap_description: View and generate the site map (sitemap.xml)
     tags: Tags
     taxonomies: Taxonomies
+    taxonomies_description: Categorize content with taxonomies and terms
   sitemap:
     totalUrls: Total URLs
     size: Size
