@@ -8,14 +8,16 @@ use Aurora\Module\Editorial\Form\Entity\FormFieldInterface;
 use Aurora\Module\Editorial\Form\Entity\FormFieldTranslationInterface;
 use Aurora\Module\Editorial\Form\Entity\FormInterface;
 use Aurora\Module\Editorial\Form\Entity\FormSubmissionInterface;
+use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 use const DATE_ATOM;
 
-final readonly class FormSerializer
+#[AsAlias(FormSerializerInterface::class)]
+class FormSerializer implements FormSerializerInterface
 {
     public function __construct(
-        private TranslatorInterface $translator,
+        protected readonly TranslatorInterface $translator,
     ) {}
 
     /**
@@ -99,7 +101,7 @@ final readonly class FormSerializer
     /**
      * @return array<string, array<string, mixed>>
      */
-    private function serializeFormTranslations(FormInterface $form): array
+    protected function serializeFormTranslations(FormInterface $form): array
     {
         $result = [];
         foreach ($form->getTranslations() as $translation) {
@@ -116,7 +118,7 @@ final readonly class FormSerializer
     /**
      * @return array<string, array<string, mixed>>
      */
-    private function serializeFieldTranslations(FormFieldInterface $field): array
+    protected function serializeFieldTranslations(FormFieldInterface $field): array
     {
         $result = [];
         foreach ($field->getTranslations() as $translation) {

@@ -10,7 +10,7 @@ use Aurora\Core\Frontend\Controller\FrontLocaleTrait;
 use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Frontend\Service\FrontContext;
 use Aurora\Core\Theme\Service\ThemeResolver;
-use Aurora\Module\Editorial\Form\Contract\FormManagerInterface;
+use Aurora\Module\Editorial\Form\Manager\FormManagerInterface;
 use Aurora\Module\Editorial\Form\Entity\FormTranslationInterface;
 use Aurora\Module\Editorial\Form\Repository\FormTranslationRepository;
 use Aurora\Module\Editorial\Form\Service\FormSubmissionValidator;

@@ -8,9 +8,8 @@ use Aurora\Core\Sequence\SequenceGenerator;
 use Aurora\Core\Sequence\SequencePrefixEnum;
 use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
 use Aurora\Core\Setting\Repository\SettingRepository;
-use Aurora\Module\Editorial\Form\Contract\FormManagerInterface;
-use Aurora\Module\Editorial\Form\Dto\FormFieldInput;
-use Aurora\Module\Editorial\Form\Dto\FormInput;
+use Aurora\Module\Editorial\Form\Dto\FormFieldInputInterface;
+use Aurora\Module\Editorial\Form\Dto\FormInputInterface;
 use Aurora\Module\Editorial\Form\Entity\Form;
 use Aurora\Module\Editorial\Form\Entity\FormField;
 use Aurora\Module\Editorial\Form\Entity\FormFieldInterface;
@@ -30,22 +29,21 @@ use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AsAlias(FormManagerInterface::class)]
-final readonly class FormManager implements FormManagerInterface
+class FormManager implements FormManagerInterface
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private FormTranslationRepository $formTranslationRepository,
-        private TranslatorInterface $translator,
-        private FormNotificationService $notificationService,
-        private SequenceGenerator $sequenceGenerator,
-        private SettingRepository $settingRepository,
+        protected readonly EntityManagerInterface $entityManager,
+        protected readonly FormTranslationRepository $formTranslationRepository,
+        protected readonly TranslatorInterface $translator,
+        protected readonly FormNotificationService $notificationService,
+        protected readonly SequenceGenerator $sequenceGenerator,
+        protected readonly SettingRepository $settingRepository,
     ) {}
 
-    public function create(FormInput $input): FormInterface
+    public function create(FormInputInterface $input): FormInterface
     {
-        $form = new Form();
-        $this->applySettings($form, $input);
-        $this->applyTranslations($form, $input);
+        $form = $this->createForm();
+        $this->applyInput($form, $input);
         $prefix = $this->settingRepository->get(ApplicationParameterEnum::EditorialFormPrefix->value, SequencePrefixEnum::Form->value) ?? SequencePrefixEnum::Form->value;
         $form->setReference($this->sequenceGenerator->next($prefix));
         $this->entityManager->persist($form);
@@ -54,10 +52,9 @@ final readonly class FormManager implements FormManagerInterface
         return $form;
     }
 
-    public function update(FormInterface $form, FormInput $input): void
+    public function update(FormInterface $form, FormInputInterface $input): void
     {
-        $this->applySettings($form, $input);
-        $this->applyTranslations($form, $input);
+        $this->applyInput($form, $input);
         $form->setUpdatedAt(new DateTimeImmutable());
         $this->entityManager->flush();
     }
@@ -68,12 +65,11 @@ final readonly class FormManager implements FormManagerInterface
         $this->entityManager->flush();
     }
 
-    public function createField(FormInterface $form, FormFieldInput $input): FormFieldInterface
+    public function createField(FormInterface $form, FormFieldInputInterface $input): FormFieldInterface
     {
-        $field = new FormField();
+        $field = $this->createFormField();
         $field->setForm($form);
-        $this->applyFieldSettings($field, $input, $form->getFields()->count());
-        $this->applyFieldTranslations($field, $input);
+        $this->applyFieldInput($field, $input, $form->getFields()->count());
         $form->addField($field);
         $this->entityManager->persist($field);
         $form->setUpdatedAt(new DateTimeImmutable());
@@ -86,10 +82,9 @@ final readonly class FormManager implements FormManagerInterface
         return $field;
     }
 
-    public function updateField(FormFieldInterface $field, FormFieldInput $input): void
+    public function updateField(FormFieldInterface $field, FormFieldInputInterface $input): void
     {
-        $this->applyFieldSettings($field, $input, $field->getPosition());
-        $this->applyFieldTranslations($field, $input);
+        $this->applyFieldInput($field, $input, $field->getPosition());
         $field->getForm()->setUpdatedAt(new DateTimeImmutable());
         $this->entityManager->flush();
     }
@@ -125,7 +120,7 @@ final readonly class FormManager implements FormManagerInterface
     {
         $submissionPrefix = $this->settingRepository->get(ApplicationParameterEnum::EditorialFormSubmissionPrefix->value, SequencePrefixEnum::FormSubmission->value) ?? SequencePrefixEnum::FormSubmission->value;
 
-        $submission = new FormSubmission();
+        $submission = $this->createFormSubmission();
         $submission->setForm($form);
         $submission->setData($submittedData);
         $submission->setLocale($locale);
@@ -141,23 +136,63 @@ final readonly class FormManager implements FormManagerInterface
         return $submission;
     }
 
-    private function applySettings(FormInterface $form, FormInput $input): void
+    // ── Hooks: instanciation ──────────────────────────────────────────────────
+
+    protected function createForm(): FormInterface
     {
-        $form->setNotifyEmail($input->notifyEmail);
-        $form->setActive($input->active);
+        return new Form();
     }
 
-    private function applyTranslations(FormInterface $form, FormInput $input, ?int $excludeFormId = null): void
+    protected function createFormField(): FormFieldInterface
     {
-        $excludeId = $excludeFormId ?? $form->getId();
+        return new FormField();
+    }
 
-        foreach ($input->translations as $locale => $data) {
+    protected function createFormTranslation(): FormTranslationInterface
+    {
+        return new FormTranslation();
+    }
+
+    protected function createFormFieldTranslation(): FormFieldTranslationInterface
+    {
+        return new FormFieldTranslation();
+    }
+
+    protected function createFormSubmission(): FormSubmissionInterface
+    {
+        return new FormSubmission();
+    }
+
+    // ── Hooks: hydratation ────────────────────────────────────────────────────
+
+    protected function applyInput(FormInterface $form, FormInputInterface $input): void
+    {
+        $form->setNotifyEmail($input->getNotifyEmail());
+        $form->setActive($input->isActive());
+        $this->applyTranslations($form, $input);
+    }
+
+    protected function applyFieldInput(FormFieldInterface $field, FormFieldInputInterface $input, int $position): void
+    {
+        $field->setType($input->getTypeEnum());
+        $field->setRequired($input->isRequired());
+        $field->setPosition($position);
+        $this->applyFieldTranslations($field, $input);
+    }
+
+    // ── Internals ─────────────────────────────────────────────────────────────
+
+    private function applyTranslations(FormInterface $form, FormInputInterface $input): void
+    {
+        $excludeId = $form->getId();
+
+        foreach ($input->getTranslations() as $locale => $data) {
             $slug = $data['slug'];
             $this->assertSlugValid($locale, $slug, $excludeId);
 
             $translation = $form->getTranslation($locale);
             if (!$translation instanceof FormTranslationInterface) {
-                $translation = new FormTranslation();
+                $translation = $this->createFormTranslation();
                 $translation->setLocale($locale);
                 $form->addTranslation($translation);
                 $this->entityManager->persist($translation);
@@ -169,27 +204,22 @@ final readonly class FormManager implements FormManagerInterface
         }
 
         // Remove translations for locales no longer in the input
+        $kept = $input->getTranslations();
         foreach ($form->getTranslations() as $existing) {
-            if (!isset($input->translations[$existing->getLocale()])) {
+            if (!isset($kept[$existing->getLocale()])) {
                 $form->removeTranslation($existing);
                 $this->entityManager->remove($existing);
             }
         }
     }
 
-    private function applyFieldSettings(FormFieldInterface $field, FormFieldInput $input, int $position): void
+    private function applyFieldTranslations(FormFieldInterface $field, FormFieldInputInterface $input): void
     {
-        $field->setType($input->getTypeEnum());
-        $field->setRequired($input->required);
-        $field->setPosition($position);
-    }
-
-    private function applyFieldTranslations(FormFieldInterface $field, FormFieldInput $input): void
-    {
-        foreach ($input->translations as $locale => $data) {
+        $kept = $input->getTranslations();
+        foreach ($kept as $locale => $data) {
             $translation = $field->getTranslation($locale);
             if (!$translation instanceof FormFieldTranslationInterface) {
-                $translation = new FormFieldTranslation();
+                $translation = $this->createFormFieldTranslation();
                 $translation->setLocale($locale);
                 $field->addTranslation($translation);
                 $this->entityManager->persist($translation);
@@ -202,7 +232,7 @@ final readonly class FormManager implements FormManagerInterface
 
         // Remove translations for locales no longer in the input
         foreach ($field->getTranslations() as $existing) {
-            if (!isset($input->translations[$existing->getLocale()])) {
+            if (!isset($kept[$existing->getLocale()])) {
                 $field->removeTranslation($existing);
                 $this->entityManager->remove($existing);
             }

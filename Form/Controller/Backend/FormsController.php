@@ -10,15 +10,15 @@ use Aurora\Core\Frontend\Controller\JsonRequestTrait;
 use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Validation\Dto\PaginationRequest;
 use Aurora\Core\Validation\Service\PayloadValidator;
-use Aurora\Module\Editorial\Form\Contract\FormManagerInterface;
-use Aurora\Module\Editorial\Form\Dto\FormFieldInput;
-use Aurora\Module\Editorial\Form\Dto\FormInput;
+use Aurora\Module\Editorial\Form\Dto\FormFieldInputFactoryInterface;
+use Aurora\Module\Editorial\Form\Dto\FormInputFactoryInterface;
 use Aurora\Module\Editorial\Form\Dto\ReorderFieldsInput;
 use Aurora\Module\Editorial\Form\Entity\FormFieldInterface;
 use Aurora\Module\Editorial\Form\Entity\FormInterface;
+use Aurora\Module\Editorial\Form\Manager\FormManagerInterface;
 use Aurora\Module\Editorial\Form\Repository\FormRepository;
 use Aurora\Module\Editorial\Form\Repository\FormSubmissionRepository;
-use Aurora\Module\Editorial\Form\Serializer\FormSerializer;
+use Aurora\Module\Editorial\Form\Serializer\FormSerializerInterface;
 use Aurora\Module\Editorial\Form\Service\FormSubmissionExporter;
 use Aurora\Module\Editorial\Form\View\FormsViewBuilder;
 use InvalidArgumentException;
@@ -41,10 +41,12 @@ final class FormsController extends AbstractController
         private readonly FormRepository $formRepository,
         private readonly FormSubmissionRepository $formSubmissionRepository,
         private readonly FormManagerInterface $formManager,
-        private readonly FormSerializer $formSerializer,
+        private readonly FormSerializerInterface $formSerializer,
         private readonly FormSubmissionExporter $submissionExporter,
         private readonly PayloadValidator $payloadValidator,
         private readonly FormsViewBuilder $viewBuilder,
+        private readonly FormInputFactoryInterface $formInputFactory,
+        private readonly FormFieldInputFactoryInterface $formFieldInputFactory,
     ) {}
 
     #[Route('', name: '', methods: [HttpMethodEnum::Get->value])]
@@ -75,7 +77,7 @@ final class FormsController extends AbstractController
     #[Route('', name: '_create', methods: [HttpMethodEnum::Post->value])]
     public function create(Request $request): JsonResponse
     {
-        $input = FormInput::fromArray($this->decodeJson($request));
+        $input = $this->formInputFactory->fromArray($this->decodeJson($request));
         if (($validationFailure = $this->validateOrFail($input)) instanceof JsonResponse) {
             return $validationFailure;
         }
@@ -92,7 +94,7 @@ final class FormsController extends AbstractController
     #[Route('/{id}/edit', name: '_update', methods: [HttpMethodEnum::Post->value])]
     public function update(Request $request, FormInterface $form): JsonResponse
     {
-        $input = FormInput::fromArray($this->decodeJson($request));
+        $input = $this->formInputFactory->fromArray($this->decodeJson($request));
         if (($validationFailure = $this->validateOrFail($input)) instanceof JsonResponse) {
             return $validationFailure;
         }
@@ -117,7 +119,7 @@ final class FormsController extends AbstractController
     #[Route('/{id}/fields', name: '_field_create', methods: [HttpMethodEnum::Post->value])]
     public function createField(Request $request, FormInterface $form): JsonResponse
     {
-        $input = FormFieldInput::fromArray($this->decodeJson($request));
+        $input = $this->formFieldInputFactory->fromArray($this->decodeJson($request));
         if (($validationFailure = $this->validateOrFail($input)) instanceof JsonResponse) {
             return $validationFailure;
         }
@@ -135,7 +137,7 @@ final class FormsController extends AbstractController
             return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
         }
 
-        $input = FormFieldInput::fromArray($this->decodeJson($request));
+        $input = $this->formFieldInputFactory->fromArray($this->decodeJson($request));
         if (($validationFailure = $this->validateOrFail($input)) instanceof JsonResponse) {
             return $validationFailure;
         }

@@ -4,49 +4,32 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Form\Dto;
 
-use Aurora\Core\Support\Str;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final readonly class FormInput
+class FormInput implements FormInputInterface
 {
     /**
      * @param array<string, array{title: string, slug: string, description: ?string}> $translations
      */
     public function __construct(
-        public ?string $notifyEmail,
-        public bool $active,
+        public readonly ?string $notifyEmail,
+        public readonly bool $active,
         #[Assert\Count(min: 1, minMessage: 'forms.errors.translations_required')]
-        public array $translations,
+        public readonly array $translations,
     ) {}
 
-    public static function fromArray(array $data): self
+    public function getNotifyEmail(): ?string
     {
-        $rawTranslations = is_array($data['translations'] ?? null) ? $data['translations'] : [];
-        $translations = [];
+        return $this->notifyEmail;
+    }
 
-        foreach ($rawTranslations as $locale => $payload) {
-            if (!is_array($payload)) {
-                continue;
-            }
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
 
-            $title = Str::trimOrNull((string) ($payload['title'] ?? ''));
-            $slug = Str::trimOrNull((string) ($payload['slug'] ?? ''));
-
-            if (null === $title && null === $slug) {
-                continue;
-            }
-
-            $translations[(string) $locale] = [
-                'title' => $title ?? '',
-                'slug' => $slug ?? '',
-                'description' => Str::trimOrNull((string) ($payload['description'] ?? '')),
-            ];
-        }
-
-        return new self(
-            notifyEmail: Str::trimOrNull((string) ($data['notifyEmail'] ?? '')),
-            active: (bool) ($data['active'] ?? true),
-            translations: $translations,
-        );
+    public function getTranslations(): array
+    {
+        return $this->translations;
     }
 }

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Form\Manager\Decorator;
 
-use Aurora\Module\Editorial\Form\Contract\FormManagerInterface;
-use Aurora\Module\Editorial\Form\Dto\FormFieldInput;
-use Aurora\Module\Editorial\Form\Dto\FormInput;
+use Aurora\Module\Editorial\Form\Dto\FormFieldInputInterface;
+use Aurora\Module\Editorial\Form\Dto\FormInputInterface;
 use Aurora\Module\Editorial\Form\Entity\FormFieldInterface;
 use Aurora\Module\Editorial\Form\Entity\FormInterface;
 use Aurora\Module\Editorial\Form\Entity\FormSubmissionInterface;
+use Aurora\Module\Editorial\Form\Manager\FormManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
@@ -24,12 +24,12 @@ final readonly class RateLimitFormManagerDecorator implements FormManagerInterfa
         private RateLimiterFactory $formSubmissionLimiter,
     ) {}
 
-    public function create(FormInput $input): FormInterface
+    public function create(FormInputInterface $input): FormInterface
     {
         return $this->inner->create($input);
     }
 
-    public function update(FormInterface $form, FormInput $input): void
+    public function update(FormInterface $form, FormInputInterface $input): void
     {
         $this->inner->update($form, $input);
     }
@@ -39,12 +39,12 @@ final readonly class RateLimitFormManagerDecorator implements FormManagerInterfa
         $this->inner->delete($form);
     }
 
-    public function createField(FormInterface $form, FormFieldInput $input): FormFieldInterface
+    public function createField(FormInterface $form, FormFieldInputInterface $input): FormFieldInterface
     {
         return $this->inner->createField($form, $input);
     }
 
-    public function updateField(FormFieldInterface $field, FormFieldInput $input): void
+    public function updateField(FormFieldInterface $field, FormFieldInputInterface $input): void
     {
         $this->inner->updateField($field, $input);
     }
