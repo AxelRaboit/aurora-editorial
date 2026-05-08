@@ -1,4 +1,22 @@
 backend:
+  permissions:
+    names:
+      editorial:
+        posts:
+          view: Voir les articles
+          manage: Gérer les articles (création, édition, publication)
+        post_types:
+          manage: Gérer les types d'articles
+        comments:
+          manage: Modérer les commentaires
+        forms:
+          manage: Gérer les formulaires
+        menus:
+          manage: Gérer les menus
+        taxonomies:
+          manage: Gérer les taxonomies
+        sitemap:
+          manage: Gérer le sitemap
   menus:
     preview:
       untitled: (sans titre)

@@ -1,4 +1,22 @@
 backend:
+  permissions:
+    names:
+      editorial:
+        posts:
+          view: View posts
+          manage: Manage posts (create, edit, publish)
+        post_types:
+          manage: Manage post types
+        comments:
+          manage: Moderate comments
+        forms:
+          manage: Manage forms
+        menus:
+          manage: Manage menus
+        taxonomies:
+          manage: Manage taxonomies
+        sitemap:
+          manage: Manage sitemap
   menus:
     preview:
       untitled: (untitled)
