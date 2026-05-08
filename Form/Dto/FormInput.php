@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aurora\Module\Editorial\Form\DTO;
+namespace Aurora\Module\Editorial\Form\Dto;
 
 use Aurora\Core\Support\Str;
 use Symfony\Component\Validator\Constraints as Assert;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aurora\Module\Editorial\Seo\DTO;
+namespace Aurora\Module\Editorial\Seo\Dto;
 
 use DateTimeImmutable;
 

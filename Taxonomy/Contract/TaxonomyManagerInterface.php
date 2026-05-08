@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Taxonomy\Contract;
 
-use Aurora\Module\Editorial\Taxonomy\DTO\TaxonomyInput;
-use Aurora\Module\Editorial\Taxonomy\DTO\TaxonomyTermInput;
+use Aurora\Module\Editorial\Taxonomy\Dto\TaxonomyInput;
+use Aurora\Module\Editorial\Taxonomy\Dto\TaxonomyTermInput;
 use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
 

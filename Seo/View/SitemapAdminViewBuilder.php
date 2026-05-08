@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Seo\View;
 
 use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
-use Aurora\Module\Editorial\Seo\DTO\SitemapData;
+use Aurora\Module\Editorial\Seo\Dto\SitemapData;
 use Aurora\Module\Editorial\Seo\Service\SitemapManager;
 use DateTimeInterface;
 

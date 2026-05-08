@@ -6,8 +6,8 @@ namespace Aurora\Module\Editorial\Post\Manager;
 
 use Aurora\Core\Audit\Service\AuditLogger;
 use Aurora\Module\Editorial\Post\Contract\PostTypeManagerInterface;
-use Aurora\Module\Editorial\Post\DTO\PostTypeFieldInput;
-use Aurora\Module\Editorial\Post\DTO\PostTypeInput;
+use Aurora\Module\Editorial\Post\Dto\PostTypeFieldInput;
+use Aurora\Module\Editorial\Post\Dto\PostTypeInput;
 use Aurora\Module\Editorial\Post\Entity\PostType;
 use Aurora\Module\Editorial\Post\Entity\PostTypeField;
 use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;

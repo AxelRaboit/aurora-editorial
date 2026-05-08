@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Seo\Service;
 
-use Aurora\Module\Editorial\Seo\DTO\SitemapData;
+use Aurora\Module\Editorial\Seo\Dto\SitemapData;
 use DateTimeImmutable;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;

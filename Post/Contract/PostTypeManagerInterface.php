@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Contract;
 
-use Aurora\Module\Editorial\Post\DTO\PostTypeFieldInput;
-use Aurora\Module\Editorial\Post\DTO\PostTypeInput;
+use Aurora\Module\Editorial\Post\Dto\PostTypeFieldInput;
+use Aurora\Module\Editorial\Post\Dto\PostTypeInput;
 use Aurora\Module\Editorial\Post\Entity\PostType;
 use Aurora\Module\Editorial\Post\Entity\PostTypeField;
 

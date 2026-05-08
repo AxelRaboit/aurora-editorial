@@ -7,7 +7,7 @@ namespace Aurora\Module\Editorial\Seo\Service;
 use Aurora\Core\Frontend\Service\FrontContext;
 use Aurora\Module\Editorial\Post\Repository\PostRepository;
 use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
-use Aurora\Module\Editorial\Seo\DTO\SitemapData;
+use Aurora\Module\Editorial\Seo\Dto\SitemapData;
 use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
 use DateTimeImmutable;
 use DateTimeInterface;

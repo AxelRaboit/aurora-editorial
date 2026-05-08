@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Contract;
 
-use Aurora\Module\Editorial\Post\DTO\PostInput;
+use Aurora\Module\Editorial\Post\Dto\PostInput;
 use Aurora\Module\Editorial\Post\Entity\Post;
 use Aurora\Module\Editorial\Post\Entity\PostRevision;
 

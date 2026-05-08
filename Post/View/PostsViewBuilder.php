@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\View;
 
-use Aurora\Core\Validation\DTO\PaginationRequest;
+use Aurora\Core\Validation\Dto\PaginationRequest;
 use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
 use Aurora\Module\Editorial\Post\Serializer\PostTypeSerializer;
 use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;

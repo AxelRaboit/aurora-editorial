@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Form\Manager\Decorator;
 
 use Aurora\Module\Editorial\Form\Contract\FormManagerInterface;
-use Aurora\Module\Editorial\Form\DTO\FormFieldInput;
-use Aurora\Module\Editorial\Form\DTO\FormInput;
+use Aurora\Module\Editorial\Form\Dto\FormFieldInput;
+use Aurora\Module\Editorial\Form\Dto\FormInput;
 use Aurora\Module\Editorial\Form\Entity\FormFieldInterface;
 use Aurora\Module\Editorial\Form\Entity\FormInterface;
 use Aurora\Module\Editorial\Form\Entity\FormSubmissionInterface;
