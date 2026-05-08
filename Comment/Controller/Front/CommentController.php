@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Comment\Controller\Front;
 
 use Aurora\Core\Enum\HttpMethodEnum;
+use Aurora\Core\Enum\HttpStatusEnum;
 use Aurora\Core\Frontend\Controller\FrontLocaleTrait;
 use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Frontend\Service\FrontContext;
@@ -92,7 +93,7 @@ class CommentController extends AbstractController
 
         $post = $this->postRepository->findPublishedBySlug($slug, $locale);
         if (!$post instanceof Post) {
-            return $this->json(['success' => false], Response::HTTP_NOT_FOUND);
+            return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
         }
 
         if (!$this->areCommentsEnabled($post)) {
@@ -118,12 +119,12 @@ class CommentController extends AbstractController
 
         $post = $this->postRepository->findPublishedBySlug($slug, $locale);
         if (!$post instanceof Post) {
-            return $this->json(['success' => false], Response::HTTP_NOT_FOUND);
+            return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
         }
 
         $comment = $this->commentRepository->find($commentId);
         if (!$this->isPubliclyOnPost($comment, $post)) {
-            return $this->json(['success' => false], Response::HTTP_NOT_FOUND);
+            return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
         }
 
         $typeValue = str_contains((string) $request->headers->get('Content-Type', ''), 'application/json')

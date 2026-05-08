@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Frontend\Controller;
 
+use Aurora\Core\Enum\HttpStatusEnum;
 use Aurora\Core\Frontend\Service\FrontContext;
 use Aurora\Module\Editorial\Seo\Service\RssFeedManager;
 use Aurora\Module\Editorial\Seo\Service\SitemapManager;
@@ -24,7 +25,7 @@ class SitemapController extends AbstractController
     {
         return new Response(
             $this->sitemapManager->getData()->xml,
-            Response::HTTP_OK,
+            HttpStatusEnum::Ok->value,
             ['Content-Type' => 'application/xml'],
         );
     }
@@ -35,7 +36,7 @@ class SitemapController extends AbstractController
         $siteUrl = $this->frontContext->siteUrl();
         $body = "User-agent: *\nAllow: /\nDisallow: /admin/\nDisallow: /dev/\n\nSitemap: {$siteUrl}/sitemap.xml\n";
 
-        return new Response($body, Response::HTTP_OK, ['Content-Type' => 'text/plain']);
+        return new Response($body, HttpStatusEnum::Ok->value, ['Content-Type' => 'text/plain']);
     }
 
     #[Route('/{locale}/feed.xml', name: 'frontend_rss', requirements: ['locale' => '[a-z]{2}'], priority: 12)]
@@ -47,7 +48,7 @@ class SitemapController extends AbstractController
 
         return new Response(
             $this->rssFeedManager->getXml($locale),
-            Response::HTTP_OK,
+            HttpStatusEnum::Ok->value,
             ['Content-Type' => 'application/rss+xml'],
         );
     }

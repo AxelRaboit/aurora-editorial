@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Controller\Front;
 
+use Aurora\Core\Enum\HttpStatusEnum;
 use Aurora\Core\Frontend\Controller\FrontLocaleTrait;
 use Aurora\Core\Frontend\Service\FrontContext;
 use Aurora\Core\Frontend\Service\HttpCacheService;
@@ -89,7 +90,7 @@ class PageController extends AbstractController
                 'locale' => $locale,
                 'postTypeSlug' => $post->getPostType()->getSlug(),
                 'slug' => $slug,
-            ], Response::HTTP_MOVED_PERMANENTLY);
+            ], HttpStatusEnum::MovedPermanently->value);
         }
 
         $lastModified = $post->getUpdatedAt();
@@ -173,7 +174,7 @@ class PageController extends AbstractController
             'locale' => $locale,
             'postTypeSlug' => $historyEntry->getPost()->getPostType()->getSlug(),
             'slug' => $currentSlug,
-        ], Response::HTTP_MOVED_PERMANENTLY);
+        ], HttpStatusEnum::MovedPermanently->value);
     }
 
     private function postsPerPage(): int

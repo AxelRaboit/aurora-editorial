@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Form\Controller\Backend;
 
 use Aurora\Core\Enum\HttpMethodEnum;
+use Aurora\Core\Enum\HttpStatusEnum;
 use Aurora\Core\Frontend\Controller\JsonRequestTrait;
 use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Validation\DTO\PaginationRequest;
@@ -85,7 +86,7 @@ final class FormsController extends AbstractController
             return $this->jsonInvalidInput($this->mapManagerException($invalidArgumentException));
         }
 
-        return $this->jsonSuccess(['form' => $this->formSerializer->serialize($form)], Response::HTTP_CREATED);
+        return $this->jsonSuccess(['form' => $this->formSerializer->serialize($form)], HttpStatusEnum::Created->value);
     }
 
     #[Route('/{id}/edit', name: '_update', methods: [HttpMethodEnum::Post->value])]
@@ -123,7 +124,7 @@ final class FormsController extends AbstractController
 
         $field = $this->formManager->createField($form, $input);
 
-        return $this->jsonSuccess(['field' => $this->formSerializer->serializeField($field)], Response::HTTP_CREATED);
+        return $this->jsonSuccess(['field' => $this->formSerializer->serializeField($field)], HttpStatusEnum::Created->value);
     }
 
     #[Route('/{id}/fields/{fieldId}/edit', name: '_field_update', methods: [HttpMethodEnum::Post->value])]
@@ -131,7 +132,7 @@ final class FormsController extends AbstractController
     {
         $field = $this->loadField($form, $fieldId);
         if (!$field instanceof FormField) {
-            return $this->json(['success' => false], Response::HTTP_NOT_FOUND);
+            return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
         }
 
         $input = FormFieldInput::fromArray($this->decodeJson($request));
@@ -149,7 +150,7 @@ final class FormsController extends AbstractController
     {
         $field = $this->loadField($form, $fieldId);
         if (!$field instanceof FormField) {
-            return $this->json(['success' => false], Response::HTTP_NOT_FOUND);
+            return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
         }
 
         $this->formManager->deleteField($field);

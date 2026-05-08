@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Taxonomy\Controller\Backend;
 
 use Aurora\Core\Enum\HttpMethodEnum;
+use Aurora\Core\Enum\HttpStatusEnum;
 use Aurora\Core\Frontend\Controller\JsonRequestTrait;
 use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Validation\Service\PayloadValidator;
@@ -88,7 +89,7 @@ class TaxonomiesController extends AbstractController
         try {
             $this->taxonomyManager->delete($taxonomy);
         } catch (RuntimeException $runtimeException) {
-            return $this->jsonFailure($runtimeException->getMessage(), Response::HTTP_CONFLICT);
+            return $this->jsonFailure($runtimeException->getMessage(), HttpStatusEnum::Conflict->value);
         }
 
         return $this->jsonSuccess();
@@ -118,7 +119,7 @@ class TaxonomiesController extends AbstractController
     {
         $term = $taxonomy->findTermById($termId);
         if (!$term instanceof TaxonomyTerm) {
-            return $this->json(['success' => false], Response::HTTP_NOT_FOUND);
+            return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
         }
 
         $input = TaxonomyTermInput::fromArray($this->decodeJson($request));
@@ -142,7 +143,7 @@ class TaxonomiesController extends AbstractController
     {
         $term = $taxonomy->findTermById($termId);
         if (!$term instanceof TaxonomyTerm) {
-            return $this->json(['success' => false], Response::HTTP_NOT_FOUND);
+            return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
         }
 
         $this->taxonomyManager->deleteTerm($term);

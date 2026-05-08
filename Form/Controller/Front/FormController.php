@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Form\Controller\Front;
 
 use Aurora\Core\Enum\HttpMethodEnum;
+use Aurora\Core\Enum\HttpStatusEnum;
 use Aurora\Core\Frontend\Controller\FrontLocaleTrait;
 use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Frontend\Service\FrontContext;
@@ -58,7 +59,7 @@ class FormController extends AbstractController
 
         $translation = $this->findActiveFormTranslation($locale, $slug);
         if (!$translation instanceof FormTranslation) {
-            return $this->json(['success' => false], Response::HTTP_NOT_FOUND);
+            return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
         }
 
         $form = $translation->getForm();

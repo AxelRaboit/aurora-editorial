@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Post\Controller\Backend;
 
 use Aurora\Core\Enum\HttpMethodEnum;
+use Aurora\Core\Enum\HttpStatusEnum;
 use Aurora\Core\Frontend\Controller\JsonRequestTrait;
 use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\User\Entity\User;
@@ -128,7 +129,7 @@ class PostsController extends AbstractController
             try {
                 $this->entityManager->lock($post, LockMode::OPTIMISTIC, $input->version);
             } catch (OptimisticLockException) {
-                return $this->json(['success' => false, 'conflict' => true], Response::HTTP_CONFLICT);
+                return $this->json(['success' => false, 'conflict' => true], HttpStatusEnum::Conflict->value);
             }
         }
 
@@ -192,7 +193,7 @@ class PostsController extends AbstractController
     {
         $revision = $this->revisionRepository->find($revisionId);
         if (!$revision instanceof PostRevision || $revision->getPost() !== $post) {
-            return $this->json(['success' => false], Response::HTTP_NOT_FOUND);
+            return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
         }
 
         return $this->jsonSuccess(['revision' => $this->revisionSerializer->serializeFull($revision)]);
@@ -203,7 +204,7 @@ class PostsController extends AbstractController
     {
         $revision = $this->revisionRepository->find($revisionId);
         if (!$revision instanceof PostRevision || $revision->getPost() !== $post) {
-            return $this->json(['success' => false], Response::HTTP_NOT_FOUND);
+            return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
         }
 
         $this->postManager->restoreRevision($post, $revision);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Post\Controller\Backend;
 
 use Aurora\Core\Enum\HttpMethodEnum;
+use Aurora\Core\Enum\HttpStatusEnum;
 use Aurora\Core\Frontend\Controller\JsonRequestTrait;
 use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Validation\Service\PayloadValidator;
@@ -86,7 +87,7 @@ class PostTypesController extends AbstractController
         try {
             $this->postTypeManager->delete($postType);
         } catch (RuntimeException $runtimeException) {
-            return $this->jsonFailure($runtimeException->getMessage(), Response::HTTP_CONFLICT);
+            return $this->jsonFailure($runtimeException->getMessage(), HttpStatusEnum::Conflict->value);
         }
 
         return $this->jsonSuccess();
@@ -115,7 +116,7 @@ class PostTypesController extends AbstractController
     {
         $field = $postType->findFieldById($fieldId);
         if (!$field instanceof PostTypeField) {
-            return $this->json(['success' => false], Response::HTTP_NOT_FOUND);
+            return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
         }
 
         $input = PostTypeFieldInput::fromArray($this->decodeJson($request));
@@ -138,7 +139,7 @@ class PostTypesController extends AbstractController
     {
         $field = $postType->findFieldById($fieldId);
         if (!$field instanceof PostTypeField) {
-            return $this->json(['success' => false], Response::HTTP_NOT_FOUND);
+            return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
         }
 
         $this->postTypeManager->deleteField($field);
