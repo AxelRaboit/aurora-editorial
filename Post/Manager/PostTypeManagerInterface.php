@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aurora\Module\Editorial\Post\Contract;
+namespace Aurora\Module\Editorial\Post\Manager;
 
 use Aurora\Module\Editorial\Post\Dto\PostTypeFieldInput;
 use Aurora\Module\Editorial\Post\Dto\PostTypeInput;

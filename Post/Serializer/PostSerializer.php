@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Post\Serializer;
 
 use Aurora\Module\Editorial\Post\Entity\Post;
+use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 use DateTimeInterface;
 
-final readonly class PostSerializer
+#[AsAlias(PostSerializerInterface::class)]
+class PostSerializer implements PostSerializerInterface
 {
     /**
      * Compact projection used by reference pickers (post link block, related posts…).

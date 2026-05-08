@@ -9,7 +9,7 @@ use Aurora\Core\Enum\HttpStatusEnum;
 use Aurora\Core\Frontend\Controller\JsonRequestTrait;
 use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Validation\Service\PayloadValidator;
-use Aurora\Module\Editorial\Post\Contract\PostTypeManagerInterface;
+use Aurora\Module\Editorial\Post\Manager\PostTypeManagerInterface;
 use Aurora\Module\Editorial\Post\Dto\PostTypeFieldInput;
 use Aurora\Module\Editorial\Post\Dto\PostTypeInput;
 use Aurora\Module\Editorial\Post\Entity\PostType;

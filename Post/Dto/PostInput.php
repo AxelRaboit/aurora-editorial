@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Dto;
 
-use Aurora\Core\Support\Str;
 use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
 use DateTimeImmutable;
 use Exception;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
-final readonly class PostInput
+readonly class PostInput implements PostInputInterface
 {
     /**
      * @param array<string, PostTranslationInput> $translations
@@ -35,11 +34,7 @@ final readonly class PostInput
         public bool $commentsEnabled = true,
     ) {}
 
-    /**
-     * Returns a copy with a different status. Used to downgrade Published →
-     * PendingReview when the current user lacks the publish permission.
-     */
-    public function withStatus(string $status): self
+    public function withStatus(string $status): PostInputInterface
     {
         return new self(
             postTypeId: $this->postTypeId,
@@ -55,38 +50,54 @@ final readonly class PostInput
         );
     }
 
-    public static function fromArray(array $data): self
+    public function getPostTypeId(): int
     {
-        $rawTranslations = is_array($data['translations'] ?? null) ? $data['translations'] : [];
-        $translations = [];
-        foreach ($rawTranslations as $locale => $translationData) {
-            if (is_array($translationData)) {
-                $translations[(string) $locale] = PostTranslationInput::fromArray($translationData);
-            }
-        }
+        return $this->postTypeId;
+    }
 
-        $termIds = array_values(array_filter(
-            array_map(intval(...), is_array($data['termIds'] ?? null) ? $data['termIds'] : []),
-            fn (int $termId): bool => $termId > 0,
-        ));
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
 
-        $relatedPostIds = array_values(array_filter(
-            array_map(intval(...), is_array($data['relatedPostIds'] ?? null) ? $data['relatedPostIds'] : []),
-            fn (int $relatedPostId): bool => $relatedPostId > 0,
-        ));
+    public function getFeaturedMediaId(): ?int
+    {
+        return $this->featuredMediaId;
+    }
 
-        return new self(
-            postTypeId: (int) ($data['postTypeId'] ?? 0),
-            status: Str::trimOrNull((string) ($data['status'] ?? '')) ?? PostStatusEnum::Draft->value,
-            featuredMediaId: isset($data['featuredMediaId']) && $data['featuredMediaId'] > 0 ? (int) $data['featuredMediaId'] : null,
-            termIds: $termIds,
-            translations: $translations,
-            relatedPostIds: $relatedPostIds,
-            scheduledAt: Str::trimOrNull((string) ($data['scheduledAt'] ?? '')),
-            version: isset($data['version']) ? (int) $data['version'] : null,
-            force: (bool) ($data['force'] ?? false),
-            commentsEnabled: (bool) ($data['commentsEnabled'] ?? true),
-        );
+    public function getTermIds(): array
+    {
+        return $this->termIds;
+    }
+
+    public function getTranslations(): array
+    {
+        return $this->translations;
+    }
+
+    public function getRelatedPostIds(): array
+    {
+        return $this->relatedPostIds;
+    }
+
+    public function getScheduledAt(): ?string
+    {
+        return $this->scheduledAt;
+    }
+
+    public function getVersion(): ?int
+    {
+        return $this->version;
+    }
+
+    public function isForce(): bool
+    {
+        return $this->force;
+    }
+
+    public function isCommentsEnabled(): bool
+    {
+        return $this->commentsEnabled;
     }
 
     #[Assert\Callback]

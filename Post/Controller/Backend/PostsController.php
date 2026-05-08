@@ -12,8 +12,9 @@ use Aurora\Core\User\Entity\User;
 use Aurora\Core\User\Enum\UserRoleEnum;
 use Aurora\Core\Validation\Dto\PaginationRequest;
 use Aurora\Core\Validation\Service\PayloadValidator;
-use Aurora\Module\Editorial\Post\Contract\PostManagerInterface;
-use Aurora\Module\Editorial\Post\Dto\PostInput;
+use Aurora\Module\Editorial\Post\Dto\PostInputFactoryInterface;
+use Aurora\Module\Editorial\Post\Dto\PostInputInterface;
+use Aurora\Module\Editorial\Post\Manager\PostManagerInterface;
 use Aurora\Module\Editorial\Post\Entity\Post;
 use Aurora\Module\Editorial\Post\Entity\PostRevision;
 use Aurora\Module\Editorial\Post\Entity\PostTranslation;
@@ -22,7 +23,7 @@ use Aurora\Module\Editorial\Post\Repository\PostRepository;
 use Aurora\Module\Editorial\Post\Repository\PostRevisionRepository;
 use Aurora\Module\Editorial\Post\Security\PostVoter;
 use Aurora\Module\Editorial\Post\Serializer\PostRevisionSerializer;
-use Aurora\Module\Editorial\Post\Serializer\PostSerializer;
+use Aurora\Module\Editorial\Post\Serializer\PostSerializerInterface;
 use Aurora\Module\Editorial\Post\Service\PostPageRenderer;
 use Aurora\Module\Editorial\Post\View\PostsViewBuilder;
 use Doctrine\DBAL\LockMode;
@@ -45,7 +46,8 @@ class PostsController extends AbstractController
     public function __construct(
         private readonly PostRepository $postRepository,
         private readonly PostManagerInterface $postManager,
-        private readonly PostSerializer $postSerializer,
+        private readonly PostSerializerInterface $postSerializer,
+        private readonly PostInputFactoryInterface $postInputFactory,
         private readonly PostRevisionRepository $revisionRepository,
         private readonly PostRevisionSerializer $revisionSerializer,
         private readonly PayloadValidator $payloadValidator,
@@ -106,7 +108,7 @@ class PostsController extends AbstractController
     #[Route('', name: '_create', methods: [HttpMethodEnum::Post->value])]
     public function create(Request $request): JsonResponse
     {
-        $input = $this->demoteIfNotPublishable(PostInput::fromArray($this->decodeJson($request)));
+        $input = $this->demoteIfNotPublishable($this->postInputFactory->fromArray($this->decodeJson($request)));
 
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
@@ -123,11 +125,11 @@ class PostsController extends AbstractController
     {
         $this->denyAccessUnlessGranted(PostVoter::EDIT, $post);
 
-        $input = $this->demoteIfNotPublishable(PostInput::fromArray($this->decodeJson($request)), $post);
+        $input = $this->demoteIfNotPublishable($this->postInputFactory->fromArray($this->decodeJson($request)), $post);
 
-        if (!$input->force && null !== $input->version) {
+        if (!$input->isForce() && null !== $input->getVersion()) {
             try {
-                $this->entityManager->lock($post, LockMode::OPTIMISTIC, $input->version);
+                $this->entityManager->lock($post, LockMode::OPTIMISTIC, $input->getVersion());
             } catch (OptimisticLockException) {
                 return $this->json(['success' => false, 'conflict' => true], HttpStatusEnum::Conflict->value);
             }
@@ -250,9 +252,9 @@ class PostsController extends AbstractController
      * If the caller cannot publish (creating, or editing a specific post they can't publish),
      * downgrade Published → PendingReview so the change still goes through but waits for moderation.
      */
-    private function demoteIfNotPublishable(PostInput $input, ?Post $post = null): PostInput
+    private function demoteIfNotPublishable(PostInputInterface $input, ?Post $post = null): PostInputInterface
     {
-        if (PostStatusEnum::Published->value !== $input->status) {
+        if (PostStatusEnum::Published->value !== $input->getStatus()) {
             return $input;
         }
 

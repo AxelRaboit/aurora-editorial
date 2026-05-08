@@ -11,8 +11,9 @@ use Aurora\Core\Sequence\SequencePrefixEnum;
 use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
 use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Core\User\Entity\User;
-use Aurora\Module\Editorial\Post\Contract\PostManagerInterface;
+use Aurora\Module\Editorial\Post\Manager\PostManagerInterface;
 use Aurora\Module\Editorial\Post\Dto\PostInput;
+use Aurora\Module\Editorial\Post\Dto\PostInputInterface;
 use Aurora\Module\Editorial\Post\Dto\PostTranslationInput;
 use Aurora\Module\Editorial\Post\Entity\Post;
 use Aurora\Module\Editorial\Post\Entity\PostRevision;
@@ -34,27 +35,27 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use const DATE_ATOM;
 
 #[AsAlias(PostManagerInterface::class)]
-final readonly class PostManager implements PostManagerInterface
+class PostManager implements PostManagerInterface
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private PostTypeRepository $postTypeRepository,
-        private TaxonomyTermRepository $termRepository,
-        private MediaRepository $mediaRepository,
-        private PostRevisionRepository $revisionRepository,
-        private PostSlugHistoryRepository $slugHistoryRepository,
-        private SettingRepository $settingRepository,
-        private SluggerInterface $slugger,
-        private Security $security,
-        private PostTextExtractor $textExtractor,
-        private TranslatorInterface $translator,
-        private AuditLogger $auditLogger,
-        private SequenceGenerator $sequenceGenerator,
+        protected readonly EntityManagerInterface $entityManager,
+        protected readonly PostTypeRepository $postTypeRepository,
+        protected readonly TaxonomyTermRepository $termRepository,
+        protected readonly MediaRepository $mediaRepository,
+        protected readonly PostRevisionRepository $revisionRepository,
+        protected readonly PostSlugHistoryRepository $slugHistoryRepository,
+        protected readonly SettingRepository $settingRepository,
+        protected readonly SluggerInterface $slugger,
+        protected readonly Security $security,
+        protected readonly PostTextExtractor $textExtractor,
+        protected readonly TranslatorInterface $translator,
+        protected readonly AuditLogger $auditLogger,
+        protected readonly SequenceGenerator $sequenceGenerator,
     ) {}
 
-    public function create(PostInput $input): Post
+    public function create(PostInputInterface $input): Post
     {
-        $post = new Post();
+        $post = $this->createPost();
         $this->applyInput($post, $input);
 
         $currentUser = $this->security->getUser();
@@ -74,7 +75,7 @@ final readonly class PostManager implements PostManagerInterface
         return $post;
     }
 
-    public function update(Post $post, PostInput $input): void
+    public function update(Post $post, PostInputInterface $input): void
     {
         $this->applyInput($post, $input);
         // Force the Post entity to be marked as dirty so Doctrine's @Version increments
@@ -180,20 +181,20 @@ final readonly class PostManager implements PostManagerInterface
         ]);
     }
 
-    private function applyInput(Post $post, PostInput $input): void
+    protected function applyInput(Post $post, PostInputInterface $input): void
     {
-        $postType = $this->postTypeRepository->find($input->postTypeId);
+        $postType = $this->postTypeRepository->find($input->getPostTypeId());
         if (null === $postType) {
-            throw new InvalidArgumentException($this->translator->trans('backend.posts.errors.post_type_not_found', ['{id}' => $input->postTypeId]));
+            throw new InvalidArgumentException($this->translator->trans('backend.posts.errors.post_type_not_found', ['{id}' => $input->getPostTypeId()]));
         }
 
         $post->setPostType($postType);
 
-        $status = PostStatusEnum::from($input->status);
+        $status = PostStatusEnum::from($input->getStatus());
         $post->setStatus($status);
 
-        if (PostStatusEnum::Scheduled === $status && null !== $input->scheduledAt) {
-            $post->setScheduledAt(new DateTimeImmutable($input->scheduledAt));
+        if (PostStatusEnum::Scheduled === $status && null !== $input->getScheduledAt()) {
+            $post->setScheduledAt(new DateTimeImmutable($input->getScheduledAt()));
         } else {
             $post->setScheduledAt(null);
         }
@@ -202,16 +203,16 @@ final readonly class PostManager implements PostManagerInterface
             $post->setPublishedAt(new DateTimeImmutable());
         }
 
-        $featuredMedia = null !== $input->featuredMediaId
-            ? $this->mediaRepository->find($input->featuredMediaId)
+        $featuredMedia = null !== $input->getFeaturedMediaId()
+            ? $this->mediaRepository->find($input->getFeaturedMediaId())
             : null;
         $post->setFeaturedMedia($featuredMedia);
 
-        $post->setCommentsEnabled($input->commentsEnabled);
-        $this->syncTerms($post, $input->termIds);
-        $this->syncRelatedPosts($post, $input->relatedPostIds);
+        $post->setCommentsEnabled($input->isCommentsEnabled());
+        $this->syncTerms($post, $input->getTermIds());
+        $this->syncRelatedPosts($post, $input->getRelatedPostIds());
 
-        foreach ($input->translations as $locale => $translationInput) {
+        foreach ($input->getTranslations() as $locale => $translationInput) {
             $this->applyTranslation($post, $locale, $translationInput);
         }
     }
@@ -363,5 +364,16 @@ final readonly class PostManager implements PostManagerInterface
         } catch (Exception) {
             return null;
         }
+    }
+
+    /**
+     * Instantiates the concrete Post entity. Override in a subclass to return
+     * `App\Entity\Post` (or any class implementing `PostInterface`) —
+     * `resolve_target_entities` only affects Doctrine relations, not direct
+     * `new`. Used by `create()`.
+     */
+    protected function createPost(): Post
+    {
+        return new Post();
     }
 }

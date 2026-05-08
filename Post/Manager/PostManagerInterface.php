@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Aurora\Module\Editorial\Post\Contract;
+namespace Aurora\Module\Editorial\Post\Manager;
 
-use Aurora\Module\Editorial\Post\Dto\PostInput;
+use Aurora\Module\Editorial\Post\Dto\PostInputInterface;
 use Aurora\Module\Editorial\Post\Entity\Post;
 use Aurora\Module\Editorial\Post\Entity\PostRevision;
 
 interface PostManagerInterface
 {
-    public function create(PostInput $input): Post;
+    public function create(PostInputInterface $input): Post;
 
-    public function update(Post $post, PostInput $input): void;
+    public function update(Post $post, PostInputInterface $input): void;
 
     public function delete(Post $post): void;
 
