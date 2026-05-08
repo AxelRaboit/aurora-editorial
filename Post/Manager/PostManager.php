@@ -68,9 +68,7 @@ class PostManager implements PostManagerInterface
         $this->entityManager->persist($post);
         $this->entityManager->flush();
 
-        $this->auditLogger->log('editorial', 'post.created', 'Post', $post->getId(), [
-            'title' => $post->translate('fr')->getTitle() ?? $post->translate('en')->getTitle(),
-        ]);
+        $this->auditCreated($post);
 
         return $post;
     }
@@ -86,10 +84,7 @@ class PostManager implements PostManagerInterface
 
         $this->snapshotRevision($post);
 
-        $this->auditLogger->log('editorial', 'post.updated', 'Post', $post->getId(), [
-            'title' => $post->translate('fr')->getTitle() ?? $post->translate('en')->getTitle(),
-            'status' => $post->getStatus()->value,
-        ]);
+        $this->auditUpdated($post);
     }
 
     public function delete(Post $post): void
@@ -103,7 +98,7 @@ class PostManager implements PostManagerInterface
 
         $this->entityManager->flush();
 
-        $this->auditLogger->log('editorial', 'post.deleted', 'Post', $post->getId());
+        $this->auditDeleted($post);
     }
 
     public function restore(Post $post): void
@@ -113,16 +108,14 @@ class PostManager implements PostManagerInterface
 
         $this->entityManager->flush();
 
-        $this->auditLogger->log('editorial', 'post.restored', 'Post', $post->getId());
+        $this->auditLogger->log('editorial', 'post.restored', 'Post', $post->getId(), $this->auditPayload($post));
     }
 
     public function forceDelete(Post $post): void
     {
-        $id = $post->getId();
+        $this->auditLogger->log('editorial', 'post.force_deleted', 'Post', $post->getId(), $this->auditPayload($post));
         $this->entityManager->remove($post);
         $this->entityManager->flush();
-
-        $this->auditLogger->log('editorial', 'post.force_deleted', 'Post', $id);
     }
 
     public function restoreRevision(Post $post, PostRevision $revision): void
@@ -177,6 +170,7 @@ class PostManager implements PostManagerInterface
         $this->snapshotRevision($post);
 
         $this->auditLogger->log('editorial', 'post.revision_restored', 'Post', $post->getId(), [
+            ...$this->auditPayload($post),
             'revisionId' => $revision->getId(),
         ]);
     }
@@ -375,5 +369,28 @@ class PostManager implements PostManagerInterface
     protected function createPost(): Post
     {
         return new Post();
+    }
+
+    protected function auditCreated(Post $post): void
+    {
+        $this->auditLogger->log('editorial', 'post.created', 'Post', $post->getId(), $this->auditPayload($post));
+    }
+
+    protected function auditUpdated(Post $post): void
+    {
+        $this->auditLogger->log('editorial', 'post.updated', 'Post', $post->getId(), $this->auditPayload($post));
+    }
+
+    protected function auditDeleted(Post $post): void
+    {
+        $this->auditLogger->log('editorial', 'post.deleted', 'Post', $post->getId(), $this->auditPayload($post));
+    }
+
+    protected function auditPayload(Post $post): array
+    {
+        return [
+            'title' => $post->translate('fr')->getTitle() ?? $post->translate('en')->getTitle(),
+            'status' => $post->getStatus()->value,
+        ];
     }
 }
