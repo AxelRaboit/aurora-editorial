@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Entity;
 
-use Aurora\Core\Media\Entity\Media;
+use Aurora\Core\Media\Entity\MediaInterface;
 use Aurora\Module\Editorial\Post\Repository\PostTranslationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -43,9 +43,9 @@ class PostTranslation
     #[ORM\Column(type: 'json')]
     private array $customFields = [];
 
-    #[ORM\ManyToOne(targetEntity: Media::class)]
+    #[ORM\ManyToOne(targetEntity: MediaInterface::class)]
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
-    private ?Media $ogImage = null;
+    private ?MediaInterface $ogImage = null;
 
     #[ORM\Column(length: 500, nullable: true)]
     private ?string $canonicalUrl = null;
@@ -156,12 +156,12 @@ class PostTranslation
         return $this;
     }
 
-    public function getOgImage(): ?Media
+    public function getOgImage(): ?MediaInterface
     {
         return $this->ogImage;
     }
 
-    public function setOgImage(?Media $ogImage): static
+    public function setOgImage(?MediaInterface $ogImage): static
     {
         $this->ogImage = $ogImage;
 

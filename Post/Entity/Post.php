@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Entity;
 
-use Aurora\Core\Media\Entity\Media;
+use Aurora\Core\Media\Entity\MediaInterface;
 use Aurora\Core\User\Entity\User;
 use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
 use Aurora\Module\Editorial\Post\Repository\PostRepository;
@@ -55,9 +55,9 @@ class Post implements TimestampableInterface
     #[ORM\JoinColumn(nullable: false)]
     private PostType $postType;
 
-    #[ORM\ManyToOne(targetEntity: Media::class)]
+    #[ORM\ManyToOne(targetEntity: MediaInterface::class)]
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
-    private ?Media $featuredMedia = null;
+    private ?MediaInterface $featuredMedia = null;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
@@ -139,12 +139,12 @@ class Post implements TimestampableInterface
         return $this;
     }
 
-    public function getFeaturedMedia(): ?Media
+    public function getFeaturedMedia(): ?MediaInterface
     {
         return $this->featuredMedia;
     }
 
-    public function setFeaturedMedia(?Media $featuredMedia): static
+    public function setFeaturedMedia(?MediaInterface $featuredMedia): static
     {
         $this->featuredMedia = $featuredMedia;
 

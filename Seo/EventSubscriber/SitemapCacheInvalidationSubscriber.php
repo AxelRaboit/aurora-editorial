@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Seo\EventSubscriber;
 
-use Aurora\Core\Locale\Entity\Locale;
-use Aurora\Core\Setting\Entity\Setting;
+use Aurora\Core\Locale\Entity\LocaleInterface;
+use Aurora\Core\Setting\Entity\SettingInterface;
 use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
 use Aurora\Module\Editorial\Post\Entity\Post;
 use Aurora\Module\Editorial\Post\Entity\PostTranslation;
@@ -69,7 +69,7 @@ final readonly class SitemapCacheInvalidationSubscriber
         if (
             $entity instanceof Post
             || $entity instanceof PostTranslation
-            || $entity instanceof Locale
+            || $entity instanceof LocaleInterface
         ) {
             $this->sitemapManager->invalidate();
             $this->rssFeedManager->invalidate();
@@ -91,7 +91,7 @@ final readonly class SitemapCacheInvalidationSubscriber
         }
 
         // RSS only: site metadata that lands in the channel header.
-        if ($entity instanceof Setting && $this->isRssRelevantSetting($entity->getKey())) {
+        if ($entity instanceof SettingInterface && $this->isRssRelevantSetting($entity->getKey())) {
             $this->rssFeedManager->invalidate();
         }
     }
