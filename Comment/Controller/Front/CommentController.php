@@ -10,13 +10,14 @@ use Aurora\Core\Frontend\Controller\FrontLocaleTrait;
 use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Frontend\Service\FrontContext;
 use Aurora\Core\Setting\Repository\SettingRepository;
-use Aurora\Module\Editorial\Comment\Contract\CommentManagerInterface;
+use Aurora\Module\Editorial\Comment\Dto\CommentInputFactoryInterface;
+use Aurora\Module\Editorial\Comment\Manager\CommentManagerInterface;
 use Aurora\Module\Editorial\Comment\Entity\CommentInterface;
 use Aurora\Module\Editorial\Comment\Enum\ReactionTypeEnum;
 use Aurora\Module\Editorial\Comment\Manager\CommentReactionManager;
 use Aurora\Module\Editorial\Comment\Repository\CommentReactionRepository;
 use Aurora\Module\Editorial\Comment\Repository\CommentRepository;
-use Aurora\Module\Editorial\Comment\Serializer\CommentSerializer;
+use Aurora\Module\Editorial\Comment\Serializer\CommentSerializerInterface;
 use Aurora\Module\Editorial\Comment\Service\CommentSubmissionValidator;
 use Aurora\Module\Editorial\Post\Entity\Post;
 use Aurora\Module\Editorial\Post\Repository\PostRepository;
@@ -38,11 +39,12 @@ class CommentController extends AbstractController
         private readonly CommentReactionRepository $commentReactionRepository,
         private readonly CommentManagerInterface $commentManager,
         private readonly CommentReactionManager $commentReactionManager,
-        private readonly CommentSerializer $commentSerializer,
+        private readonly CommentSerializerInterface $commentSerializer,
         private readonly CommentSubmissionValidator $commentValidator,
         private readonly SettingRepository $settingRepository,
         private readonly FrontContext $frontContext,
         private readonly PostPageRenderer $postPageRenderer,
+        private readonly CommentInputFactoryInterface $commentInputFactory,
     ) {}
 
     #[Route('/{locale}/editorial/{postTypeSlug}/{slug}/comment', name: 'editorial_post_comment', requirements: ['locale' => '[a-z]{2}'], methods: [HttpMethodEnum::Post->value], priority: 6)]
@@ -63,19 +65,17 @@ class CommentController extends AbstractController
         $isJson = str_contains((string) $request->headers->get('Content-Type', ''), 'application/json');
         $payload = $isJson ? $request->toArray() : $request->request->all();
 
-        $authorName = mb_trim((string) ($payload['authorName'] ?? ''));
-        $authorEmail = mb_trim((string) ($payload['authorEmail'] ?? ''));
-        $content = mb_trim((string) ($payload['content'] ?? ''));
+        $input = $this->commentInputFactory->fromArray($payload);
 
-        $errors = $this->commentValidator->validate($authorName, $authorEmail, $content);
+        $errors = $this->commentValidator->validate($input->getAuthorName(), $input->getAuthorEmail(), $input->getContent());
         if ([] !== $errors) {
             return $isJson
                 ? $this->jsonInvalidInput($errors)
                 : $this->postPageRenderer->render($post, $locale, $errors);
         }
 
-        $parentComment = $this->resolveParent($post, (int) ($payload['parent_id'] ?? 0));
-        $this->commentManager->submit($post, $authorName, $authorEmail, $content, $parentComment);
+        $parentComment = $this->resolveParent($post, $input->getParentId() ?? 0);
+        $this->commentManager->submit($post, $input, $parentComment);
 
         if ($isJson) {
             return $this->jsonSuccess();

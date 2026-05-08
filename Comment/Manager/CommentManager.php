@@ -9,7 +9,7 @@ use Aurora\Core\Sequence\SequenceGenerator;
 use Aurora\Core\Sequence\SequencePrefixEnum;
 use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
 use Aurora\Core\Setting\Repository\SettingRepository;
-use Aurora\Module\Editorial\Comment\Contract\CommentManagerInterface;
+use Aurora\Module\Editorial\Comment\Dto\CommentInputInterface;
 use Aurora\Module\Editorial\Comment\Entity\Comment;
 use Aurora\Module\Editorial\Comment\Entity\CommentInterface;
 use Aurora\Module\Editorial\Comment\Enum\CommentStatusEnum;
@@ -19,26 +19,24 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 
 #[AsAlias(CommentManagerInterface::class)]
-final readonly class CommentManager implements CommentManagerInterface
+class CommentManager implements CommentManagerInterface
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private SettingRepository $settingRepository,
-        private AuditLogger $auditLogger,
-        private CommentNotificationService $notificationService,
-        private SequenceGenerator $sequenceGenerator,
+        protected readonly EntityManagerInterface $entityManager,
+        protected readonly SettingRepository $settingRepository,
+        protected readonly AuditLogger $auditLogger,
+        protected readonly CommentNotificationService $notificationService,
+        protected readonly SequenceGenerator $sequenceGenerator,
     ) {}
 
-    public function submit(Post $post, string $authorName, string $authorEmail, string $content, ?CommentInterface $parent = null): CommentInterface
+    public function submit(Post $post, CommentInputInterface $input, ?CommentInterface $parent = null): CommentInterface
     {
         $moderationEnabled = $this->settingRepository->getBoolean(ApplicationParameterEnum::CommentModerationEnabled->value, true);
         $prefix = $this->settingRepository->get(ApplicationParameterEnum::EditorialCommentPrefix->value, SequencePrefixEnum::Comment->value) ?? SequencePrefixEnum::Comment->value;
 
-        $comment = new Comment();
+        $comment = $this->createComment();
         $comment->setPost($post);
-        $comment->setAuthorName($authorName);
-        $comment->setAuthorEmail($authorEmail);
-        $comment->setContent($content);
+        $this->applyInput($comment, $input);
         $comment->setStatus($moderationEnabled ? CommentStatusEnum::Pending : CommentStatusEnum::Approved);
         $comment->setReference($this->sequenceGenerator->next($prefix));
 
@@ -50,8 +48,8 @@ final readonly class CommentManager implements CommentManagerInterface
         $this->entityManager->flush();
 
         $this->auditLogger->log('editorial', 'comment.submitted', 'Comment', $comment->getId(), [
+            ...$this->auditPayload($comment),
             'postId' => $post->getId(),
-            'authorEmail' => $authorEmail,
         ]);
 
         if (CommentStatusEnum::Pending === $comment->getStatus()) {
@@ -69,7 +67,7 @@ final readonly class CommentManager implements CommentManagerInterface
         $comment->setStatus(CommentStatusEnum::Approved);
         $this->entityManager->flush();
 
-        $this->auditLogger->log('editorial', 'comment.approved', 'Comment', $comment->getId());
+        $this->auditLogger->log('editorial', 'comment.approved', 'Comment', $comment->getId(), $this->auditPayload($comment));
 
         if ($wasPending) {
             $this->notificationService->notifyApprovedToAuthor($comment);
@@ -81,15 +79,43 @@ final readonly class CommentManager implements CommentManagerInterface
         $comment->setStatus(CommentStatusEnum::Spam);
         $this->entityManager->flush();
 
-        $this->auditLogger->log('editorial', 'comment.spam', 'Comment', $comment->getId());
+        $this->auditLogger->log('editorial', 'comment.spam', 'Comment', $comment->getId(), $this->auditPayload($comment));
     }
 
     public function delete(CommentInterface $comment): void
     {
-        $id = $comment->getId();
+        $this->auditDeleted($comment);
+
         $this->entityManager->remove($comment);
         $this->entityManager->flush();
+    }
 
-        $this->auditLogger->log('editorial', 'comment.deleted', 'Comment', $id);
+    protected function createComment(): CommentInterface
+    {
+        return new Comment();
+    }
+
+    protected function applyInput(CommentInterface $comment, CommentInputInterface $input): void
+    {
+        $comment->setAuthorName($input->getAuthorName());
+        $comment->setAuthorEmail($input->getAuthorEmail());
+        $comment->setContent($input->getContent());
+    }
+
+    protected function auditDeleted(CommentInterface $comment): void
+    {
+        $this->auditLogger->log('editorial', 'comment.deleted', 'Comment', $comment->getId(), $this->auditPayload($comment));
+    }
+
+    /**
+     * Base payload for every Comment audit entry. Override to add custom fields.
+     *
+     * Note: Comment's lifecycle uses domain events (`submitted`, `approved`,
+     * `spam`, `deleted`) instead of standard create/update/delete — there is no
+     * admin update flow. The base payload still applies via splat-merge.
+     */
+    protected function auditPayload(CommentInterface $comment): array
+    {
+        return ['authorEmail' => $comment->getAuthorEmail()];
     }
 }

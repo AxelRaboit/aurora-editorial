@@ -9,10 +9,10 @@ use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
 use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Core\Validation\Dto\PaginationRequest;
-use Aurora\Module\Editorial\Comment\Contract\CommentManagerInterface;
+use Aurora\Module\Editorial\Comment\Manager\CommentManagerInterface;
 use Aurora\Module\Editorial\Comment\Entity\CommentInterface;
 use Aurora\Module\Editorial\Comment\Repository\CommentRepository;
-use Aurora\Module\Editorial\Comment\Serializer\CommentSerializer;
+use Aurora\Module\Editorial\Comment\Serializer\CommentSerializerInterface;
 use Aurora\Module\Editorial\Comment\View\CommentsViewBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -30,7 +30,7 @@ final class CommentsController extends AbstractController
     public function __construct(
         private readonly CommentRepository $commentRepository,
         private readonly CommentManagerInterface $commentManager,
-        private readonly CommentSerializer $commentSerializer,
+        private readonly CommentSerializerInterface $commentSerializer,
         private readonly SettingRepository $settingRepository,
         private readonly CommentsViewBuilder $viewBuilder,
     ) {}

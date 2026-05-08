@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Comment\Manager\Decorator;
 
-use Aurora\Module\Editorial\Comment\Contract\CommentManagerInterface;
+use Aurora\Module\Editorial\Comment\Dto\CommentInputInterface;
 use Aurora\Module\Editorial\Comment\Entity\CommentInterface;
+use Aurora\Module\Editorial\Comment\Manager\CommentManagerInterface;
 use Aurora\Module\Editorial\Post\Entity\Post;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
@@ -22,11 +23,11 @@ final readonly class SpamFilterCommentManagerDecorator implements CommentManager
         private CommentManagerInterface $inner,
     ) {}
 
-    public function submit(Post $post, string $authorName, string $authorEmail, string $content, ?CommentInterface $parent = null): CommentInterface
+    public function submit(Post $post, CommentInputInterface $input, ?CommentInterface $parent = null): CommentInterface
     {
-        $comment = $this->inner->submit($post, $authorName, $authorEmail, $content, $parent);
+        $comment = $this->inner->submit($post, $input, $parent);
 
-        if ($this->isSpam($content)) {
+        if ($this->isSpam($input->getContent())) {
             $this->inner->spam($comment);
         }
 

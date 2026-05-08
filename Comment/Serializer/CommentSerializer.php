@@ -7,15 +7,17 @@ namespace Aurora\Module\Editorial\Comment\Serializer;
 use Aurora\Module\Editorial\Comment\Entity\CommentInterface;
 use Aurora\Module\Editorial\Comment\Enum\ReactionTypeEnum;
 use Aurora\Module\Editorial\Comment\Repository\CommentReactionRepository;
+use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 use const DATE_ATOM;
 
-final readonly class CommentSerializer
+#[AsAlias(CommentSerializerInterface::class)]
+class CommentSerializer implements CommentSerializerInterface
 {
     public function __construct(
-        private CommentReactionRepository $commentReactionRepository,
-        private TranslatorInterface $translator,
+        protected readonly CommentReactionRepository $commentReactionRepository,
+        protected readonly TranslatorInterface $translator,
     ) {}
 
     /**
