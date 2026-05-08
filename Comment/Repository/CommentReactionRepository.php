@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Comment\Repository;
 
+use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Aurora\Module\Editorial\Comment\Entity\CommentReaction;
 use Aurora\Module\Editorial\Comment\Entity\CommentReactionInterface;
 use Aurora\Module\Editorial\Comment\Enum\ReactionTypeEnum;
-use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**

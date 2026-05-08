@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Seo\Service;
 
 use Aurora\Core\Frontend\Service\FrontContext;
-use Aurora\Module\Editorial\Post\Entity\Post;
-use Aurora\Module\Editorial\Post\Entity\PostTranslation;
+use Aurora\Module\Editorial\Post\Entity\PostInterface;
+use Aurora\Module\Editorial\Post\Entity\PostTranslationInterface;
 use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTermTranslation;
@@ -22,12 +22,12 @@ final readonly class AlternatesBuilder
     /**
      * @return list<array{locale: string, url: string}>
      */
-    public function forPost(Post $post): array
+    public function forPost(PostInterface $post): array
     {
         $alternates = [];
         foreach ($this->frontContext->activeLocaleCodes() as $code) {
             $translation = $post->getTranslation($code);
-            if (!$translation instanceof PostTranslation) {
+            if (!$translation instanceof PostTranslationInterface) {
                 continue;
             }
 

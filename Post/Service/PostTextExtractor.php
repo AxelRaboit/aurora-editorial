@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Service;
 
-use Aurora\Module\Editorial\Post\Entity\PostTranslation;
-use Aurora\Module\Editorial\Post\Entity\PostTypeField;
+use Aurora\Module\Editorial\Post\Entity\PostTranslationInterface;
+use Aurora\Module\Editorial\Post\Entity\PostTypeFieldInterface;
 
 final readonly class PostTextExtractor
 {
@@ -15,7 +15,7 @@ final readonly class PostTextExtractor
      * Build the search_content string for a post translation by concatenating
      * every indexable piece of text: meta fields, block text, custom field values.
      */
-    public function extract(PostTranslation $translation): string
+    public function extract(PostTranslationInterface $translation): string
     {
         $parts = [
             $translation->getMetaTitle(),
@@ -46,7 +46,7 @@ final readonly class PostTextExtractor
         return implode(' ', $collected);
     }
 
-    private function textFromCustomFields(PostTranslation $translation): string
+    private function textFromCustomFields(PostTranslationInterface $translation): string
     {
         $fieldDefinitions = $this->postTypeFields($translation);
         $customFields = $translation->getCustomFields();
@@ -79,8 +79,8 @@ final readonly class PostTextExtractor
         return implode(' ', $parts);
     }
 
-    /** @return array<string, PostTypeField> */
-    private function postTypeFields(PostTranslation $translation): array
+    /** @return array<string, PostTypeFieldInterface> */
+    private function postTypeFields(PostTranslationInterface $translation): array
     {
         $map = [];
         foreach ($translation->getPost()->getPostType()->getFields() as $field) {

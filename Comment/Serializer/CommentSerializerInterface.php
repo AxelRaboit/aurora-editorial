@@ -19,7 +19,7 @@ interface CommentSerializerInterface
     public function serializeForFront(CommentInterface $comment, array $reactionCountsMap): array;
 
     /**
-     * @param CommentInterface[]              $comments
+     * @param CommentInterface[]             $comments
      * @param array<int, array<string, int>> $reactionCountsMap
      *
      * @return array{roots: list<array<string,mixed>>, replies: array<int, list<array<string,mixed>>>, reactionEmojis: array<string, string>}

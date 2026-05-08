@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Repository;
 
+use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Aurora\Core\Repository\Trait\PaginationTrait;
 use Aurora\Module\Editorial\Post\Entity\Post;
 use Aurora\Module\Editorial\Post\Entity\PostInterface;
 use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
 use DateTimeImmutable;
-use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Doctrine\Common\Collections\Order;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\Persistence\ManagerRegistry;

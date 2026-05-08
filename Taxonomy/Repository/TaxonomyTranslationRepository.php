@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Taxonomy\Repository;
 
+use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTranslation;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTranslationInterface;
-use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Comment\Repository;
 
+use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Aurora\Core\Repository\Trait\PaginationTrait;
 use Aurora\Module\Editorial\Comment\Entity\Comment;
 use Aurora\Module\Editorial\Comment\Entity\CommentInterface;
 use Aurora\Module\Editorial\Comment\Enum\CommentStatusEnum;
-use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Doctrine\Common\Collections\Order;
 use Doctrine\Persistence\ManagerRegistry;
 

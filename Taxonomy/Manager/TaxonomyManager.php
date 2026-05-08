@@ -60,10 +60,8 @@ class TaxonomyManager implements TaxonomyManagerInterface
 
     public function update(TaxonomyInterface $taxonomy, TaxonomyInputInterface $input): void
     {
-        if (!$taxonomy->isBuiltIn() && $input->getSlug() !== $taxonomy->getSlug()) {
-            if ($this->taxonomyRepository->findOneBySlug($input->getSlug()) instanceof Taxonomy) {
-                throw new InvalidArgumentException($this->translator->trans('backend.taxonomies.errors.slug_taken', ['{slug}' => $input->getSlug()]));
-            }
+        if (!$taxonomy->isBuiltIn() && $input->getSlug() !== $taxonomy->getSlug() && $this->taxonomyRepository->findOneBySlug($input->getSlug()) instanceof Taxonomy) {
+            throw new InvalidArgumentException($this->translator->trans('backend.taxonomies.errors.slug_taken', ['{slug}' => $input->getSlug()]));
         }
 
         $this->applyInput($taxonomy, $input);

@@ -11,8 +11,6 @@ use Aurora\Core\Sequence\SequencePrefixEnum;
 use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
 use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Core\User\Entity\User;
-use Aurora\Module\Editorial\Post\Manager\PostManagerInterface;
-use Aurora\Module\Editorial\Post\Dto\PostInput;
 use Aurora\Module\Editorial\Post\Dto\PostInputInterface;
 use Aurora\Module\Editorial\Post\Dto\PostTranslationInput;
 use Aurora\Module\Editorial\Post\Entity\Post;

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Taxonomy\Repository;
 
-use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
+use Aurora\Core\Repository\ResolveTargetEntityRepository;
+use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyInterface;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTermInterface;
-use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Doctrine\Common\Collections\Order;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -65,7 +65,7 @@ class TaxonomyTermRepository extends ResolveTargetEntityRepository
     /**
      * @return list<TaxonomyTerm>
      */
-    public function findByTaxonomyOrdered(Taxonomy $taxonomy): array
+    public function findByTaxonomyOrdered(TaxonomyInterface $taxonomy): array
     {
         return $this->createQueryBuilder('t')
             ->where('t.taxonomy = :taxonomy')

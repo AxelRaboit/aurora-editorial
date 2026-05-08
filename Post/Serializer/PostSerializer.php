@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Post\Serializer;
 
 use Aurora\Module\Editorial\Post\Entity\Post;
-use Symfony\Component\DependencyInjection\Attribute\AsAlias;
+use Aurora\Module\Editorial\Post\Entity\PostInterface;
 use DateTimeInterface;
+use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 
 #[AsAlias(PostSerializerInterface::class)]
 class PostSerializer implements PostSerializerInterface
@@ -42,7 +43,7 @@ class PostSerializer implements PostSerializerInterface
             'title' => $defaultTranslation?->getTitle(),
             'slug' => $defaultTranslation?->getSlug(),
             'termIds' => $post->getTerms()->map(fn (object $term): ?int => $term->getId())->toArray(),
-            'relatedPostIds' => $post->getRelatedPosts()->map(fn (Post $related): ?int => $related->getId())->toArray(),
+            'relatedPostIds' => $post->getRelatedPosts()->map(fn (PostInterface $related): ?int => $related->getId())->toArray(),
             'publishedAt' => $post->getPublishedAt()?->format(DateTimeInterface::ATOM),
             'scheduledAt' => $post->getScheduledAt()?->format(DateTimeInterface::ATOM),
             'deletedAt' => $post->getDeletedAt()?->format(DateTimeInterface::ATOM),

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Form\Repository;
 
+use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Aurora\Module\Editorial\Form\Entity\FormTranslation;
 use Aurora\Module\Editorial\Form\Entity\FormTranslationInterface;
-use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,12 +19,12 @@ class FormTranslationRepository extends ResolveTargetEntityRepository
         parent::__construct($registry, FormTranslation::class, FormTranslationInterface::class);
     }
 
-    public function findOneByLocaleAndSlug(string $locale, string $slug): ?FormTranslation
+    public function findOneByLocaleAndSlug(string $locale, string $slug): ?FormTranslationInterface
     {
         return $this->findOneBy(['locale' => $locale, 'slug' => $slug]);
     }
 
-    public function findOneByLocaleAndSlugExcluding(string $locale, string $slug, int $excludeFormId): ?FormTranslation
+    public function findOneByLocaleAndSlugExcluding(string $locale, string $slug, int $excludeFormId): ?FormTranslationInterface
     {
         return $this->createQueryBuilder('t')
             ->andWhere('t.locale = :locale')

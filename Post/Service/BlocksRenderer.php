@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Post\Service;
 
 use Aurora\Core\Media\Entity\Media;
-use Aurora\Module\Ecommerce\Listing\Entity\Listing;
+use Aurora\Module\Ecommerce\Listing\Entity\ListingInterface;
 use Aurora\Module\Ecommerce\Listing\Repository\ListingRepository;
 use Aurora\Module\Ecommerce\Service\EcommerceContext;
 use Aurora\Module\Editorial\Post\Entity\Post;
@@ -137,7 +137,7 @@ final readonly class BlocksRenderer
         );
     }
 
-    private function renderListingCard(Listing $listing, string $locale): string
+    private function renderListingCard(ListingInterface $listing, string $locale): string
     {
         $url = $this->urlGenerator->generate('frontend_shop_product', ['locale' => $locale, 'slug' => $listing->getSlug()]);
         $title = htmlspecialchars($listing->getDisplayTitle(), ENT_QUOTES, 'UTF-8');

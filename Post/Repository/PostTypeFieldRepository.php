@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Repository;
 
+use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Aurora\Module\Editorial\Post\Entity\PostTypeField;
 use Aurora\Module\Editorial\Post\Entity\PostTypeFieldInterface;
-use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**

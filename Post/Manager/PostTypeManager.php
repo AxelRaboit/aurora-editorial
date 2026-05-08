@@ -50,10 +50,8 @@ class PostTypeManager implements PostTypeManagerInterface
 
     public function update(PostTypeInterface $postType, PostTypeInputInterface $input): void
     {
-        if (!$postType->isBuiltIn() && $input->getSlug() !== $postType->getSlug()) {
-            if (null !== $this->postTypeRepository->findOneBy(['slug' => $input->getSlug()])) {
-                throw new InvalidArgumentException($this->translator->trans('backend.postTypes.errors.slug_taken', ['{slug}' => $input->getSlug()]));
-            }
+        if (!$postType->isBuiltIn() && $input->getSlug() !== $postType->getSlug() && null !== $this->postTypeRepository->findOneBy(['slug' => $input->getSlug()])) {
+            throw new InvalidArgumentException($this->translator->trans('backend.postTypes.errors.slug_taken', ['{slug}' => $input->getSlug()]));
         }
 
         $this->applyInput($postType, $input);

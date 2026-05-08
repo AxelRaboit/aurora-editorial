@@ -73,7 +73,7 @@ class CommentSerializer implements CommentSerializerInterface
     /**
      * Builds the front-facing comment tree: roots, replies grouped by root ID, and reaction emojis.
      *
-     * @param CommentInterface[]                      $comments          ordered by createdAt ASC
+     * @param CommentInterface[]             $comments          ordered by createdAt ASC
      * @param array<int, array<string, int>> $reactionCountsMap
      *
      * @return array{roots: list<array<string,mixed>>, replies: array<int, list<array<string,mixed>>>, reactionEmojis: array<string, string>}

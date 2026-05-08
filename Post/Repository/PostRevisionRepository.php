@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Repository;
 
+use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Aurora\Module\Editorial\Post\Entity\Post;
 use Aurora\Module\Editorial\Post\Entity\PostRevision;
 use Aurora\Module\Editorial\Post\Entity\PostRevisionInterface;
-use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Doctrine\Common\Collections\Order;
 use Doctrine\Persistence\ManagerRegistry;
 

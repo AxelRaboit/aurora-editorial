@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Form\Repository;
 
+use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Aurora\Core\Repository\Trait\PaginationTrait;
-use Aurora\Module\Editorial\Form\Entity\Form;
+use Aurora\Module\Editorial\Form\Entity\FormInterface;
 use Aurora\Module\Editorial\Form\Entity\FormSubmission;
 use Aurora\Module\Editorial\Form\Entity\FormSubmissionInterface;
-use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Doctrine\Common\Collections\Order;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -25,9 +25,9 @@ class FormSubmissionRepository extends ResolveTargetEntityRepository
     }
 
     /**
-     * @return array{items: FormSubmission[], total: int, page: int, totalPages: int}
+     * @return array{items: FormSubmissionInterface[], total: int, page: int, totalPages: int}
      */
-    public function findPaginatedByForm(Form $form, int $page, int $limit): array
+    public function findPaginatedByForm(FormInterface $form, int $page, int $limit): array
     {
         $queryBuilder = $this->createQueryBuilder('s')
             ->andWhere('s.form = :form')
@@ -42,9 +42,9 @@ class FormSubmissionRepository extends ResolveTargetEntityRepository
     }
 
     /**
-     * @return FormSubmission[]
+     * @return FormSubmissionInterface[]
      */
-    public function findAllByForm(Form $form): array
+    public function findAllByForm(FormInterface $form): array
     {
         return $this->createQueryBuilder('s')
             ->andWhere('s.form = :form')

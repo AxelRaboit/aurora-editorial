@@ -6,7 +6,7 @@ namespace Aurora\Module\Editorial\Post\View;
 
 use Aurora\Core\Frontend\Service\FrontContext;
 use Aurora\Core\Theme\Service\ThemeContext;
-use Aurora\Module\Editorial\Post\Entity\PostType;
+use Aurora\Module\Editorial\Post\Entity\PostTypeInterface;
 use Aurora\Module\Editorial\Seo\Service\AlternatesBuilder;
 use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
@@ -27,7 +27,7 @@ final readonly class PageViewBuilder
      *
      * @return array<string, mixed>
      */
-    public function homeView(string $locale, array $posts, ?PostType $postType): array
+    public function homeView(string $locale, array $posts, ?PostTypeInterface $postType): array
     {
         return [
             'locale' => $locale,
@@ -45,7 +45,7 @@ final readonly class PageViewBuilder
      *
      * @return array<string, mixed>
      */
-    public function archiveView(string $locale, PostType $postType, array $posts): array
+    public function archiveView(string $locale, PostTypeInterface $postType, array $posts): array
     {
         return [
             'locale' => $locale,

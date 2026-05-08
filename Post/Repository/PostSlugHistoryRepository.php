@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Repository;
 
+use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Aurora\Module\Editorial\Post\Entity\Post;
 use Aurora\Module\Editorial\Post\Entity\PostSlugHistory;
 use Aurora\Module\Editorial\Post\Entity\PostSlugHistoryInterface;
-use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -20,7 +20,7 @@ class PostSlugHistoryRepository extends ResolveTargetEntityRepository
         parent::__construct($registry, PostSlugHistory::class, PostSlugHistoryInterface::class);
     }
 
-    public function findOneByLocaleAndSlug(string $locale, string $slug): ?PostSlugHistory
+    public function findOneByLocaleAndSlug(string $locale, string $slug): ?PostSlugHistoryInterface
     {
         return $this->findOneBy(['locale' => $locale, 'slug' => $slug]);
     }
@@ -32,14 +32,14 @@ class PostSlugHistoryRepository extends ResolveTargetEntityRepository
     public function removeByLocaleAndSlug(string $locale, string $slug): void
     {
         $entry = $this->findOneByLocaleAndSlug($locale, $slug);
-        if ($entry instanceof PostSlugHistory) {
+        if ($entry instanceof PostSlugHistoryInterface) {
             $this->getEntityManager()->remove($entry);
         }
     }
 
     public function recordIfNew(Post $post, string $locale, string $oldSlug): void
     {
-        if ($this->findOneByLocaleAndSlug($locale, $oldSlug) instanceof PostSlugHistory) {
+        if ($this->findOneByLocaleAndSlug($locale, $oldSlug) instanceof PostSlugHistoryInterface) {
             return;
         }
 

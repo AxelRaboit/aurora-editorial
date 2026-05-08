@@ -8,8 +8,8 @@ use Aurora\Core\Frontend\Service\FrontContext;
 use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Core\Theme\Service\ThemeContext;
 use Aurora\Core\Theme\Service\ThemeResolver;
-use Aurora\Module\Editorial\Post\Entity\Post;
-use Aurora\Module\Editorial\Post\Entity\PostTranslation;
+use Aurora\Module\Editorial\Post\Entity\PostInterface;
+use Aurora\Module\Editorial\Post\Entity\PostTranslationInterface;
 use Aurora\Module\Editorial\Seo\Service\AlternatesBuilder;
 use LogicException;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,10 +34,10 @@ final readonly class PostPageRenderer
     /**
      * @param array<string, string> $commentErrors
      */
-    public function render(Post $post, string $locale, array $commentErrors = []): Response
+    public function render(PostInterface $post, string $locale, array $commentErrors = []): Response
     {
         $translation = $post->getTranslation($locale);
-        if (!$translation instanceof PostTranslation) {
+        if (!$translation instanceof PostTranslationInterface) {
             throw new LogicException(sprintf('Post #%d has no translation for locale "%s".', $post->getId(), $locale));
         }
 
