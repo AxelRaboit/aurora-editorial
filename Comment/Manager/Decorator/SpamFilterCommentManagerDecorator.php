@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Comment\Manager\Decorator;
 
 use Aurora\Module\Editorial\Comment\Contract\CommentManagerInterface;
-use Aurora\Module\Editorial\Comment\Entity\Comment;
+use Aurora\Module\Editorial\Comment\Entity\CommentInterface;
 use Aurora\Module\Editorial\Post\Entity\Post;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
@@ -22,7 +22,7 @@ final readonly class SpamFilterCommentManagerDecorator implements CommentManager
         private CommentManagerInterface $inner,
     ) {}
 
-    public function submit(Post $post, string $authorName, string $authorEmail, string $content, ?Comment $parent = null): Comment
+    public function submit(Post $post, string $authorName, string $authorEmail, string $content, ?CommentInterface $parent = null): CommentInterface
     {
         $comment = $this->inner->submit($post, $authorName, $authorEmail, $content, $parent);
 
@@ -33,17 +33,17 @@ final readonly class SpamFilterCommentManagerDecorator implements CommentManager
         return $comment;
     }
 
-    public function approve(Comment $comment): void
+    public function approve(CommentInterface $comment): void
     {
         $this->inner->approve($comment);
     }
 
-    public function spam(Comment $comment): void
+    public function spam(CommentInterface $comment): void
     {
         $this->inner->spam($comment);
     }
 
-    public function delete(Comment $comment): void
+    public function delete(CommentInterface $comment): void
     {
         $this->inner->delete($comment);
     }

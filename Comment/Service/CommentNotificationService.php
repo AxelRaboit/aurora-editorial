@@ -6,7 +6,7 @@ namespace Aurora\Module\Editorial\Comment\Service;
 
 use Aurora\Core\Mail\Service\MailService;
 use Aurora\Core\User\Entity\User;
-use Aurora\Module\Editorial\Comment\Entity\Comment;
+use Aurora\Module\Editorial\Comment\Entity\CommentInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 final readonly class CommentNotificationService
@@ -16,7 +16,7 @@ final readonly class CommentNotificationService
         private UrlGeneratorInterface $urlGenerator,
     ) {}
 
-    public function notifyPendingToAdmin(Comment $comment): void
+    public function notifyPendingToAdmin(CommentInterface $comment): void
     {
         $this->mail->sendToAdmin(
             'editorial.mail.comment.subject_pending',
@@ -28,7 +28,7 @@ final readonly class CommentNotificationService
         );
     }
 
-    public function notifyApprovedToAuthor(Comment $comment): void
+    public function notifyApprovedToAuthor(CommentInterface $comment): void
     {
         $author = $comment->getPost()->getAuthor();
         if (!$author instanceof User) {

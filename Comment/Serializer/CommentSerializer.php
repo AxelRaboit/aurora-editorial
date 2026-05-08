@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Comment\Serializer;
 
-use Aurora\Module\Editorial\Comment\Entity\Comment;
+use Aurora\Module\Editorial\Comment\Entity\CommentInterface;
 use Aurora\Module\Editorial\Comment\Enum\ReactionTypeEnum;
 use Aurora\Module\Editorial\Comment\Repository\CommentReactionRepository;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -23,7 +23,7 @@ final readonly class CommentSerializer
      *
      * @return array<string, mixed>
      */
-    public function serialize(Comment $comment): array
+    public function serialize(CommentInterface $comment): array
     {
         $firstTranslation = $comment->getPost()->getTranslations()->first();
         $postTitle = false !== $firstTranslation ? ($firstTranslation->getTitle() ?? '') : '';
@@ -55,7 +55,7 @@ final readonly class CommentSerializer
      *
      * @return array<string, mixed>
      */
-    public function serializeForFront(Comment $comment, array $reactionCountsMap): array
+    public function serializeForFront(CommentInterface $comment, array $reactionCountsMap): array
     {
         return [
             'id' => $comment->getId(),
@@ -71,7 +71,7 @@ final readonly class CommentSerializer
     /**
      * Builds the front-facing comment tree: roots, replies grouped by root ID, and reaction emojis.
      *
-     * @param Comment[]                      $comments          ordered by createdAt ASC
+     * @param CommentInterface[]                      $comments          ordered by createdAt ASC
      * @param array<int, array<string, int>> $reactionCountsMap
      *
      * @return array{roots: list<array<string,mixed>>, replies: array<int, list<array<string,mixed>>>, reactionEmojis: array<string, string>}
@@ -105,9 +105,9 @@ final readonly class CommentSerializer
     }
 
     /**
-     * @param array<int, Comment> $commentMap pre-built id → comment map
+     * @param array<int, CommentInterface> $commentMap pre-built id → comment map
      */
-    public function findRootId(Comment $comment, array $commentMap): int
+    public function findRootId(CommentInterface $comment, array $commentMap): int
     {
         $current = $comment;
         while (null !== $current->getParent()) {

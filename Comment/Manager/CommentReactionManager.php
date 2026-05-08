@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Comment\Manager;
 
-use Aurora\Module\Editorial\Comment\Entity\Comment;
+use Aurora\Module\Editorial\Comment\Entity\CommentInterface;
 use Aurora\Module\Editorial\Comment\Entity\CommentReaction;
+use Aurora\Module\Editorial\Comment\Entity\CommentReactionInterface;
 use Aurora\Module\Editorial\Comment\Enum\ReactionTypeEnum;
 use Aurora\Module\Editorial\Comment\Repository\CommentReactionRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,14 +24,14 @@ final readonly class CommentReactionManager
      *
      * @return array<string, int>
      */
-    public function toggle(Comment $comment, ReactionTypeEnum $type, string $fingerprint): array
+    public function toggle(CommentInterface $comment, ReactionTypeEnum $type, string $fingerprint): array
     {
         $existingReaction = $this->commentReactionRepository->findByCommentAndFingerprint(
             (int) $comment->getId(),
             $fingerprint,
         );
 
-        if ($existingReaction instanceof CommentReaction) {
+        if ($existingReaction instanceof CommentReactionInterface) {
             if ($existingReaction->getType() === $type) {
                 $this->entityManager->remove($existingReaction);
             } else {

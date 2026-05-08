@@ -11,6 +11,7 @@ use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
 use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Module\Editorial\Comment\Contract\CommentManagerInterface;
 use Aurora\Module\Editorial\Comment\Entity\Comment;
+use Aurora\Module\Editorial\Comment\Entity\CommentInterface;
 use Aurora\Module\Editorial\Comment\Enum\CommentStatusEnum;
 use Aurora\Module\Editorial\Comment\Service\CommentNotificationService;
 use Aurora\Module\Editorial\Post\Entity\Post;
@@ -28,7 +29,7 @@ final readonly class CommentManager implements CommentManagerInterface
         private SequenceGenerator $sequenceGenerator,
     ) {}
 
-    public function submit(Post $post, string $authorName, string $authorEmail, string $content, ?Comment $parent = null): Comment
+    public function submit(Post $post, string $authorName, string $authorEmail, string $content, ?CommentInterface $parent = null): CommentInterface
     {
         $moderationEnabled = $this->settingRepository->getBoolean(ApplicationParameterEnum::CommentModerationEnabled->value, true);
         $prefix = $this->settingRepository->get(ApplicationParameterEnum::EditorialCommentPrefix->value, SequencePrefixEnum::Comment->value) ?? SequencePrefixEnum::Comment->value;
@@ -41,7 +42,7 @@ final readonly class CommentManager implements CommentManagerInterface
         $comment->setStatus($moderationEnabled ? CommentStatusEnum::Pending : CommentStatusEnum::Approved);
         $comment->setReference($this->sequenceGenerator->next($prefix));
 
-        if ($parent instanceof Comment) {
+        if ($parent instanceof CommentInterface) {
             $comment->setParent($parent);
         }
 
@@ -62,7 +63,7 @@ final readonly class CommentManager implements CommentManagerInterface
         return $comment;
     }
 
-    public function approve(Comment $comment): void
+    public function approve(CommentInterface $comment): void
     {
         $wasPending = CommentStatusEnum::Pending === $comment->getStatus();
         $comment->setStatus(CommentStatusEnum::Approved);
@@ -75,7 +76,7 @@ final readonly class CommentManager implements CommentManagerInterface
         }
     }
 
-    public function spam(Comment $comment): void
+    public function spam(CommentInterface $comment): void
     {
         $comment->setStatus(CommentStatusEnum::Spam);
         $this->entityManager->flush();
@@ -83,7 +84,7 @@ final readonly class CommentManager implements CommentManagerInterface
         $this->auditLogger->log('editorial', 'comment.spam', 'Comment', $comment->getId());
     }
 
-    public function delete(Comment $comment): void
+    public function delete(CommentInterface $comment): void
     {
         $id = $comment->getId();
         $this->entityManager->remove($comment);

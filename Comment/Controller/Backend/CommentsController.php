@@ -10,7 +10,7 @@ use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
 use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Core\Validation\DTO\PaginationRequest;
 use Aurora\Module\Editorial\Comment\Contract\CommentManagerInterface;
-use Aurora\Module\Editorial\Comment\Entity\Comment;
+use Aurora\Module\Editorial\Comment\Entity\CommentInterface;
 use Aurora\Module\Editorial\Comment\Repository\CommentRepository;
 use Aurora\Module\Editorial\Comment\Serializer\CommentSerializer;
 use Aurora\Module\Editorial\Comment\View\CommentsViewBuilder;
@@ -71,7 +71,7 @@ final class CommentsController extends AbstractController
     }
 
     #[Route('/{id}/approve', name: '_approve', methods: [HttpMethodEnum::Post->value])]
-    public function approve(Comment $comment): JsonResponse
+    public function approve(CommentInterface $comment): JsonResponse
     {
         $this->commentManager->approve($comment);
 
@@ -79,7 +79,7 @@ final class CommentsController extends AbstractController
     }
 
     #[Route('/{id}/spam', name: '_spam', methods: [HttpMethodEnum::Post->value])]
-    public function spam(Comment $comment): JsonResponse
+    public function spam(CommentInterface $comment): JsonResponse
     {
         $this->commentManager->spam($comment);
 
@@ -87,7 +87,7 @@ final class CommentsController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: '_delete', methods: [HttpMethodEnum::Post->value])]
-    public function delete(Comment $comment): JsonResponse
+    public function delete(CommentInterface $comment): JsonResponse
     {
         $this->commentManager->delete($comment);
 

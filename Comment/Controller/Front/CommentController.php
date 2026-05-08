@@ -11,7 +11,7 @@ use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Frontend\Service\FrontContext;
 use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Module\Editorial\Comment\Contract\CommentManagerInterface;
-use Aurora\Module\Editorial\Comment\Entity\Comment;
+use Aurora\Module\Editorial\Comment\Entity\CommentInterface;
 use Aurora\Module\Editorial\Comment\Enum\ReactionTypeEnum;
 use Aurora\Module\Editorial\Comment\Manager\CommentReactionManager;
 use Aurora\Module\Editorial\Comment\Repository\CommentReactionRepository;
@@ -102,7 +102,7 @@ class CommentController extends AbstractController
 
         $allComments = $this->commentRepository->findApprovedByPost($post->getId());
 
-        $allCommentIds = array_map(static fn (Comment $comment): int => (int) $comment->getId(), $allComments);
+        $allCommentIds = array_map(static fn (CommentInterface $comment): int => (int) $comment->getId(), $allComments);
         $reactionCountsMap = [] !== $allCommentIds
             ? $this->commentReactionRepository->countByComments($allCommentIds)
             : [];
@@ -147,7 +147,7 @@ class CommentController extends AbstractController
         return $this->settingRepository->getBoolean('comments_enabled') && $post->isCommentsEnabled();
     }
 
-    private function resolveParent(Post $post, int $parentId): ?Comment
+    private function resolveParent(Post $post, int $parentId): ?CommentInterface
     {
         if ($parentId <= 0) {
             return null;
@@ -158,9 +158,9 @@ class CommentController extends AbstractController
         return $this->isPubliclyOnPost($parent, $post) ? $parent : null;
     }
 
-    private function isPubliclyOnPost(?Comment $comment, Post $post): bool
+    private function isPubliclyOnPost(?CommentInterface $comment, Post $post): bool
     {
-        return $comment instanceof Comment
+        return $comment instanceof CommentInterface
             && $comment->getPost()->getId() === $post->getId()
             && 'approved' === $comment->getStatus()->value;
     }
