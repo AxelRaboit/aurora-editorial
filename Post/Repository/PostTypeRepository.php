@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Post\Repository;
 
 use Aurora\Module\Editorial\Post\Entity\PostType;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Aurora\Module\Editorial\Post\Entity\PostTypeInterface;
+use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<PostType>
+ * @extends ResolveTargetEntityRepository<PostTypeInterface>
  */
-class PostTypeRepository extends ServiceEntityRepository
+class PostTypeRepository extends ResolveTargetEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, PostType::class);
+        parent::__construct($registry, PostType::class, PostTypeInterface::class);
     }
 
     /**

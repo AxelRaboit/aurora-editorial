@@ -6,23 +6,24 @@ namespace Aurora\Module\Editorial\Post\Repository;
 
 use Aurora\Core\Repository\Trait\PaginationTrait;
 use Aurora\Module\Editorial\Post\Entity\Post;
+use Aurora\Module\Editorial\Post\Entity\PostInterface;
 use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
 use DateTimeImmutable;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Doctrine\Common\Collections\Order;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Post>
+ * @extends ResolveTargetEntityRepository<PostInterface>
  */
-class PostRepository extends ServiceEntityRepository
+class PostRepository extends ResolveTargetEntityRepository
 {
     use PaginationTrait;
 
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Post::class);
+        parent::__construct($registry, Post::class, PostInterface::class);
     }
 
     public function findPaginated(int $page, int $limit = 20, ?string $search = null, ?int $postTypeId = null, string $locale = 'fr', bool $trashed = false, ?int $authorId = null): array

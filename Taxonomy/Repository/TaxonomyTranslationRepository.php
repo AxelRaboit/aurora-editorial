@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Taxonomy\Repository;
 
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTranslation;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTranslationInterface;
+use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<TaxonomyTranslation>
+ * @extends ResolveTargetEntityRepository<TaxonomyTranslationInterface>
  */
-class TaxonomyTranslationRepository extends ServiceEntityRepository
+class TaxonomyTranslationRepository extends ResolveTargetEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, TaxonomyTranslation::class);
+        parent::__construct($registry, TaxonomyTranslation::class, TaxonomyTranslationInterface::class);
     }
 }

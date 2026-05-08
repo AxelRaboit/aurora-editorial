@@ -6,18 +6,19 @@ namespace Aurora\Module\Editorial\Taxonomy\Repository;
 
 use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTermInterface;
+use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Doctrine\Common\Collections\Order;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<TaxonomyTerm>
+ * @extends ResolveTargetEntityRepository<TaxonomyTermInterface>
  */
-class TaxonomyTermRepository extends ServiceEntityRepository
+class TaxonomyTermRepository extends ResolveTargetEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, TaxonomyTerm::class);
+        parent::__construct($registry, TaxonomyTerm::class, TaxonomyTermInterface::class);
     }
 
     /**

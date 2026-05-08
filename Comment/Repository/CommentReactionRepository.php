@@ -5,18 +5,19 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Comment\Repository;
 
 use Aurora\Module\Editorial\Comment\Entity\CommentReaction;
+use Aurora\Module\Editorial\Comment\Entity\CommentReactionInterface;
 use Aurora\Module\Editorial\Comment\Enum\ReactionTypeEnum;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<CommentReaction>
+ * @extends ResolveTargetEntityRepository<CommentReactionInterface>
  */
-final class CommentReactionRepository extends ServiceEntityRepository
+final class CommentReactionRepository extends ResolveTargetEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, CommentReaction::class);
+        parent::__construct($registry, CommentReaction::class, CommentReactionInterface::class);
     }
 
     public function findByCommentAndFingerprint(int $commentId, string $fingerprint): ?CommentReaction

@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Form\Repository;
 
 use Aurora\Module\Editorial\Form\Entity\FormTranslation;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Aurora\Module\Editorial\Form\Entity\FormTranslationInterface;
+use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<FormTranslation>
+ * @extends ResolveTargetEntityRepository<FormTranslationInterface>
  */
-class FormTranslationRepository extends ServiceEntityRepository
+class FormTranslationRepository extends ResolveTargetEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, FormTranslation::class);
+        parent::__construct($registry, FormTranslation::class, FormTranslationInterface::class);
     }
 
     public function findOneByLocaleAndSlug(string $locale, string $slug): ?FormTranslation

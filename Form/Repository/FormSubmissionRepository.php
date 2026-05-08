@@ -7,20 +7,21 @@ namespace Aurora\Module\Editorial\Form\Repository;
 use Aurora\Core\Repository\Trait\PaginationTrait;
 use Aurora\Module\Editorial\Form\Entity\Form;
 use Aurora\Module\Editorial\Form\Entity\FormSubmission;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Aurora\Module\Editorial\Form\Entity\FormSubmissionInterface;
+use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Doctrine\Common\Collections\Order;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<FormSubmission>
+ * @extends ResolveTargetEntityRepository<FormSubmissionInterface>
  */
-class FormSubmissionRepository extends ServiceEntityRepository
+class FormSubmissionRepository extends ResolveTargetEntityRepository
 {
     use PaginationTrait;
 
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, FormSubmission::class);
+        parent::__construct($registry, FormSubmission::class, FormSubmissionInterface::class);
     }
 
     /**

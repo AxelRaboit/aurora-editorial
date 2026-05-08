@@ -6,20 +6,21 @@ namespace Aurora\Module\Editorial\Form\Repository;
 
 use Aurora\Core\Repository\Trait\PaginationTrait;
 use Aurora\Module\Editorial\Form\Entity\Form;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Aurora\Module\Editorial\Form\Entity\FormInterface;
+use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Doctrine\Common\Collections\Order;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Form>
+ * @extends ResolveTargetEntityRepository<FormInterface>
  */
-class FormRepository extends ServiceEntityRepository
+class FormRepository extends ResolveTargetEntityRepository
 {
     use PaginationTrait;
 
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Form::class);
+        parent::__construct($registry, Form::class, FormInterface::class);
     }
 
     /**

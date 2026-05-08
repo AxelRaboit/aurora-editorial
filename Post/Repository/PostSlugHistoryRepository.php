@@ -6,17 +6,18 @@ namespace Aurora\Module\Editorial\Post\Repository;
 
 use Aurora\Module\Editorial\Post\Entity\Post;
 use Aurora\Module\Editorial\Post\Entity\PostSlugHistory;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Aurora\Module\Editorial\Post\Entity\PostSlugHistoryInterface;
+use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<PostSlugHistory>
+ * @extends ResolveTargetEntityRepository<PostSlugHistoryInterface>
  */
-class PostSlugHistoryRepository extends ServiceEntityRepository
+class PostSlugHistoryRepository extends ResolveTargetEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, PostSlugHistory::class);
+        parent::__construct($registry, PostSlugHistory::class, PostSlugHistoryInterface::class);
     }
 
     public function findOneByLocaleAndSlug(string $locale, string $slug): ?PostSlugHistory

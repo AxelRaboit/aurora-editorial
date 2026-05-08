@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Taxonomy\Repository;
 
 use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyInterface;
+use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Taxonomy>
+ * @extends ResolveTargetEntityRepository<TaxonomyInterface>
  */
-class TaxonomyRepository extends ServiceEntityRepository
+class TaxonomyRepository extends ResolveTargetEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Taxonomy::class);
+        parent::__construct($registry, Taxonomy::class, TaxonomyInterface::class);
     }
 
     public function findOneBySlug(string $slug): ?Taxonomy

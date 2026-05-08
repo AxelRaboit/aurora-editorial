@@ -6,18 +6,19 @@ namespace Aurora\Module\Editorial\Post\Repository;
 
 use Aurora\Module\Editorial\Post\Entity\Post;
 use Aurora\Module\Editorial\Post\Entity\PostRevision;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Aurora\Module\Editorial\Post\Entity\PostRevisionInterface;
+use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Doctrine\Common\Collections\Order;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<PostRevision>
+ * @extends ResolveTargetEntityRepository<PostRevisionInterface>
  */
-class PostRevisionRepository extends ServiceEntityRepository
+class PostRevisionRepository extends ResolveTargetEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, PostRevision::class);
+        parent::__construct($registry, PostRevision::class, PostRevisionInterface::class);
     }
 
     /**
