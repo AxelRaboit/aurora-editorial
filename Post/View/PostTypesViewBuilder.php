@@ -7,7 +7,7 @@ namespace Aurora\Module\Editorial\Post\View;
 use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
 use Aurora\Module\Editorial\Post\Serializer\PostTypeSerializerInterface;
 use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
-use Aurora\Module\Editorial\Taxonomy\Serializer\TaxonomySerializer;
+use Aurora\Module\Editorial\Taxonomy\Serializer\TaxonomySerializerInterface;
 use Doctrine\Common\Collections\Order;
 
 /**
@@ -19,7 +19,7 @@ final readonly class PostTypesViewBuilder
         private PostTypeRepository $postTypeRepository,
         private TaxonomyRepository $taxonomyRepository,
         private PostTypeSerializerInterface $postTypeSerializer,
-        private TaxonomySerializer $taxonomySerializer,
+        private TaxonomySerializerInterface $taxonomySerializer,
     ) {}
 
     /**

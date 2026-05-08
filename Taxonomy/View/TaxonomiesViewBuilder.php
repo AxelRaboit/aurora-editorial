@@ -7,7 +7,7 @@ namespace Aurora\Module\Editorial\Taxonomy\View;
 use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
 use Aurora\Module\Editorial\Post\Serializer\PostTypeSerializerInterface;
 use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
-use Aurora\Module\Editorial\Taxonomy\Serializer\TaxonomySerializer;
+use Aurora\Module\Editorial\Taxonomy\Serializer\TaxonomySerializerInterface;
 use Doctrine\Common\Collections\Order;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
@@ -22,7 +22,7 @@ final readonly class TaxonomiesViewBuilder
     public function __construct(
         private TaxonomyRepository $taxonomyRepository,
         private PostTypeRepository $postTypeRepository,
-        private TaxonomySerializer $taxonomySerializer,
+        private TaxonomySerializerInterface $taxonomySerializer,
         private PostTypeSerializerInterface $postTypeSerializer,
         #[Autowire(param: 'kernel.enabled_locales')]
         private array $enabledLocales,

@@ -4,18 +4,20 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Taxonomy\Serializer;
 
-use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
+use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyInterface;
+use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 
-final readonly class TaxonomySerializer
+#[AsAlias(TaxonomySerializerInterface::class)]
+class TaxonomySerializer implements TaxonomySerializerInterface
 {
     public function __construct(
-        private TaxonomyTermSerializer $termSerializer,
+        protected readonly TaxonomyTermSerializerInterface $termSerializer,
     ) {}
 
     /**
      * @return array<string, mixed>
      */
-    public function serialize(Taxonomy $taxonomy): array
+    public function serialize(TaxonomyInterface $taxonomy): array
     {
         $translations = [];
         foreach ($taxonomy->getTranslations() as $locale => $translation) {
@@ -38,7 +40,7 @@ final readonly class TaxonomySerializer
     /**
      * @return array<string, mixed>
      */
-    public function serializeFull(Taxonomy $taxonomy): array
+    public function serializeFull(TaxonomyInterface $taxonomy): array
     {
         $terms = array_map(
             $this->termSerializer->serializeFull(...),

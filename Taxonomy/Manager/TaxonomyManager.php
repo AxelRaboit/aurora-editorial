@@ -10,11 +10,12 @@ use Aurora\Core\Sequence\SequencePrefixEnum;
 use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
 use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
-use Aurora\Module\Editorial\Taxonomy\Contract\TaxonomyManagerInterface;
-use Aurora\Module\Editorial\Taxonomy\Dto\TaxonomyInput;
-use Aurora\Module\Editorial\Taxonomy\Dto\TaxonomyTermInput;
+use Aurora\Module\Editorial\Taxonomy\Dto\TaxonomyInputInterface;
+use Aurora\Module\Editorial\Taxonomy\Dto\TaxonomyTermInputInterface;
 use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
+use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyInterface;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
+use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTermInterface;
 use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
 use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyTermRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,88 +26,87 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AsAlias(TaxonomyManagerInterface::class)]
-final readonly class TaxonomyManager implements TaxonomyManagerInterface
+class TaxonomyManager implements TaxonomyManagerInterface
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private TaxonomyRepository $taxonomyRepository,
-        private TaxonomyTermRepository $termRepository,
-        private PostTypeRepository $postTypeRepository,
-        private SluggerInterface $slugger,
-        private TranslatorInterface $translator,
-        private AuditLogger $auditLogger,
-        private SequenceGenerator $sequenceGenerator,
-        private SettingRepository $settingRepository,
+        protected readonly EntityManagerInterface $entityManager,
+        protected readonly TaxonomyRepository $taxonomyRepository,
+        protected readonly TaxonomyTermRepository $termRepository,
+        protected readonly PostTypeRepository $postTypeRepository,
+        protected readonly SluggerInterface $slugger,
+        protected readonly TranslatorInterface $translator,
+        protected readonly AuditLogger $auditLogger,
+        protected readonly SequenceGenerator $sequenceGenerator,
+        protected readonly SettingRepository $settingRepository,
     ) {}
 
-    public function create(TaxonomyInput $input): Taxonomy
+    public function create(TaxonomyInputInterface $input): TaxonomyInterface
     {
-        if ($this->taxonomyRepository->findOneBySlug($input->slug) instanceof Taxonomy) {
-            throw new InvalidArgumentException($this->translator->trans('backend.taxonomies.errors.slug_taken', ['{slug}' => $input->slug]));
+        if ($this->taxonomyRepository->findOneBySlug($input->getSlug()) instanceof Taxonomy) {
+            throw new InvalidArgumentException($this->translator->trans('backend.taxonomies.errors.slug_taken', ['{slug}' => $input->getSlug()]));
         }
 
-        $taxonomy = new Taxonomy()
-            ->setSlug($input->slug)
-            ->setHierarchical($input->hierarchical)
-            ->setIsBuiltIn(false);
+        $taxonomy = $this->createTaxonomy();
+        $taxonomy->setSlug($input->getSlug());
+        $taxonomy->setHierarchical($input->isHierarchical());
+        $taxonomy->setIsBuiltIn(false);
 
-        $this->applyTranslations($taxonomy, $input->translations);
-        $this->syncPostTypes($taxonomy, $input->postTypeIds);
+        $this->applyTaxonomyTranslations($taxonomy, $input->getTranslations());
+        $this->syncPostTypes($taxonomy, $input->getPostTypeIds());
 
         $this->entityManager->persist($taxonomy);
         $this->entityManager->flush();
 
-        $this->auditLogger->log('editorial', 'taxonomy.created', 'Taxonomy', $taxonomy->getId(), ['slug' => $taxonomy->getSlug()]);
+        $this->auditTaxonomyCreated($taxonomy);
 
         return $taxonomy;
     }
 
-    public function update(Taxonomy $taxonomy, TaxonomyInput $input): void
+    public function update(TaxonomyInterface $taxonomy, TaxonomyInputInterface $input): void
     {
         if (!$taxonomy->isBuiltIn()) {
-            if ($input->slug !== $taxonomy->getSlug()) {
-                if ($this->taxonomyRepository->findOneBySlug($input->slug) instanceof Taxonomy) {
-                    throw new InvalidArgumentException($this->translator->trans('backend.taxonomies.errors.slug_taken', ['{slug}' => $input->slug]));
+            if ($input->getSlug() !== $taxonomy->getSlug()) {
+                if ($this->taxonomyRepository->findOneBySlug($input->getSlug()) instanceof Taxonomy) {
+                    throw new InvalidArgumentException($this->translator->trans('backend.taxonomies.errors.slug_taken', ['{slug}' => $input->getSlug()]));
                 }
 
-                $taxonomy->setSlug($input->slug);
+                $taxonomy->setSlug($input->getSlug());
             }
 
-            $taxonomy->setHierarchical($input->hierarchical);
+            $taxonomy->setHierarchical($input->isHierarchical());
         }
 
-        $this->applyTranslations($taxonomy, $input->translations);
-        $this->syncPostTypes($taxonomy, $input->postTypeIds);
+        $this->applyTaxonomyTranslations($taxonomy, $input->getTranslations());
+        $this->syncPostTypes($taxonomy, $input->getPostTypeIds());
 
         $this->entityManager->flush();
 
-        $this->auditLogger->log('editorial', 'taxonomy.updated', 'Taxonomy', $taxonomy->getId(), ['slug' => $taxonomy->getSlug()]);
+        $this->auditTaxonomyUpdated($taxonomy);
     }
 
-    public function delete(Taxonomy $taxonomy): void
+    public function delete(TaxonomyInterface $taxonomy): void
     {
         if ($taxonomy->isBuiltIn()) {
             throw new RuntimeException($this->translator->trans('backend.taxonomies.errors.builtin_protected'));
         }
 
-        $id = $taxonomy->getId();
-        $slug = $taxonomy->getSlug();
+        $this->auditTaxonomyDeleted($taxonomy);
+
         $this->entityManager->remove($taxonomy);
         $this->entityManager->flush();
-
-        $this->auditLogger->log('editorial', 'taxonomy.deleted', 'Taxonomy', $id, ['slug' => $slug]);
     }
 
-    public function createTerm(Taxonomy $taxonomy, TaxonomyTermInput $input): TaxonomyTerm
+    public function createTerm(TaxonomyInterface $taxonomy, TaxonomyTermInputInterface $input): TaxonomyTermInterface
     {
-        $term = new TaxonomyTerm()->setTaxonomy($taxonomy);
+        $term = $this->createTaxonomyTerm();
+        $term->setTaxonomy($taxonomy);
 
-        $parent = $this->resolveParent($taxonomy, $input->parentId);
+        $parent = $this->resolveParent($taxonomy, $input->getParentId());
         $term->setParent($parent);
 
         $term->setPosition($this->nextPositionFor($taxonomy, $parent));
 
-        $this->applyTermTranslations($term, $input->translations);
+        $this->applyTermTranslations($term, $input->getTranslations());
 
         $this->entityManager->persist($term);
         $this->entityManager->flush();
@@ -115,45 +115,44 @@ final readonly class TaxonomyManager implements TaxonomyManagerInterface
         $term->setReference($this->sequenceGenerator->next($termPrefix));
         $this->entityManager->flush();
 
-        $this->auditLogger->log('editorial', 'taxonomy.term.created', 'TaxonomyTerm', $term->getId(), ['taxonomySlug' => $taxonomy->getSlug()]);
+        $this->auditTermCreated($term);
 
         return $term;
     }
 
-    public function updateTerm(TaxonomyTerm $term, TaxonomyTermInput $input): void
+    public function updateTerm(TaxonomyTermInterface $term, TaxonomyTermInputInterface $input): void
     {
-        $parent = $this->resolveParent($term->getTaxonomy(), $input->parentId);
+        $parent = $this->resolveParent($term->getTaxonomy(), $input->getParentId());
 
         if ($parent !== $term->getParent()) {
-            if ($parent instanceof TaxonomyTerm && ($parent === $term || $parent->isDescendantOf($term))) {
+            if ($parent instanceof TaxonomyTermInterface && ($parent === $term || $parent->isDescendantOf($term))) {
                 throw new InvalidArgumentException($this->translator->trans('backend.taxonomies.errors.term_self_nested'));
             }
 
             $term->setParent($parent);
         }
 
-        $this->applyTermTranslations($term, $input->translations);
+        $this->applyTermTranslations($term, $input->getTranslations());
 
         $this->entityManager->flush();
 
-        $this->auditLogger->log('editorial', 'taxonomy.term.updated', 'TaxonomyTerm', $term->getId());
+        $this->auditTermUpdated($term);
     }
 
-    public function deleteTerm(TaxonomyTerm $term): void
+    public function deleteTerm(TaxonomyTermInterface $term): void
     {
         // Promote direct children to this term's parent so the subtree is preserved.
         foreach ($term->getChildren() as $child) {
             $child->setParent($term->getParent());
         }
 
-        $id = $term->getId();
+        $this->auditTermDeleted($term);
+
         $this->entityManager->remove($term);
         $this->entityManager->flush();
-
-        $this->auditLogger->log('editorial', 'taxonomy.term.deleted', 'TaxonomyTerm', $id);
     }
 
-    public function reorderTerms(Taxonomy $taxonomy, array $entries): void
+    public function reorderTerms(TaxonomyInterface $taxonomy, array $entries): void
     {
         $termsById = [];
         foreach ($this->termRepository->findByTaxonomyOrdered($taxonomy) as $term) {
@@ -185,7 +184,6 @@ final readonly class TaxonomyManager implements TaxonomyManagerInterface
             }
         }
 
-        // Detach then reassign, now that we know the target tree is acyclic.
         foreach (array_keys($parentMap) as $id) {
             $termsById[$id]->setParent(null);
         }
@@ -205,8 +203,64 @@ final readonly class TaxonomyManager implements TaxonomyManagerInterface
         $this->entityManager->flush();
     }
 
+    // ── Hooks: instanciation ──────────────────────────────────────────────────
+
+    protected function createTaxonomy(): TaxonomyInterface
+    {
+        return new Taxonomy();
+    }
+
+    protected function createTaxonomyTerm(): TaxonomyTermInterface
+    {
+        return new TaxonomyTerm();
+    }
+
+    // ── Hooks: audit ──────────────────────────────────────────────────────────
+
+    protected function auditTaxonomyCreated(TaxonomyInterface $taxonomy): void
+    {
+        $this->auditLogger->log('editorial', 'taxonomy.created', 'Taxonomy', $taxonomy->getId(), $this->auditTaxonomyPayload($taxonomy));
+    }
+
+    protected function auditTaxonomyUpdated(TaxonomyInterface $taxonomy): void
+    {
+        $this->auditLogger->log('editorial', 'taxonomy.updated', 'Taxonomy', $taxonomy->getId(), $this->auditTaxonomyPayload($taxonomy));
+    }
+
+    protected function auditTaxonomyDeleted(TaxonomyInterface $taxonomy): void
+    {
+        $this->auditLogger->log('editorial', 'taxonomy.deleted', 'Taxonomy', $taxonomy->getId(), $this->auditTaxonomyPayload($taxonomy));
+    }
+
+    protected function auditTermCreated(TaxonomyTermInterface $term): void
+    {
+        $this->auditLogger->log('editorial', 'taxonomy.term.created', 'TaxonomyTerm', $term->getId(), $this->auditTermPayload($term));
+    }
+
+    protected function auditTermUpdated(TaxonomyTermInterface $term): void
+    {
+        $this->auditLogger->log('editorial', 'taxonomy.term.updated', 'TaxonomyTerm', $term->getId(), $this->auditTermPayload($term));
+    }
+
+    protected function auditTermDeleted(TaxonomyTermInterface $term): void
+    {
+        $this->auditLogger->log('editorial', 'taxonomy.term.deleted', 'TaxonomyTerm', $term->getId(), $this->auditTermPayload($term));
+    }
+
+    protected function auditTaxonomyPayload(TaxonomyInterface $taxonomy): array
+    {
+        return ['slug' => $taxonomy->getSlug()];
+    }
+
+    protected function auditTermPayload(TaxonomyTermInterface $term): array
+    {
+        return ['taxonomySlug' => $term->getTaxonomy()->getSlug()];
+    }
+
+    // ── Internals ─────────────────────────────────────────────────────────────
+
     /** @param array<string, array{label?: string, description?: ?string}> $translations */
-    private function applyTranslations(Taxonomy $taxonomy, array $translations): void
+    private function applyTaxonomyTranslations(TaxonomyInterface $taxonomy, array $translations): void
     {
         foreach ($translations as $locale => $payload) {
             $translation = $taxonomy->translate((string) $locale);
@@ -216,7 +270,7 @@ final readonly class TaxonomyManager implements TaxonomyManagerInterface
     }
 
     /** @param array<string, array{name?: ?string, slug?: ?string, description?: ?string}> $translations */
-    private function applyTermTranslations(TaxonomyTerm $term, array $translations): void
+    private function applyTermTranslations(TaxonomyTermInterface $term, array $translations): void
     {
         foreach ($translations as $locale => $payload) {
             $translation = $term->translate((string) $locale);
@@ -233,7 +287,7 @@ final readonly class TaxonomyManager implements TaxonomyManagerInterface
     }
 
     /** @param array<int> $postTypeIds */
-    private function syncPostTypes(Taxonomy $taxonomy, array $postTypeIds): void
+    private function syncPostTypes(TaxonomyInterface $taxonomy, array $postTypeIds): void
     {
         foreach ($taxonomy->getPostTypes() as $existing) {
             if (!in_array($existing->getId(), $postTypeIds, true)) {
@@ -250,7 +304,7 @@ final readonly class TaxonomyManager implements TaxonomyManagerInterface
         }
     }
 
-    private function resolveParent(Taxonomy $taxonomy, ?int $parentId): ?TaxonomyTerm
+    private function resolveParent(TaxonomyInterface $taxonomy, ?int $parentId): ?TaxonomyTermInterface
     {
         if (null === $parentId) {
             return null;
@@ -268,7 +322,7 @@ final readonly class TaxonomyManager implements TaxonomyManagerInterface
         return $parent;
     }
 
-    private function nextPositionFor(Taxonomy $taxonomy, ?TaxonomyTerm $parent): int
+    private function nextPositionFor(TaxonomyInterface $taxonomy, ?TaxonomyTermInterface $parent): int
     {
         $max = 0;
         foreach ($this->termRepository->findBy(['taxonomy' => $taxonomy, 'parent' => $parent]) as $sibling) {

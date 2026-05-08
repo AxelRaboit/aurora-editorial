@@ -9,12 +9,12 @@ use Aurora\Core\Enum\HttpStatusEnum;
 use Aurora\Core\Frontend\Controller\JsonRequestTrait;
 use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Validation\Service\PayloadValidator;
-use Aurora\Module\Editorial\Taxonomy\Contract\TaxonomyManagerInterface;
-use Aurora\Module\Editorial\Taxonomy\Dto\TaxonomyInput;
-use Aurora\Module\Editorial\Taxonomy\Dto\TaxonomyTermInput;
+use Aurora\Module\Editorial\Taxonomy\Dto\TaxonomyInputFactoryInterface;
+use Aurora\Module\Editorial\Taxonomy\Dto\TaxonomyTermInputFactoryInterface;
 use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
-use Aurora\Module\Editorial\Taxonomy\Serializer\TaxonomySerializer;
+use Aurora\Module\Editorial\Taxonomy\Manager\TaxonomyManagerInterface;
+use Aurora\Module\Editorial\Taxonomy\Serializer\TaxonomySerializerInterface;
 use Aurora\Module\Editorial\Taxonomy\View\TaxonomiesViewBuilder;
 use InvalidArgumentException;
 use RuntimeException;
@@ -34,9 +34,11 @@ class TaxonomiesController extends AbstractController
 
     public function __construct(
         private readonly TaxonomyManagerInterface $taxonomyManager,
-        private readonly TaxonomySerializer $taxonomySerializer,
+        private readonly TaxonomySerializerInterface $taxonomySerializer,
         private readonly PayloadValidator $payloadValidator,
         private readonly TaxonomiesViewBuilder $viewBuilder,
+        private readonly TaxonomyInputFactoryInterface $taxonomyInputFactory,
+        private readonly TaxonomyTermInputFactoryInterface $taxonomyTermInputFactory,
     ) {}
 
     #[Route('', name: '', methods: [HttpMethodEnum::Get->value])]
@@ -48,7 +50,7 @@ class TaxonomiesController extends AbstractController
     #[Route('', name: '_create', methods: [HttpMethodEnum::Post->value])]
     public function create(Request $request): JsonResponse
     {
-        $input = TaxonomyInput::fromArray($this->decodeJson($request));
+        $input = $this->taxonomyInputFactory->fromArray($this->decodeJson($request));
 
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
@@ -67,7 +69,7 @@ class TaxonomiesController extends AbstractController
     #[Route('/{id}/edit', name: '_edit', methods: [HttpMethodEnum::Post->value])]
     public function edit(Taxonomy $taxonomy, Request $request): JsonResponse
     {
-        $input = TaxonomyInput::fromArray($this->decodeJson($request));
+        $input = $this->taxonomyInputFactory->fromArray($this->decodeJson($request));
 
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
@@ -98,7 +100,7 @@ class TaxonomiesController extends AbstractController
     #[Route('/{id}/terms', name: '_term_create', methods: [HttpMethodEnum::Post->value])]
     public function createTerm(Taxonomy $taxonomy, Request $request): JsonResponse
     {
-        $input = TaxonomyTermInput::fromArray($this->decodeJson($request));
+        $input = $this->taxonomyTermInputFactory->fromArray($this->decodeJson($request));
 
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
@@ -122,7 +124,7 @@ class TaxonomiesController extends AbstractController
             return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
         }
 
-        $input = TaxonomyTermInput::fromArray($this->decodeJson($request));
+        $input = $this->taxonomyTermInputFactory->fromArray($this->decodeJson($request));
 
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {

@@ -8,7 +8,7 @@ use Aurora\Core\Validation\Dto\PaginationRequest;
 use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
 use Aurora\Module\Editorial\Post\Serializer\PostTypeSerializerInterface;
 use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
-use Aurora\Module\Editorial\Taxonomy\Serializer\TaxonomySerializer;
+use Aurora\Module\Editorial\Taxonomy\Serializer\TaxonomySerializerInterface;
 use Doctrine\Common\Collections\Order;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
@@ -24,7 +24,7 @@ final readonly class PostsViewBuilder
         private PostTypeRepository $postTypeRepository,
         private TaxonomyRepository $taxonomyRepository,
         private PostTypeSerializerInterface $postTypeSerializer,
-        private TaxonomySerializer $taxonomySerializer,
+        private TaxonomySerializerInterface $taxonomySerializer,
         #[Autowire(param: 'kernel.enabled_locales')]
         private array $enabledLocales,
     ) {}
