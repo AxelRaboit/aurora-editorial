@@ -15,7 +15,7 @@ class PostSlugHistory extends AbstractPostSlugHistory
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
-    #[ORM\SequenceGenerator(sequenceName: 'seq_post_slug_history_id', allocationSize: 1)]
+    #[ORM\SequenceGenerator(sequenceName: 'seq_core_post_slug_history_id', allocationSize: 1)]
     #[ORM\Column]
     private ?int $id = null;
 
