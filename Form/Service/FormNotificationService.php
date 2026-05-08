@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Form\Service;
 
 use Aurora\Core\Mail\Service\MailService;
-use Aurora\Module\Editorial\Form\Entity\Form;
-use Aurora\Module\Editorial\Form\Entity\FormFieldTranslation;
-use Aurora\Module\Editorial\Form\Entity\FormSubmission;
-use Aurora\Module\Editorial\Form\Entity\FormTranslation;
+use Aurora\Module\Editorial\Form\Entity\FormFieldTranslationInterface;
+use Aurora\Module\Editorial\Form\Entity\FormInterface;
+use Aurora\Module\Editorial\Form\Entity\FormSubmissionInterface;
+use Aurora\Module\Editorial\Form\Entity\FormTranslationInterface;
 use Aurora\Module\Editorial\Form\Enum\FormFieldTypeEnum;
 
 final readonly class FormNotificationService
@@ -18,7 +18,7 @@ final readonly class FormNotificationService
     /**
      * Sends the admin notification when a form is submitted.
      */
-    public function notifyAdmin(Form $form, FormSubmission $submission, string $locale): void
+    public function notifyAdmin(FormInterface $form, FormSubmissionInterface $submission, string $locale): void
     {
         $notifyEmail = (string) $form->getNotifyEmail();
         if ('' === $notifyEmail) {
@@ -38,7 +38,7 @@ final readonly class FormNotificationService
      * Sends a confirmation to the submitter when the form contains an email field
      * filled with a valid address.
      */
-    public function notifyAuthorIfPresent(Form $form, FormSubmission $submission, string $locale): void
+    public function notifyAuthorIfPresent(FormInterface $form, FormSubmissionInterface $submission, string $locale): void
     {
         $submitterEmail = $this->extractSubmitterEmail($form, $submission);
         if (null === $submitterEmail) {
@@ -54,7 +54,7 @@ final readonly class FormNotificationService
         );
     }
 
-    private function extractSubmitterEmail(Form $form, FormSubmission $submission): ?string
+    private function extractSubmitterEmail(FormInterface $form, FormSubmissionInterface $submission): ?string
     {
         foreach ($form->getFields() as $field) {
             if (FormFieldTypeEnum::Email !== $field->getType()) {
@@ -73,7 +73,7 @@ final readonly class FormNotificationService
     /**
      * @return array<string, mixed>
      */
-    private function buildContext(Form $form, FormSubmission $submission, string $locale): array
+    private function buildContext(FormInterface $form, FormSubmissionInterface $submission, string $locale): array
     {
         $formTranslation = $this->resolve($form->getTranslation($locale), $form->getTranslations()->first());
 
@@ -82,7 +82,7 @@ final readonly class FormNotificationService
             $fieldTranslation = $this->resolve($field->getTranslation($locale), $field->getTranslations()->first());
             $value = $submission->getData()[(string) $field->getId()] ?? '';
             $rows[] = [
-                'label' => $fieldTranslation instanceof FormFieldTranslation ? $fieldTranslation->getLabel() : '#'.$field->getId(),
+                'label' => $fieldTranslation instanceof FormFieldTranslationInterface ? $fieldTranslation->getLabel() : '#'.$field->getId(),
                 'value' => is_array($value) ? implode(', ', $value) : (string) $value,
             ];
         }
@@ -90,7 +90,7 @@ final readonly class FormNotificationService
         return [
             'form' => $form,
             'submission' => $submission,
-            'formTitle' => $formTranslation instanceof FormTranslation ? $formTranslation->getTitle() : '',
+            'formTitle' => $formTranslation instanceof FormTranslationInterface ? $formTranslation->getTitle() : '',
             'rows' => $rows,
         ];
     }

@@ -6,27 +6,27 @@ namespace Aurora\Module\Editorial\Form\Contract;
 
 use Aurora\Module\Editorial\Form\DTO\FormFieldInput;
 use Aurora\Module\Editorial\Form\DTO\FormInput;
-use Aurora\Module\Editorial\Form\Entity\Form;
-use Aurora\Module\Editorial\Form\Entity\FormField;
-use Aurora\Module\Editorial\Form\Entity\FormSubmission;
+use Aurora\Module\Editorial\Form\Entity\FormFieldInterface;
+use Aurora\Module\Editorial\Form\Entity\FormInterface;
+use Aurora\Module\Editorial\Form\Entity\FormSubmissionInterface;
 
 interface FormManagerInterface
 {
-    public function create(FormInput $input): Form;
+    public function create(FormInput $input): FormInterface;
 
-    public function update(Form $form, FormInput $input): void;
+    public function update(FormInterface $form, FormInput $input): void;
 
-    public function delete(Form $form): void;
+    public function delete(FormInterface $form): void;
 
-    public function createField(Form $form, FormFieldInput $input): FormField;
+    public function createField(FormInterface $form, FormFieldInput $input): FormFieldInterface;
 
-    public function updateField(FormField $field, FormFieldInput $input): void;
+    public function updateField(FormFieldInterface $field, FormFieldInput $input): void;
 
-    public function deleteField(FormField $field): void;
+    public function deleteField(FormFieldInterface $field): void;
 
     /** @param int[] $orderedIds */
-    public function reorderFields(Form $form, array $orderedIds): void;
+    public function reorderFields(FormInterface $form, array $orderedIds): void;
 
     /** @param array<string, mixed> $submittedData */
-    public function submit(Form $form, array $submittedData, string $locale, string $ip): FormSubmission;
+    public function submit(FormInterface $form, array $submittedData, string $locale, string $ip): FormSubmissionInterface;
 }

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Form\Serializer;
 
-use Aurora\Module\Editorial\Form\Entity\Form;
-use Aurora\Module\Editorial\Form\Entity\FormField;
-use Aurora\Module\Editorial\Form\Entity\FormFieldTranslation;
-use Aurora\Module\Editorial\Form\Entity\FormSubmission;
+use Aurora\Module\Editorial\Form\Entity\FormFieldInterface;
+use Aurora\Module\Editorial\Form\Entity\FormFieldTranslationInterface;
+use Aurora\Module\Editorial\Form\Entity\FormInterface;
+use Aurora\Module\Editorial\Form\Entity\FormSubmissionInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 use const DATE_ATOM;
@@ -21,7 +21,7 @@ final readonly class FormSerializer
     /**
      * @return array<string, mixed>
      */
-    public function serialize(Form $form, bool $withFields = true): array
+    public function serialize(FormInterface $form, bool $withFields = true): array
     {
         $result = [
             'id' => $form->getId(),
@@ -46,7 +46,7 @@ final readonly class FormSerializer
     /**
      * @return array<string, mixed>
      */
-    public function serializeField(FormField $field): array
+    public function serializeField(FormFieldInterface $field): array
     {
         return [
             'id' => $field->getId(),
@@ -63,12 +63,12 @@ final readonly class FormSerializer
      *
      * @return array<string, mixed>
      */
-    public function serializeFieldForLocale(FormField $field, string $locale): array
+    public function serializeFieldForLocale(FormFieldInterface $field, string $locale): array
     {
         $translation = $field->getTranslation($locale);
-        if (!$translation instanceof FormFieldTranslation) {
+        if (!$translation instanceof FormFieldTranslationInterface) {
             $first = $field->getTranslations()->first();
-            $translation = $first instanceof FormFieldTranslation ? $first : null;
+            $translation = $first instanceof FormFieldTranslationInterface ? $first : null;
         }
 
         return [
@@ -85,7 +85,7 @@ final readonly class FormSerializer
     /**
      * @return array<string, mixed>
      */
-    public function serializeSubmission(FormSubmission $submission): array
+    public function serializeSubmission(FormSubmissionInterface $submission): array
     {
         return [
             'id' => $submission->getId(),
@@ -99,7 +99,7 @@ final readonly class FormSerializer
     /**
      * @return array<string, array<string, mixed>>
      */
-    private function serializeFormTranslations(Form $form): array
+    private function serializeFormTranslations(FormInterface $form): array
     {
         $result = [];
         foreach ($form->getTranslations() as $translation) {
@@ -116,7 +116,7 @@ final readonly class FormSerializer
     /**
      * @return array<string, array<string, mixed>>
      */
-    private function serializeFieldTranslations(FormField $field): array
+    private function serializeFieldTranslations(FormFieldInterface $field): array
     {
         $result = [];
         foreach ($field->getTranslations() as $translation) {

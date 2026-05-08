@@ -14,8 +14,8 @@ use Aurora\Module\Editorial\Form\Contract\FormManagerInterface;
 use Aurora\Module\Editorial\Form\DTO\FormFieldInput;
 use Aurora\Module\Editorial\Form\DTO\FormInput;
 use Aurora\Module\Editorial\Form\DTO\ReorderFieldsInput;
-use Aurora\Module\Editorial\Form\Entity\Form;
-use Aurora\Module\Editorial\Form\Entity\FormField;
+use Aurora\Module\Editorial\Form\Entity\FormFieldInterface;
+use Aurora\Module\Editorial\Form\Entity\FormInterface;
 use Aurora\Module\Editorial\Form\Repository\FormRepository;
 use Aurora\Module\Editorial\Form\Repository\FormSubmissionRepository;
 use Aurora\Module\Editorial\Form\Serializer\FormSerializer;
@@ -59,7 +59,7 @@ final class FormsController extends AbstractController
         $result = $this->formRepository->findPaginated($pagination->page, $pagination->limit);
 
         return $this->jsonSuccess([
-            'items' => array_map(fn (Form $form): array => $this->formSerializer->serialize($form, false), $result['items']),
+            'items' => array_map(fn (FormInterface $form): array => $this->formSerializer->serialize($form, false), $result['items']),
             'total' => $result['total'],
             'page' => $result['page'],
             'totalPages' => $result['totalPages'],
@@ -67,7 +67,7 @@ final class FormsController extends AbstractController
     }
 
     #[Route('/{id}', name: '_get', methods: [HttpMethodEnum::Get->value])]
-    public function get(Form $form): JsonResponse
+    public function get(FormInterface $form): JsonResponse
     {
         return $this->jsonSuccess(['form' => $this->formSerializer->serialize($form)]);
     }
@@ -90,7 +90,7 @@ final class FormsController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: '_update', methods: [HttpMethodEnum::Post->value])]
-    public function update(Request $request, Form $form): JsonResponse
+    public function update(Request $request, FormInterface $form): JsonResponse
     {
         $input = FormInput::fromArray($this->decodeJson($request));
         if (($validationFailure = $this->validateOrFail($input)) instanceof JsonResponse) {
@@ -107,7 +107,7 @@ final class FormsController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: '_delete', methods: [HttpMethodEnum::Post->value])]
-    public function delete(Form $form): JsonResponse
+    public function delete(FormInterface $form): JsonResponse
     {
         $this->formManager->delete($form);
 
@@ -115,7 +115,7 @@ final class FormsController extends AbstractController
     }
 
     #[Route('/{id}/fields', name: '_field_create', methods: [HttpMethodEnum::Post->value])]
-    public function createField(Request $request, Form $form): JsonResponse
+    public function createField(Request $request, FormInterface $form): JsonResponse
     {
         $input = FormFieldInput::fromArray($this->decodeJson($request));
         if (($validationFailure = $this->validateOrFail($input)) instanceof JsonResponse) {
@@ -128,10 +128,10 @@ final class FormsController extends AbstractController
     }
 
     #[Route('/{id}/fields/{fieldId}/edit', name: '_field_update', methods: [HttpMethodEnum::Post->value])]
-    public function updateField(Request $request, Form $form, int $fieldId): JsonResponse
+    public function updateField(Request $request, FormInterface $form, int $fieldId): JsonResponse
     {
         $field = $this->loadField($form, $fieldId);
-        if (!$field instanceof FormField) {
+        if (!$field instanceof FormFieldInterface) {
             return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
         }
 
@@ -146,10 +146,10 @@ final class FormsController extends AbstractController
     }
 
     #[Route('/{id}/fields/{fieldId}/delete', name: '_field_delete', methods: [HttpMethodEnum::Post->value])]
-    public function deleteField(Form $form, int $fieldId): JsonResponse
+    public function deleteField(FormInterface $form, int $fieldId): JsonResponse
     {
         $field = $this->loadField($form, $fieldId);
-        if (!$field instanceof FormField) {
+        if (!$field instanceof FormFieldInterface) {
             return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
         }
 
@@ -159,7 +159,7 @@ final class FormsController extends AbstractController
     }
 
     #[Route('/{id}/fields/reorder', name: '_field_reorder', methods: [HttpMethodEnum::Post->value])]
-    public function reorderFields(Request $request, Form $form): JsonResponse
+    public function reorderFields(Request $request, FormInterface $form): JsonResponse
     {
         $input = ReorderFieldsInput::fromArray($this->decodeJson($request));
         $this->formManager->reorderFields($form, $input->orderedIds);
@@ -168,7 +168,7 @@ final class FormsController extends AbstractController
     }
 
     #[Route('/{id}/submissions', name: '_submissions', methods: [HttpMethodEnum::Get->value])]
-    public function submissions(PaginationRequest $pagination, Form $form): JsonResponse
+    public function submissions(PaginationRequest $pagination, FormInterface $form): JsonResponse
     {
         $result = $this->formSubmissionRepository->findPaginatedByForm($form, $pagination->page, $pagination->limit);
 
@@ -182,7 +182,7 @@ final class FormsController extends AbstractController
     }
 
     #[Route('/{id}/submissions/export', name: '_submissions_export', methods: [HttpMethodEnum::Get->value])]
-    public function exportSubmissions(Request $request, Form $form): StreamedResponse
+    public function exportSubmissions(Request $request, FormInterface $form): StreamedResponse
     {
         $locale = (string) ($request->query->get('locale') ?: $request->getLocale());
 
@@ -203,11 +203,11 @@ final class FormsController extends AbstractController
         return $this->jsonInvalidInput($errors);
     }
 
-    private function loadField(Form $form, int $fieldId): ?FormField
+    private function loadField(FormInterface $form, int $fieldId): ?FormFieldInterface
     {
         $field = $form->findFieldById($fieldId);
 
-        return $field instanceof FormField ? $field : null;
+        return $field instanceof FormFieldInterface ? $field : null;
     }
 
     /**

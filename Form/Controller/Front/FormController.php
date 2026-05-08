@@ -11,7 +11,7 @@ use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Frontend\Service\FrontContext;
 use Aurora\Core\Theme\Service\ThemeResolver;
 use Aurora\Module\Editorial\Form\Contract\FormManagerInterface;
-use Aurora\Module\Editorial\Form\Entity\FormTranslation;
+use Aurora\Module\Editorial\Form\Entity\FormTranslationInterface;
 use Aurora\Module\Editorial\Form\Repository\FormTranslationRepository;
 use Aurora\Module\Editorial\Form\Service\FormSubmissionValidator;
 use Aurora\Module\Editorial\Form\View\FormViewBuilder;
@@ -42,7 +42,7 @@ class FormController extends AbstractController
         $request->setLocale($locale);
 
         $translation = $this->findActiveFormTranslation($locale, $slug);
-        if (!$translation instanceof FormTranslation) {
+        if (!$translation instanceof FormTranslationInterface) {
             throw $this->createNotFoundException();
         }
 
@@ -58,7 +58,7 @@ class FormController extends AbstractController
         $request->setLocale($locale);
 
         $translation = $this->findActiveFormTranslation($locale, $slug);
-        if (!$translation instanceof FormTranslation) {
+        if (!$translation instanceof FormTranslationInterface) {
             return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
         }
 
@@ -77,10 +77,10 @@ class FormController extends AbstractController
         return $this->jsonSuccess();
     }
 
-    private function findActiveFormTranslation(string $locale, string $slug): ?FormTranslation
+    private function findActiveFormTranslation(string $locale, string $slug): ?FormTranslationInterface
     {
         $translation = $this->formTranslationRepository->findOneByLocaleAndSlug($locale, $slug);
-        if (!$translation instanceof FormTranslation || !$translation->getForm()->isActive()) {
+        if (!$translation instanceof FormTranslationInterface || !$translation->getForm()->isActive()) {
             return null;
         }
 

@@ -13,9 +13,14 @@ use Aurora\Module\Editorial\Form\DTO\FormFieldInput;
 use Aurora\Module\Editorial\Form\DTO\FormInput;
 use Aurora\Module\Editorial\Form\Entity\Form;
 use Aurora\Module\Editorial\Form\Entity\FormField;
+use Aurora\Module\Editorial\Form\Entity\FormFieldInterface;
 use Aurora\Module\Editorial\Form\Entity\FormFieldTranslation;
+use Aurora\Module\Editorial\Form\Entity\FormFieldTranslationInterface;
+use Aurora\Module\Editorial\Form\Entity\FormInterface;
 use Aurora\Module\Editorial\Form\Entity\FormSubmission;
+use Aurora\Module\Editorial\Form\Entity\FormSubmissionInterface;
 use Aurora\Module\Editorial\Form\Entity\FormTranslation;
+use Aurora\Module\Editorial\Form\Entity\FormTranslationInterface;
 use Aurora\Module\Editorial\Form\Repository\FormTranslationRepository;
 use Aurora\Module\Editorial\Form\Service\FormNotificationService;
 use DateTimeImmutable;
@@ -36,7 +41,7 @@ final readonly class FormManager implements FormManagerInterface
         private SettingRepository $settingRepository,
     ) {}
 
-    public function create(FormInput $input): Form
+    public function create(FormInput $input): FormInterface
     {
         $form = new Form();
         $this->applySettings($form, $input);
@@ -49,7 +54,7 @@ final readonly class FormManager implements FormManagerInterface
         return $form;
     }
 
-    public function update(Form $form, FormInput $input): void
+    public function update(FormInterface $form, FormInput $input): void
     {
         $this->applySettings($form, $input);
         $this->applyTranslations($form, $input);
@@ -57,13 +62,13 @@ final readonly class FormManager implements FormManagerInterface
         $this->entityManager->flush();
     }
 
-    public function delete(Form $form): void
+    public function delete(FormInterface $form): void
     {
         $this->entityManager->remove($form);
         $this->entityManager->flush();
     }
 
-    public function createField(Form $form, FormFieldInput $input): FormField
+    public function createField(FormInterface $form, FormFieldInput $input): FormFieldInterface
     {
         $field = new FormField();
         $field->setForm($form);
@@ -81,7 +86,7 @@ final readonly class FormManager implements FormManagerInterface
         return $field;
     }
 
-    public function updateField(FormField $field, FormFieldInput $input): void
+    public function updateField(FormFieldInterface $field, FormFieldInput $input): void
     {
         $this->applyFieldSettings($field, $input, $field->getPosition());
         $this->applyFieldTranslations($field, $input);
@@ -89,7 +94,7 @@ final readonly class FormManager implements FormManagerInterface
         $this->entityManager->flush();
     }
 
-    public function deleteField(FormField $field): void
+    public function deleteField(FormFieldInterface $field): void
     {
         $form = $field->getForm();
         $form->removeField($field);
@@ -99,7 +104,7 @@ final readonly class FormManager implements FormManagerInterface
         $this->entityManager->flush();
     }
 
-    public function reorderFields(Form $form, array $orderedIds): void
+    public function reorderFields(FormInterface $form, array $orderedIds): void
     {
         $fieldsById = [];
         foreach ($form->getFields() as $field) {
@@ -116,7 +121,7 @@ final readonly class FormManager implements FormManagerInterface
         $this->entityManager->flush();
     }
 
-    public function submit(Form $form, array $submittedData, string $locale, string $ip): FormSubmission
+    public function submit(FormInterface $form, array $submittedData, string $locale, string $ip): FormSubmissionInterface
     {
         $submissionPrefix = $this->settingRepository->get(ApplicationParameterEnum::EditorialFormSubmissionPrefix->value, SequencePrefixEnum::FormSubmission->value) ?? SequencePrefixEnum::FormSubmission->value;
 
@@ -136,13 +141,13 @@ final readonly class FormManager implements FormManagerInterface
         return $submission;
     }
 
-    private function applySettings(Form $form, FormInput $input): void
+    private function applySettings(FormInterface $form, FormInput $input): void
     {
         $form->setNotifyEmail($input->notifyEmail);
         $form->setActive($input->active);
     }
 
-    private function applyTranslations(Form $form, FormInput $input, ?int $excludeFormId = null): void
+    private function applyTranslations(FormInterface $form, FormInput $input, ?int $excludeFormId = null): void
     {
         $excludeId = $excludeFormId ?? $form->getId();
 
@@ -151,7 +156,7 @@ final readonly class FormManager implements FormManagerInterface
             $this->assertSlugValid($locale, $slug, $excludeId);
 
             $translation = $form->getTranslation($locale);
-            if (!$translation instanceof FormTranslation) {
+            if (!$translation instanceof FormTranslationInterface) {
                 $translation = new FormTranslation();
                 $translation->setLocale($locale);
                 $form->addTranslation($translation);
@@ -172,18 +177,18 @@ final readonly class FormManager implements FormManagerInterface
         }
     }
 
-    private function applyFieldSettings(FormField $field, FormFieldInput $input, int $position): void
+    private function applyFieldSettings(FormFieldInterface $field, FormFieldInput $input, int $position): void
     {
         $field->setType($input->getTypeEnum());
         $field->setRequired($input->required);
         $field->setPosition($position);
     }
 
-    private function applyFieldTranslations(FormField $field, FormFieldInput $input): void
+    private function applyFieldTranslations(FormFieldInterface $field, FormFieldInput $input): void
     {
         foreach ($input->translations as $locale => $data) {
             $translation = $field->getTranslation($locale);
-            if (!$translation instanceof FormFieldTranslation) {
+            if (!$translation instanceof FormFieldTranslationInterface) {
                 $translation = new FormFieldTranslation();
                 $translation->setLocale($locale);
                 $field->addTranslation($translation);
@@ -214,7 +219,7 @@ final readonly class FormManager implements FormManagerInterface
             ? $this->formTranslationRepository->findOneByLocaleAndSlug($locale, $slug)
             : $this->formTranslationRepository->findOneByLocaleAndSlugExcluding($locale, $slug, $excludeFormId);
 
-        if ($existing instanceof FormTranslation) {
+        if ($existing instanceof FormTranslationInterface) {
             throw new InvalidArgumentException(sprintf('translations.%s.slug|%s', $locale, $this->translator->trans('backend.forms.errors.slug_taken')));
         }
     }

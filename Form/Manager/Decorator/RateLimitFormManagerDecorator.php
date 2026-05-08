@@ -7,9 +7,9 @@ namespace Aurora\Module\Editorial\Form\Manager\Decorator;
 use Aurora\Module\Editorial\Form\Contract\FormManagerInterface;
 use Aurora\Module\Editorial\Form\DTO\FormFieldInput;
 use Aurora\Module\Editorial\Form\DTO\FormInput;
-use Aurora\Module\Editorial\Form\Entity\Form;
-use Aurora\Module\Editorial\Form\Entity\FormField;
-use Aurora\Module\Editorial\Form\Entity\FormSubmission;
+use Aurora\Module\Editorial\Form\Entity\FormFieldInterface;
+use Aurora\Module\Editorial\Form\Entity\FormInterface;
+use Aurora\Module\Editorial\Form\Entity\FormSubmissionInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
@@ -24,44 +24,44 @@ final readonly class RateLimitFormManagerDecorator implements FormManagerInterfa
         private RateLimiterFactory $formSubmissionLimiter,
     ) {}
 
-    public function create(FormInput $input): Form
+    public function create(FormInput $input): FormInterface
     {
         return $this->inner->create($input);
     }
 
-    public function update(Form $form, FormInput $input): void
+    public function update(FormInterface $form, FormInput $input): void
     {
         $this->inner->update($form, $input);
     }
 
-    public function delete(Form $form): void
+    public function delete(FormInterface $form): void
     {
         $this->inner->delete($form);
     }
 
-    public function createField(Form $form, FormFieldInput $input): FormField
+    public function createField(FormInterface $form, FormFieldInput $input): FormFieldInterface
     {
         return $this->inner->createField($form, $input);
     }
 
-    public function updateField(FormField $field, FormFieldInput $input): void
+    public function updateField(FormFieldInterface $field, FormFieldInput $input): void
     {
         $this->inner->updateField($field, $input);
     }
 
-    public function deleteField(FormField $field): void
+    public function deleteField(FormFieldInterface $field): void
     {
         $this->inner->deleteField($field);
     }
 
     /** @param int[] $orderedIds */
-    public function reorderFields(Form $form, array $orderedIds): void
+    public function reorderFields(FormInterface $form, array $orderedIds): void
     {
         $this->inner->reorderFields($form, $orderedIds);
     }
 
     /** @param array<string, mixed> $submittedData */
-    public function submit(Form $form, array $submittedData, string $locale, string $ip): FormSubmission
+    public function submit(FormInterface $form, array $submittedData, string $locale, string $ip): FormSubmissionInterface
     {
         $limiter = $this->formSubmissionLimiter->create($ip);
         $limit = $limiter->consume();

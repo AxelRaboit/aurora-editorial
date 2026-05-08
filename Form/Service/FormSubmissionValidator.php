@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Form\Service;
 
-use Aurora\Module\Editorial\Form\Entity\Form;
+use Aurora\Module\Editorial\Form\Entity\FormInterface;
 use Aurora\Module\Editorial\Form\Enum\FormFieldTypeEnum;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -21,7 +21,7 @@ final readonly class FormSubmissionValidator
      *
      * @return array<string, string> field ID → error message
      */
-    public function validate(Form $form, array $payload): array
+    public function validate(FormInterface $form, array $payload): array
     {
         $errors = [];
 
@@ -54,7 +54,7 @@ final readonly class FormSubmissionValidator
      *
      * @return array<string, mixed>
      */
-    public function extractSubmittedData(Form $form, array $payload): array
+    public function extractSubmittedData(FormInterface $form, array $payload): array
     {
         $submittedData = [];
 

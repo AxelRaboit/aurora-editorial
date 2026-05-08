@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Form\Service;
 
-use Aurora\Module\Editorial\Form\Entity\Form;
-use Aurora\Module\Editorial\Form\Entity\FormField;
-use Aurora\Module\Editorial\Form\Entity\FormFieldTranslation;
-use Aurora\Module\Editorial\Form\Entity\FormTranslation;
+use Aurora\Module\Editorial\Form\Entity\FormFieldInterface;
+use Aurora\Module\Editorial\Form\Entity\FormFieldTranslationInterface;
+use Aurora\Module\Editorial\Form\Entity\FormInterface;
+use Aurora\Module\Editorial\Form\Entity\FormTranslationInterface;
 use Aurora\Module\Editorial\Form\Repository\FormSubmissionRepository;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -20,7 +20,7 @@ final readonly class FormSubmissionExporter
 {
     public function __construct(private FormSubmissionRepository $submissionRepository) {}
 
-    public function exportToCsv(Form $form, string $locale): StreamedResponse
+    public function exportToCsv(FormInterface $form, string $locale): StreamedResponse
     {
         $submissions = $this->submissionRepository->findAllByForm($form);
         $fields = $form->getFields()->toArray();
@@ -63,29 +63,29 @@ final readonly class FormSubmissionExporter
     }
 
     /**
-     * @param list<FormField> $fields
+     * @param list<FormFieldInterface> $fields
      *
      * @return list<string>
      */
     private function fieldLabels(array $fields, string $locale): array
     {
-        return array_map(static function (FormField $field) use ($locale): string {
+        return array_map(static function (FormFieldInterface $field) use ($locale): string {
             $translation = $field->getTranslation($locale);
-            if (!$translation instanceof FormFieldTranslation) {
+            if (!$translation instanceof FormFieldTranslationInterface) {
                 $first = $field->getTranslations()->first();
-                $translation = $first instanceof FormFieldTranslation ? $first : null;
+                $translation = $first instanceof FormFieldTranslationInterface ? $first : null;
             }
 
             return $translation?->getLabel() ?? '#'.$field->getId();
         }, $fields);
     }
 
-    private function formSlug(Form $form, string $locale): string
+    private function formSlug(FormInterface $form, string $locale): string
     {
         $translation = $form->getTranslation($locale);
-        if (!$translation instanceof FormTranslation) {
+        if (!$translation instanceof FormTranslationInterface) {
             $first = $form->getTranslations()->first();
-            $translation = $first instanceof FormTranslation ? $first : null;
+            $translation = $first instanceof FormTranslationInterface ? $first : null;
         }
 
         return $translation?->getSlug() ?? (string) $form->getId();
