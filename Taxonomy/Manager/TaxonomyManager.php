@@ -47,12 +47,8 @@ class TaxonomyManager implements TaxonomyManagerInterface
         }
 
         $taxonomy = $this->createTaxonomy();
-        $taxonomy->setSlug($input->getSlug());
-        $taxonomy->setHierarchical($input->isHierarchical());
         $taxonomy->setIsBuiltIn(false);
-
-        $this->applyTaxonomyTranslations($taxonomy, $input->getTranslations());
-        $this->syncPostTypes($taxonomy, $input->getPostTypeIds());
+        $this->applyInput($taxonomy, $input);
 
         $this->entityManager->persist($taxonomy);
         $this->entityManager->flush();
@@ -64,20 +60,13 @@ class TaxonomyManager implements TaxonomyManagerInterface
 
     public function update(TaxonomyInterface $taxonomy, TaxonomyInputInterface $input): void
     {
-        if (!$taxonomy->isBuiltIn()) {
-            if ($input->getSlug() !== $taxonomy->getSlug()) {
-                if ($this->taxonomyRepository->findOneBySlug($input->getSlug()) instanceof Taxonomy) {
-                    throw new InvalidArgumentException($this->translator->trans('backend.taxonomies.errors.slug_taken', ['{slug}' => $input->getSlug()]));
-                }
-
-                $taxonomy->setSlug($input->getSlug());
+        if (!$taxonomy->isBuiltIn() && $input->getSlug() !== $taxonomy->getSlug()) {
+            if ($this->taxonomyRepository->findOneBySlug($input->getSlug()) instanceof Taxonomy) {
+                throw new InvalidArgumentException($this->translator->trans('backend.taxonomies.errors.slug_taken', ['{slug}' => $input->getSlug()]));
             }
-
-            $taxonomy->setHierarchical($input->isHierarchical());
         }
 
-        $this->applyTaxonomyTranslations($taxonomy, $input->getTranslations());
-        $this->syncPostTypes($taxonomy, $input->getPostTypeIds());
+        $this->applyInput($taxonomy, $input);
 
         $this->entityManager->flush();
 
@@ -102,11 +91,9 @@ class TaxonomyManager implements TaxonomyManagerInterface
         $term->setTaxonomy($taxonomy);
 
         $parent = $this->resolveParent($taxonomy, $input->getParentId());
-        $term->setParent($parent);
-
         $term->setPosition($this->nextPositionFor($taxonomy, $parent));
 
-        $this->applyTermTranslations($term, $input->getTranslations());
+        $this->applyTermInput($term, $input);
 
         $this->entityManager->persist($term);
         $this->entityManager->flush();
@@ -124,15 +111,14 @@ class TaxonomyManager implements TaxonomyManagerInterface
     {
         $parent = $this->resolveParent($term->getTaxonomy(), $input->getParentId());
 
-        if ($parent !== $term->getParent()) {
-            if ($parent instanceof TaxonomyTermInterface && ($parent === $term || $parent->isDescendantOf($term))) {
-                throw new InvalidArgumentException($this->translator->trans('backend.taxonomies.errors.term_self_nested'));
-            }
-
-            $term->setParent($parent);
+        if ($parent !== $term->getParent()
+            && $parent instanceof TaxonomyTermInterface
+            && ($parent === $term || $parent->isDescendantOf($term))
+        ) {
+            throw new InvalidArgumentException($this->translator->trans('backend.taxonomies.errors.term_self_nested'));
         }
 
-        $this->applyTermTranslations($term, $input->getTranslations());
+        $this->applyTermInput($term, $input);
 
         $this->entityManager->flush();
 
@@ -213,6 +199,27 @@ class TaxonomyManager implements TaxonomyManagerInterface
     protected function createTaxonomyTerm(): TaxonomyTermInterface
     {
         return new TaxonomyTerm();
+    }
+
+    // ── Hooks: hydratation ────────────────────────────────────────────────────
+
+    protected function applyInput(TaxonomyInterface $taxonomy, TaxonomyInputInterface $input): void
+    {
+        // Built-in taxonomies expose a fixed slug + hierarchical setting; only
+        // translations and post-type bindings are editable.
+        if (!$taxonomy->isBuiltIn()) {
+            $taxonomy->setSlug($input->getSlug());
+            $taxonomy->setHierarchical($input->isHierarchical());
+        }
+
+        $this->applyTaxonomyTranslations($taxonomy, $input->getTranslations());
+        $this->syncPostTypes($taxonomy, $input->getPostTypeIds());
+    }
+
+    protected function applyTermInput(TaxonomyTermInterface $term, TaxonomyTermInputInterface $input): void
+    {
+        $term->setParent($this->resolveParent($term->getTaxonomy(), $input->getParentId()));
+        $this->applyTermTranslations($term, $input->getTranslations());
     }
 
     // ── Hooks: audit ──────────────────────────────────────────────────────────

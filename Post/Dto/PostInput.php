@@ -10,7 +10,7 @@ use Exception;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
-readonly class PostInput implements PostInputInterface
+class PostInput implements PostInputInterface
 {
     /**
      * @param array<string, PostTranslationInput> $translations
@@ -20,18 +20,18 @@ readonly class PostInput implements PostInputInterface
     public function __construct(
         #[Assert\NotNull(message: 'posts.errors.post_type_required')]
         #[Assert\Positive(message: 'posts.errors.post_type_required')]
-        public int $postTypeId,
+        public readonly int $postTypeId,
         #[Assert\NotBlank(message: 'posts.errors.status_required')]
         #[Assert\Choice(callback: [PostStatusEnum::class, 'values'], message: 'posts.errors.status_invalid')]
-        public string $status,
-        public ?int $featuredMediaId,
-        public array $termIds,
-        public array $translations,
-        public array $relatedPostIds = [],
-        public ?string $scheduledAt = null,
-        public ?int $version = null,
-        public bool $force = false,
-        public bool $commentsEnabled = true,
+        public readonly string $status,
+        public readonly ?int $featuredMediaId,
+        public readonly array $termIds,
+        public readonly array $translations,
+        public readonly array $relatedPostIds = [],
+        public readonly ?string $scheduledAt = null,
+        public readonly ?int $version = null,
+        public readonly bool $force = false,
+        public readonly bool $commentsEnabled = true,
     ) {}
 
     public function withStatus(string $status): PostInputInterface
