@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aurora\Module\Editorial\Form\Controller\Front;
+namespace Aurora\Module\Editorial\Form\Controller\Frontend;
 
 use Aurora\Core\Enum\HttpMethodEnum;
 use Aurora\Core\Enum\HttpStatusEnum;

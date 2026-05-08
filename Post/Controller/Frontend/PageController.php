@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aurora\Module\Editorial\Post\Controller\Front;
+namespace Aurora\Module\Editorial\Post\Controller\Frontend;
 
 use Aurora\Core\Enum\HttpStatusEnum;
 use Aurora\Core\Frontend\Controller\FrontLocaleTrait;
