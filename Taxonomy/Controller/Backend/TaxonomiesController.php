@@ -51,13 +51,13 @@ class TaxonomiesController extends AbstractController
 
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
-            return $this->jsonInvalidInput($errors, Response::HTTP_OK);
+            return $this->jsonInvalidInput($errors);
         }
 
         try {
             $taxonomy = $this->taxonomyManager->create($input);
         } catch (InvalidArgumentException $invalidArgumentException) {
-            return $this->jsonInvalidInput(['slug' => $invalidArgumentException->getMessage()], Response::HTTP_OK);
+            return $this->jsonInvalidInput(['slug' => $invalidArgumentException->getMessage()]);
         }
 
         return $this->jsonSuccess(['taxonomy' => $this->taxonomySerializer->serializeFull($taxonomy)]);
@@ -70,13 +70,13 @@ class TaxonomiesController extends AbstractController
 
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
-            return $this->jsonInvalidInput($errors, Response::HTTP_OK);
+            return $this->jsonInvalidInput($errors);
         }
 
         try {
             $this->taxonomyManager->update($taxonomy, $input);
         } catch (InvalidArgumentException $invalidArgumentException) {
-            return $this->jsonInvalidInput(['slug' => $invalidArgumentException->getMessage()], Response::HTTP_OK);
+            return $this->jsonInvalidInput(['slug' => $invalidArgumentException->getMessage()]);
         }
 
         return $this->jsonSuccess(['taxonomy' => $this->taxonomySerializer->serializeFull($taxonomy)]);
@@ -101,13 +101,13 @@ class TaxonomiesController extends AbstractController
 
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
-            return $this->jsonInvalidInput($errors, Response::HTTP_OK);
+            return $this->jsonInvalidInput($errors);
         }
 
         try {
             $term = $this->taxonomyManager->createTerm($taxonomy, $input);
         } catch (InvalidArgumentException $invalidArgumentException) {
-            return $this->jsonInvalidInput(['parentId' => $invalidArgumentException->getMessage()], Response::HTTP_OK);
+            return $this->jsonInvalidInput(['parentId' => $invalidArgumentException->getMessage()]);
         }
 
         return $this->jsonSuccess(['taxonomy' => $this->taxonomySerializer->serializeFull($taxonomy), 'termId' => $term->getId()]);
@@ -125,13 +125,13 @@ class TaxonomiesController extends AbstractController
 
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
-            return $this->jsonInvalidInput($errors, Response::HTTP_OK);
+            return $this->jsonInvalidInput($errors);
         }
 
         try {
             $this->taxonomyManager->updateTerm($term, $input);
         } catch (InvalidArgumentException $invalidArgumentException) {
-            return $this->jsonInvalidInput(['parentId' => $invalidArgumentException->getMessage()], Response::HTTP_OK);
+            return $this->jsonInvalidInput(['parentId' => $invalidArgumentException->getMessage()]);
         }
 
         return $this->jsonSuccess(['taxonomy' => $this->taxonomySerializer->serializeFull($taxonomy)]);

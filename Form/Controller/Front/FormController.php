@@ -66,7 +66,7 @@ class FormController extends AbstractController
 
         $errors = $this->formSubmissionValidator->validate($form, $payload);
         if ([] !== $errors) {
-            return $this->jsonInvalidInput($errors, Response::HTTP_OK);
+            return $this->jsonInvalidInput($errors);
         }
 
         $submittedData = $this->formSubmissionValidator->extractSubmittedData($form, $payload);

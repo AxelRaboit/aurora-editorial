@@ -50,13 +50,13 @@ class PostTypesController extends AbstractController
         $input = PostTypeInput::fromArray($this->decodeJson($request));
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
-            return $this->jsonInvalidInput($errors, Response::HTTP_OK);
+            return $this->jsonInvalidInput($errors);
         }
 
         try {
             $postType = $this->postTypeManager->create($input);
         } catch (InvalidArgumentException $invalidArgumentException) {
-            return $this->jsonInvalidInput(['slug' => $invalidArgumentException->getMessage()], Response::HTTP_OK);
+            return $this->jsonInvalidInput(['slug' => $invalidArgumentException->getMessage()]);
         }
 
         return $this->jsonSuccess(['postType' => $this->postTypeSerializer->serialize($postType)]);
@@ -68,13 +68,13 @@ class PostTypesController extends AbstractController
         $input = PostTypeInput::fromArray($this->decodeJson($request));
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
-            return $this->jsonInvalidInput($errors, Response::HTTP_OK);
+            return $this->jsonInvalidInput($errors);
         }
 
         try {
             $this->postTypeManager->update($postType, $input);
         } catch (InvalidArgumentException $invalidArgumentException) {
-            return $this->jsonInvalidInput(['slug' => $invalidArgumentException->getMessage()], Response::HTTP_OK);
+            return $this->jsonInvalidInput(['slug' => $invalidArgumentException->getMessage()]);
         }
 
         return $this->jsonSuccess(['postType' => $this->postTypeSerializer->serialize($postType)]);
@@ -98,13 +98,13 @@ class PostTypesController extends AbstractController
         $input = PostTypeFieldInput::fromArray($this->decodeJson($request));
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
-            return $this->jsonInvalidInput($errors, Response::HTTP_OK);
+            return $this->jsonInvalidInput($errors);
         }
 
         try {
             $this->postTypeManager->createField($postType, $input);
         } catch (InvalidArgumentException $invalidArgumentException) {
-            return $this->jsonInvalidInput(['name' => $invalidArgumentException->getMessage()], Response::HTTP_OK);
+            return $this->jsonInvalidInput(['name' => $invalidArgumentException->getMessage()]);
         }
 
         return $this->jsonSuccess(['postType' => $this->postTypeSerializer->serialize($postType)]);
@@ -121,13 +121,13 @@ class PostTypesController extends AbstractController
         $input = PostTypeFieldInput::fromArray($this->decodeJson($request));
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
-            return $this->jsonInvalidInput($errors, Response::HTTP_OK);
+            return $this->jsonInvalidInput($errors);
         }
 
         try {
             $this->postTypeManager->updateField($field, $input);
         } catch (InvalidArgumentException $invalidArgumentException) {
-            return $this->jsonInvalidInput(['name' => $invalidArgumentException->getMessage()], Response::HTTP_OK);
+            return $this->jsonInvalidInput(['name' => $invalidArgumentException->getMessage()]);
         }
 
         return $this->jsonSuccess(['postType' => $this->postTypeSerializer->serialize($postType)]);

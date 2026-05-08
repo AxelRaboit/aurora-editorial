@@ -69,7 +69,7 @@ class CommentController extends AbstractController
         $errors = $this->commentValidator->validate($authorName, $authorEmail, $content);
         if ([] !== $errors) {
             return $isJson
-                ? $this->jsonInvalidInput($errors, Response::HTTP_OK)
+                ? $this->jsonInvalidInput($errors)
                 : $this->postPageRenderer->render($post, $locale, $errors);
         }
 
