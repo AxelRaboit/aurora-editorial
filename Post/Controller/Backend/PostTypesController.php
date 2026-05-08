@@ -9,12 +9,12 @@ use Aurora\Core\Enum\HttpStatusEnum;
 use Aurora\Core\Frontend\Controller\JsonRequestTrait;
 use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Validation\Service\PayloadValidator;
-use Aurora\Module\Editorial\Post\Manager\PostTypeManagerInterface;
-use Aurora\Module\Editorial\Post\Dto\PostTypeFieldInput;
-use Aurora\Module\Editorial\Post\Dto\PostTypeInput;
+use Aurora\Module\Editorial\Post\Dto\PostTypeFieldInputFactoryInterface;
+use Aurora\Module\Editorial\Post\Dto\PostTypeInputFactoryInterface;
 use Aurora\Module\Editorial\Post\Entity\PostType;
 use Aurora\Module\Editorial\Post\Entity\PostTypeField;
-use Aurora\Module\Editorial\Post\Serializer\PostTypeSerializer;
+use Aurora\Module\Editorial\Post\Manager\PostTypeManagerInterface;
+use Aurora\Module\Editorial\Post\Serializer\PostTypeSerializerInterface;
 use Aurora\Module\Editorial\Post\View\PostTypesViewBuilder;
 use InvalidArgumentException;
 use RuntimeException;
@@ -34,9 +34,11 @@ class PostTypesController extends AbstractController
 
     public function __construct(
         private readonly PostTypeManagerInterface $postTypeManager,
-        private readonly PostTypeSerializer $postTypeSerializer,
+        private readonly PostTypeSerializerInterface $postTypeSerializer,
         private readonly PayloadValidator $payloadValidator,
         private readonly PostTypesViewBuilder $viewBuilder,
+        private readonly PostTypeInputFactoryInterface $postTypeInputFactory,
+        private readonly PostTypeFieldInputFactoryInterface $postTypeFieldInputFactory,
     ) {}
 
     #[Route('', name: '', methods: [HttpMethodEnum::Get->value])]
@@ -48,7 +50,7 @@ class PostTypesController extends AbstractController
     #[Route('', name: '_create', methods: [HttpMethodEnum::Post->value])]
     public function create(Request $request): JsonResponse
     {
-        $input = PostTypeInput::fromArray($this->decodeJson($request));
+        $input = $this->postTypeInputFactory->fromArray($this->decodeJson($request));
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
             return $this->jsonInvalidInput($errors);
@@ -66,7 +68,7 @@ class PostTypesController extends AbstractController
     #[Route('/{id}/edit', name: '_edit', methods: [HttpMethodEnum::Post->value])]
     public function edit(PostType $postType, Request $request): JsonResponse
     {
-        $input = PostTypeInput::fromArray($this->decodeJson($request));
+        $input = $this->postTypeInputFactory->fromArray($this->decodeJson($request));
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
             return $this->jsonInvalidInput($errors);
@@ -96,7 +98,7 @@ class PostTypesController extends AbstractController
     #[Route('/{id}/fields', name: '_field_create', methods: [HttpMethodEnum::Post->value])]
     public function createField(PostType $postType, Request $request): JsonResponse
     {
-        $input = PostTypeFieldInput::fromArray($this->decodeJson($request));
+        $input = $this->postTypeFieldInputFactory->fromArray($this->decodeJson($request));
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
             return $this->jsonInvalidInput($errors);
@@ -119,7 +121,7 @@ class PostTypesController extends AbstractController
             return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
         }
 
-        $input = PostTypeFieldInput::fromArray($this->decodeJson($request));
+        $input = $this->postTypeFieldInputFactory->fromArray($this->decodeJson($request));
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
             return $this->jsonInvalidInput($errors);

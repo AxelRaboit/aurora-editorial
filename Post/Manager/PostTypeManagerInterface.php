@@ -4,27 +4,27 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Manager;
 
-use Aurora\Module\Editorial\Post\Dto\PostTypeFieldInput;
-use Aurora\Module\Editorial\Post\Dto\PostTypeInput;
-use Aurora\Module\Editorial\Post\Entity\PostType;
-use Aurora\Module\Editorial\Post\Entity\PostTypeField;
+use Aurora\Module\Editorial\Post\Dto\PostTypeFieldInputInterface;
+use Aurora\Module\Editorial\Post\Dto\PostTypeInputInterface;
+use Aurora\Module\Editorial\Post\Entity\PostTypeFieldInterface;
+use Aurora\Module\Editorial\Post\Entity\PostTypeInterface;
 
 interface PostTypeManagerInterface
 {
-    public function create(PostTypeInput $input): PostType;
+    public function create(PostTypeInputInterface $input): PostTypeInterface;
 
-    public function update(PostType $postType, PostTypeInput $input): void;
+    public function update(PostTypeInterface $postType, PostTypeInputInterface $input): void;
 
-    public function delete(PostType $postType): void;
+    public function delete(PostTypeInterface $postType): void;
 
-    public function createField(PostType $postType, PostTypeFieldInput $input): PostTypeField;
+    public function createField(PostTypeInterface $postType, PostTypeFieldInputInterface $input): PostTypeFieldInterface;
 
-    public function updateField(PostTypeField $field, PostTypeFieldInput $input): void;
+    public function updateField(PostTypeFieldInterface $field, PostTypeFieldInputInterface $input): void;
 
-    public function deleteField(PostTypeField $field): void;
+    public function deleteField(PostTypeFieldInterface $field): void;
 
     /**
      * @param list<int> $orderedFieldIds
      */
-    public function reorderFields(PostType $postType, array $orderedFieldIds): void;
+    public function reorderFields(PostTypeInterface $postType, array $orderedFieldIds): void;
 }

@@ -6,7 +6,7 @@ namespace Aurora\Module\Editorial\Post\View;
 
 use Aurora\Core\Validation\Dto\PaginationRequest;
 use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
-use Aurora\Module\Editorial\Post\Serializer\PostTypeSerializer;
+use Aurora\Module\Editorial\Post\Serializer\PostTypeSerializerInterface;
 use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
 use Aurora\Module\Editorial\Taxonomy\Serializer\TaxonomySerializer;
 use Doctrine\Common\Collections\Order;
@@ -23,7 +23,7 @@ final readonly class PostsViewBuilder
     public function __construct(
         private PostTypeRepository $postTypeRepository,
         private TaxonomyRepository $taxonomyRepository,
-        private PostTypeSerializer $postTypeSerializer,
+        private PostTypeSerializerInterface $postTypeSerializer,
         private TaxonomySerializer $taxonomySerializer,
         #[Autowire(param: 'kernel.enabled_locales')]
         private array $enabledLocales,

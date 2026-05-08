@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Post\View;
 
 use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
-use Aurora\Module\Editorial\Post\Serializer\PostTypeSerializer;
+use Aurora\Module\Editorial\Post\Serializer\PostTypeSerializerInterface;
 use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
 use Aurora\Module\Editorial\Taxonomy\Serializer\TaxonomySerializer;
 use Doctrine\Common\Collections\Order;
@@ -18,7 +18,7 @@ final readonly class PostTypesViewBuilder
     public function __construct(
         private PostTypeRepository $postTypeRepository,
         private TaxonomyRepository $taxonomyRepository,
-        private PostTypeSerializer $postTypeSerializer,
+        private PostTypeSerializerInterface $postTypeSerializer,
         private TaxonomySerializer $taxonomySerializer,
     ) {}
 

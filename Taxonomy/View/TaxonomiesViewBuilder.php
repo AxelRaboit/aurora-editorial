@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Taxonomy\View;
 
 use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
-use Aurora\Module\Editorial\Post\Serializer\PostTypeSerializer;
+use Aurora\Module\Editorial\Post\Serializer\PostTypeSerializerInterface;
 use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
 use Aurora\Module\Editorial\Taxonomy\Serializer\TaxonomySerializer;
 use Doctrine\Common\Collections\Order;
@@ -23,7 +23,7 @@ final readonly class TaxonomiesViewBuilder
         private TaxonomyRepository $taxonomyRepository,
         private PostTypeRepository $postTypeRepository,
         private TaxonomySerializer $taxonomySerializer,
-        private PostTypeSerializer $postTypeSerializer,
+        private PostTypeSerializerInterface $postTypeSerializer,
         #[Autowire(param: 'kernel.enabled_locales')]
         private array $enabledLocales,
     ) {}

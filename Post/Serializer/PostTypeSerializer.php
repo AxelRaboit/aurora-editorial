@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Serializer;
 
-use Aurora\Module\Editorial\Post\Entity\PostType;
-use Aurora\Module\Editorial\Post\Entity\PostTypeField;
+use Aurora\Module\Editorial\Post\Entity\PostTypeFieldInterface;
+use Aurora\Module\Editorial\Post\Entity\PostTypeInterface;
+use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 
-final readonly class PostTypeSerializer
+#[AsAlias(PostTypeSerializerInterface::class)]
+class PostTypeSerializer implements PostTypeSerializerInterface
 {
-    public function serialize(PostType $postType): array
+    public function serialize(PostTypeInterface $postType): array
     {
         $fields = array_map(
-            static fn (PostTypeField $field): array => [
+            static fn (PostTypeFieldInterface $field): array => [
                 'id' => $field->getId(),
                 'name' => $field->getName(),
                 'label' => $field->getLabel(),
