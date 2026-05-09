@@ -6,8 +6,8 @@ namespace Aurora\Module\Editorial\Comment\Controller\Frontend;
 
 use Aurora\Core\Enum\HttpMethodEnum;
 use Aurora\Core\Enum\HttpStatusEnum;
-use Aurora\Core\Frontend\Controller\LocaleTrait;
 use Aurora\Core\Frontend\Controller\JsonResponseTrait;
+use Aurora\Core\Frontend\Controller\LocaleTrait;
 use Aurora\Core\Frontend\Service\Context;
 use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Module\Editorial\Comment\Dto\CommentInputFactoryInterface;
