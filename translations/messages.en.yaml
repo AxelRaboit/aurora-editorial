@@ -89,6 +89,11 @@ backend:
       reorder_cycle: 'Reorder would create a cycle involving term #{id}.'
       parent_wrong_taxonomy: 'Parent term #{parentId} does not belong to taxonomy "{taxonomy}".'
   nav:
+    sections:
+      editorial: Editorial
+      home: Home
+      posts: Content
+      terms: Terms
     comments: Comments
     comments_description: Moderate comments posted on the public site
     forms: Forms
