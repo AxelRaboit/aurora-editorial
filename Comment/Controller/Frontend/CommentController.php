@@ -14,7 +14,7 @@ use Aurora\Module\Editorial\Comment\Dto\CommentInputFactoryInterface;
 use Aurora\Module\Editorial\Comment\Entity\CommentInterface;
 use Aurora\Module\Editorial\Comment\Enum\ReactionTypeEnum;
 use Aurora\Module\Editorial\Comment\Manager\CommentManagerInterface;
-use Aurora\Module\Editorial\Comment\Manager\CommentReactionManager;
+use Aurora\Module\Editorial\Comment\Manager\CommentReactionManagerInterface;
 use Aurora\Module\Editorial\Comment\Repository\CommentReactionRepository;
 use Aurora\Module\Editorial\Comment\Repository\CommentRepository;
 use Aurora\Module\Editorial\Comment\Serializer\CommentSerializerInterface;
@@ -38,7 +38,7 @@ class CommentController extends AbstractController
         private readonly CommentRepository $commentRepository,
         private readonly CommentReactionRepository $commentReactionRepository,
         private readonly CommentManagerInterface $commentManager,
-        private readonly CommentReactionManager $commentReactionManager,
+        private readonly CommentReactionManagerInterface $commentReactionManager,
         private readonly CommentSerializerInterface $commentSerializer,
         private readonly CommentSubmissionValidator $commentValidator,
         private readonly SettingRepository $settingRepository,

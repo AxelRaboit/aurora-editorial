@@ -10,13 +10,15 @@ use Aurora\Module\Editorial\Comment\Entity\CommentReactionInterface;
 use Aurora\Module\Editorial\Comment\Enum\ReactionTypeEnum;
 use Aurora\Module\Editorial\Comment\Repository\CommentReactionRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 use Symfony\Component\HttpFoundation\Request;
 
-final readonly class CommentReactionManager
+#[AsAlias(CommentReactionManagerInterface::class)]
+class CommentReactionManager implements CommentReactionManagerInterface
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private CommentReactionRepository $commentReactionRepository,
+        protected readonly EntityManagerInterface $entityManager,
+        protected readonly CommentReactionRepository $commentReactionRepository,
     ) {}
 
     /**
@@ -38,7 +40,7 @@ final readonly class CommentReactionManager
                 $existingReaction->setType($type);
             }
         } else {
-            $newReaction = new CommentReaction();
+            $newReaction = $this->createCommentReaction();
             $newReaction->setComment($comment);
             $newReaction->setType($type);
             $newReaction->setFingerprint($fingerprint);
@@ -53,5 +55,10 @@ final readonly class CommentReactionManager
     public function generateFingerprint(Request $request): string
     {
         return hash('sha256', $request->getClientIp().$request->headers->get('User-Agent', ''));
+    }
+
+    protected function createCommentReaction(): CommentReactionInterface
+    {
+        return new CommentReaction();
     }
 }
