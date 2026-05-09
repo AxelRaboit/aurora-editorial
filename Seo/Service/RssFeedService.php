@@ -9,12 +9,12 @@ use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
 /**
- * Caches the per-locale RSS XML built by RssFeedBuilder. Mirrors SitemapManager
+ * Caches the per-locale RSS XML built by RssFeedBuilder. Mirrors SitemapService
  * so feed crawlers (Feedly, etc.) don't trigger a fresh DB query on every poll.
  *
  * Cache key includes the locale; invalidate() drops every active locale.
  */
-final readonly class RssFeedManager
+final readonly class RssFeedService
 {
     private const string CACHE_KEY_PREFIX = 'editorial.rss.feed.';
 

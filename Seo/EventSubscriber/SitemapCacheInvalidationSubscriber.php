@@ -10,8 +10,8 @@ use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
 use Aurora\Module\Editorial\Post\Entity\Post;
 use Aurora\Module\Editorial\Post\Entity\PostTranslation;
 use Aurora\Module\Editorial\Post\Entity\PostType;
-use Aurora\Module\Editorial\Seo\Service\RssFeedManager;
-use Aurora\Module\Editorial\Seo\Service\SitemapManager;
+use Aurora\Module\Editorial\Seo\Service\RssFeedService;
+use Aurora\Module\Editorial\Seo\Service\SitemapService;
 use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTermTranslation;
@@ -44,8 +44,8 @@ use Doctrine\ORM\Events;
 final readonly class SitemapCacheInvalidationSubscriber
 {
     public function __construct(
-        private SitemapManager $sitemapManager,
-        private RssFeedManager $rssFeedManager,
+        private SitemapService $sitemapManager,
+        private RssFeedService $rssFeedManager,
     ) {}
 
     public function postPersist(PostPersistEventArgs $args): void

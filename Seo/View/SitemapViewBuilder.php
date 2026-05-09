@@ -6,7 +6,7 @@ namespace Aurora\Module\Editorial\Seo\View;
 
 use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
 use Aurora\Module\Editorial\Seo\Dto\SitemapData;
-use Aurora\Module\Editorial\Seo\Service\SitemapManager;
+use Aurora\Module\Editorial\Seo\Service\SitemapService;
 use DateTimeInterface;
 
 /**
@@ -15,7 +15,7 @@ use DateTimeInterface;
 final readonly class SitemapViewBuilder
 {
     public function __construct(
-        private SitemapManager $sitemapManager,
+        private SitemapService $sitemapService,
         private PostTypeRepository $postTypeRepository,
     ) {}
 
@@ -25,7 +25,7 @@ final readonly class SitemapViewBuilder
     public function indexView(): array
     {
         return [
-            'stats' => $this->serialize($this->sitemapManager->getData()),
+            'stats' => $this->serialize($this->sitemapService->getData()),
         ];
     }
 

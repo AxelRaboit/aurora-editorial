@@ -6,7 +6,7 @@ namespace Aurora\Module\Editorial\Seo\Controller\Backend;
 
 use Aurora\Core\Enum\HttpMethodEnum;
 use Aurora\Core\Frontend\Controller\JsonResponseTrait;
-use Aurora\Module\Editorial\Seo\Service\SitemapManager;
+use Aurora\Module\Editorial\Seo\Service\SitemapService;
 use Aurora\Module\Editorial\Seo\View\SitemapViewBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,7 +21,7 @@ final class SitemapController extends AbstractController
     use JsonResponseTrait;
 
     public function __construct(
-        private readonly SitemapManager $sitemapManager,
+        private readonly SitemapService $sitemapManager,
         private readonly SitemapViewBuilder $viewBuilder,
     ) {}
 

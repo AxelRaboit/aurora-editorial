@@ -6,8 +6,8 @@ namespace Aurora\Module\Editorial\Frontend\Controller;
 
 use Aurora\Core\Enum\HttpStatusEnum;
 use Aurora\Core\Frontend\Service\Context;
-use Aurora\Module\Editorial\Seo\Service\RssFeedManager;
-use Aurora\Module\Editorial\Seo\Service\SitemapManager;
+use Aurora\Module\Editorial\Seo\Service\RssFeedService;
+use Aurora\Module\Editorial\Seo\Service\SitemapService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -15,8 +15,8 @@ use Symfony\Component\Routing\Attribute\Route;
 class SitemapController extends AbstractController
 {
     public function __construct(
-        private readonly SitemapManager $sitemapManager,
-        private readonly RssFeedManager $rssFeedManager,
+        private readonly SitemapService $sitemapManager,
+        private readonly RssFeedService $rssFeedManager,
         private readonly Context $context,
     ) {}
 

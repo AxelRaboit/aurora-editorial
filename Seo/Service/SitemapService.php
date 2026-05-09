@@ -18,7 +18,7 @@ use Symfony\Contracts\Cache\ItemInterface;
  * missing keys simply fall back to defaults. Cache expires after one hour as
  * a safety net for sites without an active editor.
  */
-final readonly class SitemapManager
+final readonly class SitemapService
 {
     private const string CACHE_KEY = 'editorial.sitemap.data';
 
