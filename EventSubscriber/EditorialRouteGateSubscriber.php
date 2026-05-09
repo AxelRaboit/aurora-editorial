@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 /**
  * 404s every Editorial admin route (`backend_editorial_*`, `backend_comments_*`,
  * `backend_forms_*`, `backend_post_types_*`, `backend_posts_*`, `backend_taxonomies_*`,
- * `backend_sitemap_*`, `backend_menus_*`) when EditorialAdminEnabled is off.
+ * `backend_sitemap_*`, `backend_menus_*`) when EditorialEnabled is off.
  */
 final readonly class EditorialRouteGateSubscriber implements EventSubscriberInterface
 {

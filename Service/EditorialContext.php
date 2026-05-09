@@ -13,6 +13,6 @@ final readonly class EditorialContext
 
     public function isAdminEnabled(): bool
     {
-        return $this->settingRepository->getBoolean(ApplicationParameterEnum::EditorialAdminEnabled->value, true);
+        return $this->settingRepository->getBoolean(ApplicationParameterEnum::EditorialEnabled->value, true);
     }
 }
