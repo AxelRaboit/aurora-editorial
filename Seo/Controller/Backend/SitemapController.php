@@ -7,7 +7,7 @@ namespace Aurora\Module\Editorial\Seo\Controller\Backend;
 use Aurora\Core\Enum\HttpMethodEnum;
 use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Module\Editorial\Seo\Service\SitemapManager;
-use Aurora\Module\Editorial\Seo\View\SitemapAdminViewBuilder;
+use Aurora\Module\Editorial\Seo\View\SitemapViewBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,13 +16,13 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/backend/sitemap', name: 'backend_sitemap')]
 #[IsGranted('editorial.sitemap.manage')]
-final class SitemapAdminController extends AbstractController
+final class SitemapController extends AbstractController
 {
     use JsonResponseTrait;
 
     public function __construct(
         private readonly SitemapManager $sitemapManager,
-        private readonly SitemapAdminViewBuilder $viewBuilder,
+        private readonly SitemapViewBuilder $viewBuilder,
     ) {}
 
     #[Route('', name: '', methods: [HttpMethodEnum::Get->value])]

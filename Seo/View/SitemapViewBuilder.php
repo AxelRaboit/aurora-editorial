@@ -12,7 +12,7 @@ use DateTimeInterface;
 /**
  * Builds the Twig payloads consumed by the admin sitemap views.
  */
-final readonly class SitemapAdminViewBuilder
+final readonly class SitemapViewBuilder
 {
     public function __construct(
         private SitemapManager $sitemapManager,
