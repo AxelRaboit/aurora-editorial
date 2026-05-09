@@ -39,6 +39,11 @@ final readonly class EditorialModule implements ModuleInterface
             return [];
         }
 
+        return $this->getCatalogNavSections();
+    }
+
+    public function getCatalogNavSections(): array
+    {
         return [
             new NavSection('editorial', [
                 new NavItem('backend_posts', 'backend.nav.posts', 'file-text', descriptionKey: 'backend.nav.posts_description'),
