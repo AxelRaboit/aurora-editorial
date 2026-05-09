@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Seo\Service;
 
-use Aurora\Core\Frontend\Service\FrontContext;
+use Aurora\Core\Frontend\Service\Context;
 use Aurora\Module\Editorial\Post\Entity\PostInterface;
 use Aurora\Module\Editorial\Post\Entity\PostTranslationInterface;
 use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
@@ -16,7 +16,7 @@ final readonly class AlternatesBuilder
 {
     public function __construct(
         private UrlGeneratorInterface $urlGenerator,
-        private FrontContext $frontContext,
+        private Context $context,
     ) {}
 
     /**
@@ -25,7 +25,7 @@ final readonly class AlternatesBuilder
     public function forPost(PostInterface $post): array
     {
         $alternates = [];
-        foreach ($this->frontContext->activeLocaleCodes() as $code) {
+        foreach ($this->context->activeLocaleCodes() as $code) {
             $translation = $post->getTranslation($code);
             if (!$translation instanceof PostTranslationInterface) {
                 continue;
@@ -61,7 +61,7 @@ final readonly class AlternatesBuilder
     public function forRoute(string $route, array $extraParams = []): array
     {
         $alternates = [];
-        foreach ($this->frontContext->activeLocaleCodes() as $code) {
+        foreach ($this->context->activeLocaleCodes() as $code) {
             $alternates[] = [
                 'locale' => $code,
                 'url' => $this->urlGenerator->generate($route, array_merge($extraParams, ['locale' => $code])),
@@ -77,7 +77,7 @@ final readonly class AlternatesBuilder
     public function forTerm(Taxonomy $taxonomy, TaxonomyTerm $term): array
     {
         $alternates = [];
-        foreach ($this->frontContext->activeLocaleCodes() as $code) {
+        foreach ($this->context->activeLocaleCodes() as $code) {
             $termTranslation = $term->getTranslation($code);
             if (!$termTranslation instanceof TaxonomyTermTranslation) {
                 continue;

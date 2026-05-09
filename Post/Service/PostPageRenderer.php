@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Service;
 
-use Aurora\Core\Frontend\Service\FrontContext;
+use Aurora\Core\Frontend\Service\Context;
 use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Core\Theme\Service\ThemeContext;
 use Aurora\Core\Theme\Service\ThemeResolver;
@@ -24,7 +24,7 @@ final readonly class PostPageRenderer
     public function __construct(
         private Environment $twig,
         private ThemeResolver $themeResolver,
-        private FrontContext $frontContext,
+        private Context $context,
         private ThemeContext $themeContext,
         private BlocksRenderer $blocksRenderer,
         private AlternatesBuilder $alternatesBuilder,
@@ -45,7 +45,7 @@ final readonly class PostPageRenderer
 
         $body = $this->twig->render($this->themeResolver->resolve('post'), [
             'locale' => $locale,
-            'context' => $this->frontContext,
+            'context' => $this->context,
             'showFrontMenus' => true,
             'themeContext' => $this->themeContext,
             'post' => $post,

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Post\Controller\Frontend;
 
 use Aurora\Core\Enum\HttpStatusEnum;
-use Aurora\Core\Frontend\Controller\FrontLocaleTrait;
-use Aurora\Core\Frontend\Service\FrontContext;
+use Aurora\Core\Frontend\Controller\LocaleTrait;
+use Aurora\Core\Frontend\Service\Context;
 use Aurora\Core\Frontend\Service\HttpCacheService;
 use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
 use Aurora\Core\Theme\Service\ThemeResolver;
@@ -29,14 +29,14 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class PageController extends AbstractController
 {
-    use FrontLocaleTrait;
+    use LocaleTrait;
 
     public function __construct(
         private readonly PostRepository $postRepository,
         private readonly PostTypeRepository $postTypeRepository,
         private readonly PostSlugHistoryRepository $slugHistoryRepository,
         private readonly TaxonomyRepository $taxonomyRepository,
-        private readonly FrontContext $frontContext,
+        private readonly Context $context,
         private readonly ThemeResolver $themeResolver,
         private readonly HttpCacheService $httpCache,
         private readonly PostPageRenderer $postPageRenderer,
@@ -46,10 +46,10 @@ class PageController extends AbstractController
     #[Route('/{locale}/editorial', name: 'editorial_home', requirements: ['locale' => '[a-z]{2}'], priority: 9)]
     public function home(string $locale, Request $request): Response
     {
-        $this->assertActiveLocale($this->frontContext, $locale);
+        $this->assertActiveLocale($this->context, $locale);
         $request->setLocale($locale);
 
-        $homepageId = $this->frontContext->homepagePostId();
+        $homepageId = $this->context->homepagePostId();
         if (null !== $homepageId) {
             $post = $this->postRepository->find($homepageId);
             $homepageTranslation = $post?->getTranslation($locale);
@@ -71,7 +71,7 @@ class PageController extends AbstractController
     #[Route('/{locale}/editorial/{postTypeSlug}/{slug}', name: 'editorial_post', requirements: ['locale' => '[a-z]{2}'], priority: 5)]
     public function post(string $locale, string $postTypeSlug, string $slug, Request $request): Response
     {
-        $this->assertActiveLocale($this->frontContext, $locale);
+        $this->assertActiveLocale($this->context, $locale);
         $request->setLocale($locale);
 
         $post = $this->postRepository->findPublishedBySlug($slug, $locale);
@@ -107,7 +107,7 @@ class PageController extends AbstractController
     #[Route('/{locale}/editorial/{postTypeSlug}', name: 'editorial_archive', requirements: ['locale' => '[a-z]{2}'], priority: 3)]
     public function archive(string $locale, string $postTypeSlug, Request $request): Response
     {
-        $this->assertActiveLocale($this->frontContext, $locale);
+        $this->assertActiveLocale($this->context, $locale);
         $request->setLocale($locale);
 
         $postType = $this->postTypeRepository->findOneBy(['slug' => $postTypeSlug]);
@@ -128,7 +128,7 @@ class PageController extends AbstractController
     #[Route('/{locale}/editorial/{taxonomySlug}/{termSlug}', name: 'editorial_term', requirements: ['locale' => '[a-z]{2}'], priority: 4)]
     public function term(string $locale, string $taxonomySlug, string $termSlug, Request $request): Response
     {
-        $this->assertActiveLocale($this->frontContext, $locale);
+        $this->assertActiveLocale($this->context, $locale);
         $request->setLocale($locale);
 
         $taxonomy = $this->taxonomyRepository->findOneBySlug($taxonomySlug);
@@ -179,6 +179,6 @@ class PageController extends AbstractController
 
     private function postsPerPage(): int
     {
-        return (int) ($this->frontContext->setting(ApplicationParameterEnum::PostsPerPage->value, '10') ?? 10);
+        return (int) ($this->context->setting(ApplicationParameterEnum::PostsPerPage->value, '10') ?? 10);
     }
 }

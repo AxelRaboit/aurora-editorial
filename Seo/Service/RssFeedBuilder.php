@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Seo\Service;
 
-use Aurora\Core\Frontend\Service\FrontContext;
+use Aurora\Core\Frontend\Service\Context;
 use Aurora\Module\Editorial\Post\Repository\PostRepository;
 use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
 use DateTimeInterface;
@@ -15,7 +15,7 @@ final readonly class RssFeedBuilder
     public function __construct(
         private PostRepository $postRepository,
         private PostTypeRepository $postTypeRepository,
-        private FrontContext $frontContext,
+        private Context $context,
         private UrlGeneratorInterface $urlGenerator,
     ) {}
 
@@ -26,10 +26,10 @@ final readonly class RssFeedBuilder
             ? $this->postRepository->findPublishedByPostType($postType->getId(), 1, 20, $locale)['items']
             : [];
 
-        $siteUrl = $this->frontContext->siteUrl();
+        $siteUrl = $this->context->siteUrl();
         $homeUrl = $this->urlGenerator->generate('editorial_home', ['locale' => $locale], UrlGeneratorInterface::ABSOLUTE_URL);
-        $siteName = $this->escape($this->frontContext->siteName());
-        $siteDesc = $this->escape($this->frontContext->siteDescription() ?? '');
+        $siteName = $this->escape($this->context->siteName());
+        $siteDesc = $this->escape($this->context->siteDescription() ?? '');
 
         $items = '';
         foreach ($posts as $post) {

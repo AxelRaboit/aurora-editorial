@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Form\View;
 
-use Aurora\Core\Frontend\Service\FrontContext;
+use Aurora\Core\Frontend\Service\Context;
 use Aurora\Core\Theme\Service\ThemeContext;
 use Aurora\Module\Editorial\Form\Entity\FormTranslationInterface;
 use Aurora\Module\Editorial\Form\Serializer\FormSerializerInterface;
@@ -16,7 +16,7 @@ final readonly class FormViewBuilder
 {
     public function __construct(
         private FormSerializerInterface $formSerializer,
-        private FrontContext $frontContext,
+        private Context $context,
         private ThemeContext $themeContext,
     ) {}
 
@@ -33,7 +33,7 @@ final readonly class FormViewBuilder
 
         return [
             'locale' => $locale,
-            'context' => $this->frontContext,
+            'context' => $this->context,
             'showFrontMenus' => true,
             'themeContext' => $this->themeContext,
             'form' => $form,

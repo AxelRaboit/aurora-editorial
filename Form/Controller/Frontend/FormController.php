@@ -6,9 +6,9 @@ namespace Aurora\Module\Editorial\Form\Controller\Frontend;
 
 use Aurora\Core\Enum\HttpMethodEnum;
 use Aurora\Core\Enum\HttpStatusEnum;
-use Aurora\Core\Frontend\Controller\FrontLocaleTrait;
+use Aurora\Core\Frontend\Controller\LocaleTrait;
 use Aurora\Core\Frontend\Controller\JsonResponseTrait;
-use Aurora\Core\Frontend\Service\FrontContext;
+use Aurora\Core\Frontend\Service\Context;
 use Aurora\Core\Theme\Service\ThemeResolver;
 use Aurora\Module\Editorial\Form\Entity\FormTranslationInterface;
 use Aurora\Module\Editorial\Form\Manager\FormManagerInterface;
@@ -23,14 +23,14 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class FormController extends AbstractController
 {
-    use FrontLocaleTrait;
+    use LocaleTrait;
     use JsonResponseTrait;
 
     public function __construct(
         private readonly FormTranslationRepository $formTranslationRepository,
         private readonly FormManagerInterface $formManager,
         private readonly FormSubmissionValidator $formSubmissionValidator,
-        private readonly FrontContext $frontContext,
+        private readonly Context $context,
         private readonly ThemeResolver $themeResolver,
         private readonly FormViewBuilder $viewBuilder,
     ) {}
@@ -38,7 +38,7 @@ class FormController extends AbstractController
     #[Route('/{locale}/editorial/forms/{slug}', name: 'editorial_form', requirements: ['locale' => '[a-z]{2}'], priority: 7)]
     public function show(string $locale, string $slug, Request $request): Response
     {
-        $this->assertActiveLocale($this->frontContext, $locale);
+        $this->assertActiveLocale($this->context, $locale);
         $request->setLocale($locale);
 
         $translation = $this->findActiveFormTranslation($locale, $slug);
@@ -54,7 +54,7 @@ class FormController extends AbstractController
     #[Route('/{locale}/editorial/forms/{slug}/submit', name: 'editorial_form_submit', requirements: ['locale' => '[a-z]{2}'], methods: [HttpMethodEnum::Post->value], priority: 8)]
     public function submit(string $locale, string $slug, Request $request): JsonResponse
     {
-        $this->assertActiveLocale($this->frontContext, $locale);
+        $this->assertActiveLocale($this->context, $locale);
         $request->setLocale($locale);
 
         $translation = $this->findActiveFormTranslation($locale, $slug);

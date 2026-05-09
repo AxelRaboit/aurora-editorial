@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Seo\Service;
 
-use Aurora\Core\Frontend\Service\FrontContext;
+use Aurora\Core\Frontend\Service\Context;
 use Aurora\Module\Editorial\Post\Repository\PostRepository;
 use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
 use Aurora\Module\Editorial\Seo\Dto\SitemapData;
@@ -19,7 +19,7 @@ final readonly class SitemapBuilder
         private PostRepository $postRepository,
         private PostTypeRepository $postTypeRepository,
         private TaxonomyRepository $taxonomyRepository,
-        private FrontContext $frontContext,
+        private Context $context,
         private UrlGeneratorInterface $urlGenerator,
     ) {}
 
@@ -72,7 +72,7 @@ final readonly class SitemapBuilder
     private function localizedHomeEntries(array &$byLocale): array
     {
         $entries = [];
-        foreach ($this->frontContext->activeLocales() as $locale) {
+        foreach ($this->context->activeLocales() as $locale) {
             $code = $locale->getCode();
             $entries[] = $this->urlEntry(
                 $this->urlGenerator->generate('editorial_home', ['locale' => $code], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -91,7 +91,7 @@ final readonly class SitemapBuilder
     private function archiveEntries(array &$byLocale): array
     {
         $entries = [];
-        foreach ($this->frontContext->activeLocales() as $locale) {
+        foreach ($this->context->activeLocales() as $locale) {
             $code = $locale->getCode();
             foreach ($this->postTypeRepository->findAll() as $postType) {
                 if (!$postType->hasArchive()) {
@@ -144,7 +144,7 @@ final readonly class SitemapBuilder
                 }
 
                 $code = $translation->getLocale();
-                if (!$this->frontContext->isLocaleActive($code)) {
+                if (!$this->context->isLocaleActive($code)) {
                     continue;
                 }
 
@@ -174,7 +174,7 @@ final readonly class SitemapBuilder
         $entries = [];
         foreach ($this->taxonomyRepository->findAll() as $taxonomy) {
             foreach ($taxonomy->getTerms() as $term) {
-                foreach ($this->frontContext->activeLocales() as $locale) {
+                foreach ($this->context->activeLocales() as $locale) {
                     $code = $locale->getCode();
                     $translation = $term->getTranslation($code);
                     if (null === $translation) {

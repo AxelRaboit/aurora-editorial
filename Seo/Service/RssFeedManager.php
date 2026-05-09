@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Seo\Service;
 
-use Aurora\Core\Frontend\Service\FrontContext;
+use Aurora\Core\Frontend\Service\Context;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
@@ -22,7 +22,7 @@ final readonly class RssFeedManager
 
     public function __construct(
         private RssFeedBuilder $builder,
-        private FrontContext $frontContext,
+        private Context $context,
         private CacheInterface $cache,
     ) {}
 
@@ -37,7 +37,7 @@ final readonly class RssFeedManager
 
     public function invalidate(): void
     {
-        foreach ($this->frontContext->activeLocales() as $locale) {
+        foreach ($this->context->activeLocales() as $locale) {
             $this->cache->delete(self::CACHE_KEY_PREFIX.$locale->getCode());
         }
     }

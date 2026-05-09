@@ -6,9 +6,9 @@ namespace Aurora\Module\Editorial\Comment\Controller\Frontend;
 
 use Aurora\Core\Enum\HttpMethodEnum;
 use Aurora\Core\Enum\HttpStatusEnum;
-use Aurora\Core\Frontend\Controller\FrontLocaleTrait;
+use Aurora\Core\Frontend\Controller\LocaleTrait;
 use Aurora\Core\Frontend\Controller\JsonResponseTrait;
-use Aurora\Core\Frontend\Service\FrontContext;
+use Aurora\Core\Frontend\Service\Context;
 use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Module\Editorial\Comment\Dto\CommentInputFactoryInterface;
 use Aurora\Module\Editorial\Comment\Entity\CommentInterface;
@@ -30,7 +30,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class CommentController extends AbstractController
 {
-    use FrontLocaleTrait;
+    use LocaleTrait;
     use JsonResponseTrait;
 
     public function __construct(
@@ -42,7 +42,7 @@ class CommentController extends AbstractController
         private readonly CommentSerializerInterface $commentSerializer,
         private readonly CommentSubmissionValidator $commentValidator,
         private readonly SettingRepository $settingRepository,
-        private readonly FrontContext $frontContext,
+        private readonly Context $context,
         private readonly PostPageRenderer $postPageRenderer,
         private readonly CommentInputFactoryInterface $commentInputFactory,
     ) {}
@@ -50,7 +50,7 @@ class CommentController extends AbstractController
     #[Route('/{locale}/editorial/{postTypeSlug}/{slug}/comment', name: 'editorial_post_comment', requirements: ['locale' => '[a-z]{2}'], methods: [HttpMethodEnum::Post->value], priority: 6)]
     public function submit(string $locale, string $postTypeSlug, string $slug, Request $request): Response
     {
-        $this->assertActiveLocale($this->frontContext, $locale);
+        $this->assertActiveLocale($this->context, $locale);
         $request->setLocale($locale);
 
         $post = $this->postRepository->findPublishedBySlug($slug, $locale);
@@ -89,7 +89,7 @@ class CommentController extends AbstractController
     #[Route('/{locale}/editorial/{postTypeSlug}/{slug}/comments', name: 'editorial_post_comments_list', requirements: ['locale' => '[a-z]{2}'], methods: [HttpMethodEnum::Get->value], priority: 5)]
     public function list(string $locale, string $postTypeSlug, string $slug): JsonResponse
     {
-        $this->assertActiveLocale($this->frontContext, $locale);
+        $this->assertActiveLocale($this->context, $locale);
 
         $post = $this->postRepository->findPublishedBySlug($slug, $locale);
         if (!$post instanceof Post) {
@@ -115,7 +115,7 @@ class CommentController extends AbstractController
     #[Route('/{locale}/editorial/{postTypeSlug}/{slug}/comment/{commentId}/react', name: 'editorial_comment_react', requirements: ['locale' => '[a-z]{2}'], methods: [HttpMethodEnum::Post->value], priority: 5)]
     public function react(string $locale, string $postTypeSlug, string $slug, int $commentId, Request $request): JsonResponse
     {
-        $this->assertActiveLocale($this->frontContext, $locale);
+        $this->assertActiveLocale($this->context, $locale);
 
         $post = $this->postRepository->findPublishedBySlug($slug, $locale);
         if (!$post instanceof Post) {

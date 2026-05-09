@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\View;
 
-use Aurora\Core\Frontend\Service\FrontContext;
+use Aurora\Core\Frontend\Service\Context;
 use Aurora\Core\Theme\Service\ThemeContext;
 use Aurora\Module\Editorial\Post\Entity\PostTypeInterface;
 use Aurora\Module\Editorial\Seo\Service\AlternatesBuilder;
@@ -17,7 +17,7 @@ use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
 final readonly class PageViewBuilder
 {
     public function __construct(
-        private FrontContext $frontContext,
+        private Context $context,
         private ThemeContext $themeContext,
         private AlternatesBuilder $alternatesBuilder,
     ) {}
@@ -31,7 +31,7 @@ final readonly class PageViewBuilder
     {
         return [
             'locale' => $locale,
-            'context' => $this->frontContext,
+            'context' => $this->context,
             'themeContext' => $this->themeContext,
             'showFrontMenus' => true,
             'posts' => $posts,
@@ -49,7 +49,7 @@ final readonly class PageViewBuilder
     {
         return [
             'locale' => $locale,
-            'context' => $this->frontContext,
+            'context' => $this->context,
             'themeContext' => $this->themeContext,
             'showFrontMenus' => true,
             'postType' => $postType,
@@ -67,7 +67,7 @@ final readonly class PageViewBuilder
     {
         return [
             'locale' => $locale,
-            'context' => $this->frontContext,
+            'context' => $this->context,
             'themeContext' => $this->themeContext,
             'showFrontMenus' => true,
             'taxonomy' => $taxonomy,
