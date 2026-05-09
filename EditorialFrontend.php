@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial;
 
-use Aurora\Core\Frontend\Contract\FrontInterface;
+use Aurora\Core\Frontend\Contract\FrontendInterface;
 use Aurora\Core\Menu\Contract\MenuLocationProviderInterface;
 use Aurora\Core\Menu\Enum\MenuItemTargetTypeEnum;
 use Aurora\Core\Menu\Enum\MenuItemVisibilityEnum;
 use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
 
-final class EditorialFront implements FrontInterface, MenuLocationProviderInterface
+final class EditorialFrontend implements FrontendInterface, MenuLocationProviderInterface
 {
     public function getSlug(): string
     {
