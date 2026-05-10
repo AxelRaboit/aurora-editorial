@@ -17,6 +17,9 @@ backend:
           manage: Manage taxonomies
         sitemap:
           manage: Manage sitemap
+  modules:
+    editorial: Editorial
+    editorial_description: 'Enables the Editorial section in the admin (posts, menus, forms, sitemap).'
   menus:
     preview:
       untitled: (untitled)

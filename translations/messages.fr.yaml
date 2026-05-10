@@ -88,6 +88,9 @@ backend:
       term_self_nested: Un terme ne peut pas être placé sous lui-même ou un de ses descendants.
       reorder_cycle: 'La réorganisation créerait un cycle impliquant le terme #{id}.'
       parent_wrong_taxonomy: 'Le terme parent #{parentId} n''appartient pas à la taxonomie "{taxonomy}".'
+  modules:
+    editorial: Editorial
+    editorial_description: "Active la section Editorial dans l'administration (articles, menus, formulaires, sitemap)."
   nav:
     sections:
       editorial: Editorial
