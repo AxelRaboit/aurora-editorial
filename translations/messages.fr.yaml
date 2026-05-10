@@ -534,7 +534,7 @@ backend:
     description: Description
     descriptionPlaceholder: Courte description visible par l'utilisateur…
     notifyEmail: Email de notification
-    notifyEmailPlaceholder: "admin{'@'}monsite.com"
+    notifyEmailPlaceholder: "admin@monsite.com"
     notifyEmailHint: 'Si renseigné, un e-mail est envoyé à chaque nouvelle soumission.'
     active: Formulaire actif
     addField: Ajouter un champ

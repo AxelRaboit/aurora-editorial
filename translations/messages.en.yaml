@@ -534,7 +534,7 @@ backend:
     description: Description
     descriptionPlaceholder: Short description visible to the user…
     notifyEmail: Notification email
-    notifyEmailPlaceholder: "admin{'@'}mysite.com"
+    notifyEmailPlaceholder: "admin@mysite.com"
     notifyEmailHint: 'If set, an email is sent on each new submission.'
     active: Form active
     addField: Add field
