@@ -4,7 +4,7 @@ backend:
       editorial:
         posts:
           view: View posts
-          manage: Manage posts (create, edit, publish)
+          manage: 'Manage posts (create, edit, publish)'
         post_types:
           manage: Manage post types
         comments:
@@ -44,10 +44,49 @@ backend:
       authenticated_only: Authenticated only
   postTypes:
     errors:
-      slug_taken: A post type with slug "{slug}" already exists.
+      slug_taken: 'A post type with slug "{slug}" already exists.'
       builtin_protected: Built-in post types cannot be deleted.
       has_posts: This post type contains posts and cannot be deleted.
-      field_name_taken: A field named "{name}" already exists on this post type.
+      field_name_taken: 'A field named "{name}" already exists on this post type.'
+    title: Post types
+    add: Add
+    editPostType: Edit post type
+    deleteConfirm: 'Delete "{label}"?'
+    deleteHasPosts: Cannot delete a post type that still contains posts.
+    empty: Select a post type on the left.
+    builtIn: Built-in
+    slug: Slug
+    slugPlaceholder: e.g. article
+    label: Label
+    labelPlaceholder: e.g. Article
+    icon: Icon
+    iconPlaceholder: 'file-text, layers, …'
+    hasArchive: Archive page
+    supports: Supported features
+    fields:
+      title: Custom fields
+      empty: No field.
+      add: Add field
+      edit: Edit field
+      noContacts: No contacts linked to this company.
+      contactLinked: 'Will be linked to {name}'
+      deleteConfirm: 'Delete "{label}"? Existing values will be lost.'
+      name: Technical name
+      listView: List view
+      kanbanView: Kanban view
+      namePlaceholder: e.g. reading_time
+      label: Label
+      labelPlaceholder: e.g. Reading time
+      type: Type
+      required: Required
+      translatable: Translatable
+      dndHint: Drag and drop to reorder fields.
+      selectChoices: Choices (one per line)
+      selectChoicesHint: 'Format: value|label (if label is omitted, value is used)'
+      selectChoicesPlaceholder: "low|Low\nhigh|High"
+      referenceTargetType: Target post type
+      referenceAnyType: — Any
+      referenceMultiple: Multiple selection
   posts:
     selectFromLibrary: Select from library
     status: Status
@@ -60,6 +99,116 @@ backend:
       archived: Archived
     errors:
       post_type_not_found: 'Post type #{id} not found.'
+    add: New content
+    edit: Edit content
+    searchPlaceholder: Search content…
+    empty: No content found.
+    deleteConfirm: 'Move "{title}" to trash?'
+    forceDeleteConfirm: 'Permanently delete "{title}"? This action is irreversible.'
+    forceDelete: Delete permanently
+    created: Content created.
+    updated: Content updated.
+    deleted: Content moved to trash.
+    deletedForever: Content permanently deleted.
+    restored: Content restored.
+    trashedBanner: This post is in the trash.
+    emptyTrash: Empty trash
+    emptyTrashConfirm: Permanently delete all posts in the trash? This action cannot be undone.
+    emptyTrashDone: '{count} post(s) permanently deleted.'
+    tabs:
+      active: Active
+      active_description: 'All published, draft and scheduled posts.'
+      trash: Trash
+      trash_description: Deleted posts. Restorable or permanently purgeable.
+    title: Title
+    titlePlaceholder: My title…
+    slug: Slug
+    slugPlaceholder: my-title
+    postType: Content type
+    terms: Terms
+    termsPickerEmpty: No terms in this taxonomy yet.
+    commentsEnabled: Comments
+    relatedPosts:
+      title: Related posts
+      searchPlaceholder: Search for a post to link…
+    customFields: Custom fields
+    customField:
+      upload: Upload
+    blocks: Content
+    metaTitle: Meta title
+    metaDescription: Meta description
+    seo:
+      focusKeyword: Focus keyword
+      focusKeywordPlaceholder: e.g. open source cms
+      canonicalUrl: Canonical URL
+      noindex: Prevent indexing (noindex)
+      ogImage: Open Graph image
+      ogImageUpload: Upload image
+      serpPreview: Google preview
+      focusChecksTitle: Focus keyword checks
+      focusChecks:
+        title: Present in the title
+        metaTitle: Present in the meta title
+        metaDescription: Present in the meta description
+        slug: Present in the slug
+      jsonLd: JSON-LD (schema.org)
+      jsonLdPlaceholder: JSON-LD object embedded in a script application/ld+json tag
+      jsonLdMustBeObject: JSON-LD must be an object.
+      generateArticle: Generate Article
+    featuredImage: Featured image
+    addImage: Add
+    slugLock: Lock slug
+    slugUnlock: Edit slug
+    preview: Preview
+    previewEmpty: No content to preview.
+    previewSavedHint: Preview shows the last saved version.
+    scheduledAt: Scheduled for
+    publishedAt: Published on
+    revisions:
+      title: History
+      empty: No revisions yet.
+      selectHint: Select a revision to compare.
+      restore: Restore this version
+      restored: Version restored.
+      revisionSide: Revision
+      currentSide: Current
+      unchanged: unchanged
+      showUnchanged: Show unchanged blocks
+      noChange: No differences for this language.
+      kind:
+        unchanged: Unchanged
+        added: Added
+        removed: Removed
+        modified: Modified
+    conflict: This content was modified by another user since your last save. Your changes have not been saved.
+    conflictCompare: View current version
+    conflictMerge: Merge
+    conflictForce: Force my save
+    merge:
+      title: Resolve conflicts
+      subtitle: Choose which version to keep for each block.
+      apply: 'Apply & save'
+      yours: Yours
+      theirs: Theirs
+      use: 'Use:'
+      deleted: (block deleted)
+      showUnchanged: Show unchanged blocks
+      hideUnchanged: Hide unchanged blocks
+      acceptAllMine: Accept all mine
+      acceptAllTheirs: Accept all theirs
+      nothingToShow: No changes to display.
+      unresolvedCount: '{count} unresolved conflict(s)'
+      unresolvedError: Some conflicts are still unresolved.
+      summary: '{unchanged} unchanged · {auto} auto-merged · {conflicts} conflict(s)'
+      kind:
+        unchanged: Unchanged
+        local-modified: Modified by you
+        remote-modified: Modified remotely
+        local-added: Added by you
+        remote-added: Added remotely
+        local-removed: Removed by you
+        remote-removed: Removed remotely
+        conflict: CONFLICT
   stats:
     postStatus:
       draft: Draft
@@ -86,11 +235,43 @@ backend:
         tel: Phone
   taxonomies:
     errors:
-      slug_taken: A taxonomy with slug "{slug}" already exists.
+      slug_taken: 'A taxonomy with slug "{slug}" already exists.'
       builtin_protected: Built-in taxonomies cannot be deleted.
       term_self_nested: A term cannot be nested under itself or one of its descendants.
       reorder_cycle: 'Reorder would create a cycle involving term #{id}.'
       parent_wrong_taxonomy: 'Parent term #{parentId} does not belong to taxonomy "{taxonomy}".'
+    title: Taxonomies
+    addTaxonomy: Add
+    editTaxonomy: Edit taxonomy
+    deleteTaxonomyConfirm: 'Delete "{label}"? All related terms will be removed.'
+    empty: Select a taxonomy on the left.
+    hierarchical: Hierarchical
+    builtIn: Built-in
+    slug: Slug
+    slugPlaceholder: e.g. category
+    translations: Translations
+    label: Label
+    labelPlaceholder: e.g. Category
+    description: Description
+    descriptionPlaceholder: Short description of the taxonomy…
+    postTypes: Post types
+    terms:
+      title: Terms
+      empty: No terms yet.
+      addTerm: Add
+      editTerm: Edit term
+      deleteTermConfirm: 'Delete "{name}"? Direct children will be re-parented.'
+      name: Name
+      listView: List view
+      kanbanView: Kanban view
+      namePlaceholder: e.g. Technology
+      slug: Slug
+      slugPlaceholder: e.g. technology
+      description: Description
+      descriptionPlaceholder: Short description of the term…
+      parent: Parent
+      noParent: — (root)
+      dndHint: Drag and drop terms to rearrange the tree.
   nav:
     sections:
       editorial: Editorial
@@ -104,9 +285,9 @@ backend:
     menus: Menus
     menus_description: Build the public site's navigation menus
     postTypes: Post types
-    postTypes_description: Define custom content types (articles, pages, etc.)
+    postTypes_description: 'Define custom content types (articles, pages, etc.)'
     posts: Content
-    posts_description: Write and publish articles, pages and other editorial content
+    posts_description: 'Write and publish articles, pages and other editorial content'
     sitemap: Sitemap
     sitemap_description: View and generate the site map (sitemap.xml)
     tags: Tags
@@ -135,6 +316,263 @@ backend:
     noindex:
       label: Excluded translations (noindex)
       hint: Post translations flagged as "noindex" and therefore omitted from the sitemap.
+  editor:
+    placeholder: Start writing…
+    toolNames:
+      text: Text
+      heading: Heading
+      list: List
+      orderedList: Ordered List
+      unorderedList: Unordered List
+      checklist: Checklist
+      quote: Quote
+      code: Code
+      delimiter: Delimiter
+      table: Table
+      image: Image
+      embed: Embed
+      marker: Marker
+      inlineCode: Inline Code
+      underline: Underline
+      strikethrough: Strikethrough
+      textColor: Text Color
+      textBackground: Background Color
+      fontSize: Font Size
+      clearFormatting: Clear formatting
+      callout: Callout
+      mediaText: Image + Text
+      twoColumn: 2 Columns
+      postsList: Posts list
+    ui:
+      blockTunes:
+        toggler:
+          Click to tune: Click to tune
+          or drag to move: or drag to move
+      inlineToolbar:
+        converter:
+          Convert to: Convert to
+      toolbar:
+        toolbox:
+          Add: Add
+      popover:
+        Filter: Filter
+        Nothing found: Nothing found
+        nothingFoundExtended: Nothing found. Try searching for something else.
+    blockTunes:
+      delete:
+        Delete: Delete
+        Click to delete: Click to delete
+      moveUp:
+        Move up: Move up
+      moveDown:
+        Move down: Move down
+    image:
+      captionPlaceholder: Caption…
+    quote:
+      placeholder: Quote…
+      captionPlaceholder: Author…
+    mediaText:
+      flipLeft: ⇄ Image left
+      flipRight: ⇄ Image right
+      captionPlaceholder: Caption…
+      textPlaceholder: Your text…
+      urlPlaceholder: Image URL…
+      changeUrl: Change URL
+      confirm: Confirm
+      browse: Browse
+      actions: Actions
+      or: or
+      mediaIdPlaceholder: Existing media ID…
+      mediaIdNotFound: Media not found
+    mediaPicker:
+      title: Choose a media
+      search: Search by name or alt…
+      allFolders: All folders
+      empty: No media found
+      loading: Loading…
+      select: Select
+    callout:
+      titlePlaceholder: Title…
+      messagePlaceholder: Message…
+    postsList:
+      titleLabel: Title (optional)
+      postTypeLabel: Content type
+      columnsLabel: Columns
+      modeLabel: Mode
+      modeAutoLabel: Full paginated list
+      modeManualLabel: Manual selection
+      perPageLabel: Posts per page
+      searchPlaceholderLabel: Search a post…
+      selectedLabel: Selected posts
+      emptyLabel: No post selected
+      noResultsLabel: No results
+    productGrid:
+      titleLabel: Title (optional)
+      columnsLabel: Columns
+      searchPlaceholderLabel: Search a product…
+      selectedLabel: Selected products
+      emptyLabel: No product selected
+      noResultsLabel: No results
+    templates:
+      title: Choose a template
+      subtitle: The current content will be replaced by the selected template.
+      block: block
+      blocks: blocks
+      article:
+        label: Classic article
+        description: 'Title, introduction, image, body'
+      journal:
+        label: Double layout
+        description: Alternating image-text like a newspaper
+      twoColumn:
+        label: Two columns
+        description: Content split into two equal columns
+      landing:
+        label: Landing section
+        description: 'Headline, full-width image, key points'
+      tutorial:
+        label: Tutorial / Guide
+        description: Numbered steps with code blocks
+      newsletter:
+        label: Newsletter
+        description: 'Email format: intro, sections, CTA'
+      blank:
+        label: Blank page
+        description: Start from scratch with no blocks
+      changelog:
+        label: Changelog
+        description: 'Release notes: new features, improvements, fixes'
+      faq:
+        label: FAQ
+        description: 'Structured Q&A with callout blocks'
+      portfolio:
+        label: Portfolio / Project
+        description: 'Project showcase: image, context, result'
+      comparison:
+        label: Comparison
+        description: Two options side by side with a final verdict
+      recap:
+        label: Meeting recap
+        description: 'Summary, decisions and next steps'
+      confirmReplace: Replace the current content?
+      apply: Apply
+      emptyContent: Empty content
+      structure: Structure
+      categories:
+        all: All
+        article: Article
+        marketing: Marketing
+        layout: Layout
+        technique: Technical
+  tags:
+    add: Add tag
+    name: Name
+    slug: Slug
+    createdAt: Created at
+    actions: Actions
+    searchPlaceholder: Search a tag…
+    empty: No tags found.
+    edit: Edit tag
+    deleteConfirm: 'Delete tag "{name}"? This action is irreversible.'
+    created: Tag created.
+    updated: Tag updated.
+    deleted: Tag deleted.
+    errors:
+      name_required: Name is required.
+      name_too_long: Name cannot exceed 255 characters.
+  comments:
+    title: Comments
+    empty: No comments.
+    all: All
+    pending: Pending
+    approved: Approved
+    spam: Spam
+    view: View comment
+    moderationOn: Moderation on
+    moderationOff: Moderation off
+    moderationEnableConfirm: Enable moderation?
+    moderationEnableConfirmDesc: New comments will be held for review before being published.
+    moderationDisableConfirm: Disable moderation?
+    moderationDisableConfirmDesc: New comments will be approved automatically without review.
+    moderationEnabled: Moderation enabled — comments will be held for review.
+    moderationDisabled: Moderation disabled — comments will be approved automatically.
+    approve: Approve
+    markSpam: Mark as spam
+    name: Name
+    email: Email
+    post: Post
+    content: Comment
+    date: Date
+    status: Status
+    reactions: Reactions
+    deleteConfirm: Delete this comment?
+    deleteWarning: This action cannot be undone.
+    replyTo: In reply to
+    approveSuccess: Comment approved.
+    spamSuccess: Comment marked as spam.
+    spamConfirm: Mark as spam?
+    spamConfirmDesc: This comment will be hidden and flagged as unwanted.
+  forms:
+    create: New form
+    newForm: New form
+    empty: No forms yet.
+    selectOrCreate: Select a form or create a new one.
+    inactive: Inactive
+    submissions_count: submission(s)
+    tabs:
+      settings: Settings
+      fields: Fields
+      submissions: Submissions
+    title: Title
+    titlePlaceholder: e.g. Contact form
+    slug: Slug
+    slugPlaceholder: contact
+    sharedSlug: Same slug for all languages
+    localeFilled: Language filled
+    localeEmpty: Language empty
+    localesOptional: All languages are optional
+    description: Description
+    descriptionPlaceholder: Short description visible to the user…
+    notifyEmail: Notification email
+    notifyEmailPlaceholder: "admin{'@'}mysite.com"
+    notifyEmailHint: 'If set, an email is sent on each new submission.'
+    active: Form active
+    addField: Add field
+    addFieldTitle: Add a field
+    editField: Edit field
+    fieldsHint: Drag and drop to reorder fields.
+    fieldsEmpty: No fields yet. Click 'Add field' to get started.
+    required: Required
+    fieldType: Field type
+    fieldLabel: Label
+    fieldLabelPlaceholder: e.g. Your name
+    fieldPlaceholder: Placeholder
+    fieldPlaceholderPlaceholder: e.g. John Doe
+    fieldOptions: Options (one per line)
+    fieldOptionsPlaceholder: "Option 1\nOption 2\nOption 3"
+    fieldOptionsHint: One option per line.
+    fieldRequired: Required field
+    deleteFieldConfirm: 'Delete field "{label}"?'
+    deleteConfirmTitle: Delete form?
+    deleteConfirmBody: 'Delete "{title}"? All submissions will be lost.'
+    submissionsCount: submission(s)
+    submissionsEmpty: No submissions yet.
+    submittedAt: Date
+    locale: Language
+    exportCsv: Export CSV
+    viewSubmission: View submission
+    fieldTypes:
+      text: Short text
+      email: Email
+      textarea: Long text
+      select: Dropdown
+      checkbox: Checkboxes
+      radio: Radio buttons
+      number: Number
+      date: Date
+      tel: Phone
+    errors:
+      labelRequired: Label is required.
 editorial:
   mail:
     comment:
@@ -148,8 +586,8 @@ editorial:
       from: From
       cta_moderate: Moderate
     form:
-      subject_admin: 'New form submission'
-      subject_confirmation: 'Confirmation of your message'
+      subject_admin: New form submission
+      subject_confirmation: Confirmation of your message
       admin_heading: New submission
       admin_intro: 'A new submission has been received for the form "{title}".'
       confirmation_heading: Thank you for your message
