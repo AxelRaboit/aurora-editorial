@@ -8,22 +8,19 @@ use Aurora\Core\Enum\HttpMethodEnum;
 use Aurora\Core\Enum\HttpStatusEnum;
 use Aurora\Core\Frontend\Controller\JsonRequestTrait;
 use Aurora\Core\Frontend\Controller\JsonResponseTrait;
-use Aurora\Core\User\Entity\User;
-use Aurora\Core\User\Enum\UserRoleEnum;
 use Aurora\Core\Validation\Dto\PaginationRequest;
 use Aurora\Core\Validation\Service\PayloadValidator;
 use Aurora\Module\Editorial\Post\Dto\PostInputFactoryInterface;
-use Aurora\Module\Editorial\Post\Dto\PostInputInterface;
 use Aurora\Module\Editorial\Post\Entity\Post;
 use Aurora\Module\Editorial\Post\Entity\PostRevision;
 use Aurora\Module\Editorial\Post\Entity\PostTranslation;
-use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
 use Aurora\Module\Editorial\Post\Manager\PostManagerInterface;
 use Aurora\Module\Editorial\Post\Repository\PostRepository;
 use Aurora\Module\Editorial\Post\Repository\PostRevisionRepository;
 use Aurora\Module\Editorial\Post\Security\PostVoter;
 use Aurora\Module\Editorial\Post\Serializer\PostRevisionSerializer;
 use Aurora\Module\Editorial\Post\Serializer\PostSerializerInterface;
+use Aurora\Module\Editorial\Post\Service\PostAccessService;
 use Aurora\Module\Editorial\Post\Service\PostPageRenderer;
 use Aurora\Module\Editorial\Post\View\PostsViewBuilder;
 use Doctrine\DBAL\LockMode;
@@ -54,18 +51,21 @@ class PostsController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
         private readonly PostPageRenderer $postPageRenderer,
         private readonly PostsViewBuilder $viewBuilder,
+        private readonly PostAccessService $postAccessService,
     ) {}
 
     #[Route('', name: '', methods: [HttpMethodEnum::Get->value])]
     public function index(PaginationRequest $pagination, Request $request): Response
     {
-        $payload = $this->buildListPayload($pagination, $request);
+        $postTypeId = $request->query->getInt('postTypeId') ?: null;
+        $trashed = $request->query->getBoolean('trashed');
+        $payload = $this->viewBuilder->buildListPayload($pagination, $postTypeId, $trashed, $this->postAccessService->scopedAuthorId());
 
         if ('XMLHttpRequest' === $request->headers->get('X-Requested-With')) {
             return $this->json($payload);
         }
 
-        return $this->render('@Editorial/backend/posts/index.html.twig', $this->viewBuilder->indexView($payload, $pagination, $request->query->getBoolean('trashed')));
+        return $this->render('@Editorial/backend/posts/index.html.twig', $this->viewBuilder->indexView($payload, $pagination, $trashed));
     }
 
     #[Route('/search', name: '_search', methods: [HttpMethodEnum::Get->value])]
@@ -108,7 +108,7 @@ class PostsController extends AbstractController
     #[Route('', name: '_create', methods: [HttpMethodEnum::Post->value])]
     public function create(Request $request): JsonResponse
     {
-        $input = $this->demoteIfNotPublishable($this->postInputFactory->fromArray($this->decodeJson($request)));
+        $input = $this->postManager->demoteIfNotPublishable($this->postInputFactory->fromArray($this->decodeJson($request)));
 
         $errors = $this->payloadValidator->errors($input);
         if ([] !== $errors) {
@@ -125,13 +125,13 @@ class PostsController extends AbstractController
     {
         $this->denyAccessUnlessGranted(PostVoter::EDIT, $post);
 
-        $input = $this->demoteIfNotPublishable($this->postInputFactory->fromArray($this->decodeJson($request)), $post);
+        $input = $this->postManager->demoteIfNotPublishable($this->postInputFactory->fromArray($this->decodeJson($request)), $post);
 
         if (!$input->isForce() && null !== $input->getVersion()) {
             try {
                 $this->entityManager->lock($post, LockMode::OPTIMISTIC, $input->getVersion());
             } catch (OptimisticLockException) {
-                return $this->json(['success' => false, 'conflict' => true], HttpStatusEnum::Conflict->value);
+                return $this->jsonFailure('conflict', HttpStatusEnum::Conflict->value, ['conflict' => true]);
             }
         }
 
@@ -174,12 +174,9 @@ class PostsController extends AbstractController
     #[Route('/empty-trash', name: '_empty_trash', methods: [HttpMethodEnum::Post->value])]
     public function emptyTrash(): JsonResponse
     {
-        $posts = $this->postRepository->findAllTrashed();
-        foreach ($posts as $post) {
-            $this->postManager->forceDelete($post);
-        }
+        $count = $this->postManager->emptyTrash();
 
-        return $this->jsonSuccess(['count' => count($posts)]);
+        return $this->jsonSuccess(['count' => $count]);
     }
 
     #[Route('/{id}/revisions', name: '_revisions', methods: [HttpMethodEnum::Get->value])]
@@ -195,7 +192,7 @@ class PostsController extends AbstractController
     {
         $revision = $this->revisionRepository->find($revisionId);
         if (!$revision instanceof PostRevision || $revision->getPost() !== $post) {
-            return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
+            return $this->jsonNotFound();
         }
 
         return $this->jsonSuccess(['revision' => $this->revisionSerializer->serializeFull($revision)]);
@@ -206,62 +203,11 @@ class PostsController extends AbstractController
     {
         $revision = $this->revisionRepository->find($revisionId);
         if (!$revision instanceof PostRevision || $revision->getPost() !== $post) {
-            return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
+            return $this->jsonNotFound();
         }
 
         $this->postManager->restoreRevision($post, $revision);
 
         return $this->jsonSuccess(['post' => $this->postSerializer->serialize($post)]);
-    }
-
-    /** @return array{success: bool, items: list<array<string, mixed>>, total: int, page: int, totalPages: int} */
-    private function buildListPayload(PaginationRequest $pagination, Request $request): array
-    {
-        $postTypeId = $request->query->getInt('postTypeId') ?: null;
-        $trashed = $request->query->getBoolean('trashed');
-        $authorId = $this->scopedAuthorId();
-
-        $result = $this->postRepository->findPaginated($pagination->page, 10, $pagination->search, $postTypeId, trashed: $trashed, authorId: $authorId);
-
-        return [
-            'success' => true,
-            'items' => array_map($this->postSerializer->serialize(...), $result['items']),
-            'total' => $result['total'],
-            'page' => $result['page'],
-            'totalPages' => $result['totalPages'],
-        ];
-    }
-
-    /**
-     * Authors can only see their own posts in the list. Editor+ see everything.
-     * Returns null when no scoping is needed.
-     */
-    private function scopedAuthorId(): ?int
-    {
-        // Dev and Admin see all posts; User with manage privilege sees only own
-        if ($this->isGranted(UserRoleEnum::Dev->value) || $this->isGranted(UserRoleEnum::Admin->value)) {
-            return null;
-        }
-
-        $currentUser = $this->getUser();
-
-        return $currentUser instanceof User ? $currentUser->getId() : null;
-    }
-
-    /**
-     * If the caller cannot publish (creating, or editing a specific post they can't publish),
-     * downgrade Published → PendingReview so the change still goes through but waits for moderation.
-     */
-    private function demoteIfNotPublishable(PostInputInterface $input, ?Post $post = null): PostInputInterface
-    {
-        if (PostStatusEnum::Published->value !== $input->getStatus()) {
-            return $input;
-        }
-
-        $allowed = $post instanceof Post
-            ? $this->isGranted(PostVoter::PUBLISH, $post)
-            : ($this->isGranted(UserRoleEnum::Admin->value) || $this->isGranted(UserRoleEnum::Dev->value));
-
-        return $allowed ? $input : $input->withStatus(PostStatusEnum::PendingReview->value);
     }
 }

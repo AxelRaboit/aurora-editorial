@@ -21,7 +21,7 @@ abstract class AbstractPost implements PostInterface, TimestampableInterface
 {
     use TimestampableTrait;
 
-    #[ORM\Column(length: 32, unique: true, nullable: true)]
+    #[ORM\Column(length: 64, unique: true, nullable: true)]
     protected ?string $reference = null;
 
     #[ORM\Version]

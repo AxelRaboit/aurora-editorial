@@ -15,6 +15,7 @@ use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
 use Aurora\Module\Editorial\Taxonomy\Manager\TaxonomyManagerInterface;
 use Aurora\Module\Editorial\Taxonomy\Serializer\TaxonomySerializerInterface;
+use Aurora\Module\Editorial\Taxonomy\Service\TaxonomyReorderParser;
 use Aurora\Module\Editorial\Taxonomy\View\TaxonomiesViewBuilder;
 use InvalidArgumentException;
 use RuntimeException;
@@ -121,7 +122,7 @@ class TaxonomiesController extends AbstractController
     {
         $term = $taxonomy->findTermById($termId);
         if (!$term instanceof TaxonomyTerm) {
-            return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
+            return $this->jsonNotFound();
         }
 
         $input = $this->taxonomyTermInputFactory->fromArray($this->decodeJson($request));
@@ -145,7 +146,7 @@ class TaxonomiesController extends AbstractController
     {
         $term = $taxonomy->findTermById($termId);
         if (!$term instanceof TaxonomyTerm) {
-            return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
+            return $this->jsonNotFound();
         }
 
         $this->taxonomyManager->deleteTerm($term);
@@ -157,23 +158,7 @@ class TaxonomiesController extends AbstractController
     public function reorderTerms(Taxonomy $taxonomy, Request $request): JsonResponse
     {
         $data = $this->decodeJson($request);
-        $entries = [];
-        foreach ((array) ($data['entries'] ?? []) as $entry) {
-            if (!is_array($entry)) {
-                continue;
-            }
-
-            $id = (int) ($entry['id'] ?? 0);
-            if ($id <= 0) {
-                continue;
-            }
-
-            $entries[] = [
-                'id' => $id,
-                'parentId' => isset($entry['parentId']) && (int) $entry['parentId'] > 0 ? (int) $entry['parentId'] : null,
-                'position' => (int) ($entry['position'] ?? 0),
-            ];
-        }
+        $entries = TaxonomyReorderParser::parseReorderEntries($data['entries'] ?? []);
 
         try {
             $this->taxonomyManager->reorderTerms($taxonomy, $entries);

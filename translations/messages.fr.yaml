@@ -395,7 +395,7 @@ backend:
       titlePlaceholder: Titre…
       messagePlaceholder: Message…
     postsList:
-      titleLabel: Titre (optionnel)
+      titleLabel: Titre
       postTypeLabel: Type de contenu
       columnsLabel: Colonnes
       modeLabel: Mode
@@ -407,7 +407,7 @@ backend:
       emptyLabel: Aucun article sélectionné
       noResultsLabel: Aucun résultat
     productGrid:
-      titleLabel: Titre (optionnel)
+      titleLabel: Titre
       columnsLabel: Colonnes
       searchPlaceholderLabel: Rechercher un produit…
       selectedLabel: Produits sélectionnés

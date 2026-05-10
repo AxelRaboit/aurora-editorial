@@ -9,6 +9,7 @@ use Aurora\Module\Editorial\Form\Dto\FormInputInterface;
 use Aurora\Module\Editorial\Form\Entity\FormFieldInterface;
 use Aurora\Module\Editorial\Form\Entity\FormInterface;
 use Aurora\Module\Editorial\Form\Entity\FormSubmissionInterface;
+use Aurora\Module\Editorial\Form\Entity\FormTranslationInterface;
 
 interface FormManagerInterface
 {
@@ -29,4 +30,6 @@ interface FormManagerInterface
 
     /** @param array<string, mixed> $submittedData */
     public function submit(FormInterface $form, array $submittedData, string $locale, string $ip): FormSubmissionInterface;
+
+    public function findActiveTranslation(string $locale, string $slug): ?FormTranslationInterface;
 }

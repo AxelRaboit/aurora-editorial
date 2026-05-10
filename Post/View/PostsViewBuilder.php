@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Post\View;
 
 use Aurora\Core\Validation\Dto\PaginationRequest;
+use Aurora\Module\Editorial\Post\Repository\PostRepository;
 use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
+use Aurora\Module\Editorial\Post\Serializer\PostSerializerInterface;
 use Aurora\Module\Editorial\Post\Serializer\PostTypeSerializerInterface;
 use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
 use Aurora\Module\Editorial\Taxonomy\Serializer\TaxonomySerializerInterface;
@@ -25,9 +27,27 @@ final readonly class PostsViewBuilder
         private TaxonomyRepository $taxonomyRepository,
         private PostTypeSerializerInterface $postTypeSerializer,
         private TaxonomySerializerInterface $taxonomySerializer,
+        private PostRepository $postRepository,
+        private PostSerializerInterface $postSerializer,
         #[Autowire(param: 'kernel.enabled_locales')]
         private array $enabledLocales,
     ) {}
+
+    /**
+     * @return array{success: bool, items: list<array<string, mixed>>, total: int, page: int, totalPages: int}
+     */
+    public function buildListPayload(PaginationRequest $pagination, ?int $postTypeId = null, bool $trashed = false, ?int $authorId = null): array
+    {
+        $result = $this->postRepository->findPaginated($pagination->page, 10, $pagination->search, $postTypeId, trashed: $trashed, authorId: $authorId);
+
+        return [
+            'success' => true,
+            'items' => array_map($this->postSerializer->serialize(...), $result['items']),
+            'total' => $result['total'],
+            'page' => $result['page'],
+            'totalPages' => $result['totalPages'],
+        ];
+    }
 
     /**
      * @param array<string, mixed> $listPayload

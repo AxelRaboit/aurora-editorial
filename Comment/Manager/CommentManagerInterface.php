@@ -7,6 +7,7 @@ namespace Aurora\Module\Editorial\Comment\Manager;
 use Aurora\Module\Editorial\Comment\Dto\CommentInputInterface;
 use Aurora\Module\Editorial\Comment\Entity\CommentInterface;
 use Aurora\Module\Editorial\Post\Entity\Post;
+use Aurora\Module\Editorial\Post\Entity\PostInterface;
 
 interface CommentManagerInterface
 {
@@ -17,4 +18,6 @@ interface CommentManagerInterface
     public function spam(CommentInterface $comment): void;
 
     public function delete(CommentInterface $comment): void;
+
+    public function areCommentsEnabled(PostInterface $post): bool;
 }

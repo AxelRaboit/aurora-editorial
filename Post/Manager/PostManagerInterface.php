@@ -6,6 +6,7 @@ namespace Aurora\Module\Editorial\Post\Manager;
 
 use Aurora\Module\Editorial\Post\Dto\PostInputInterface;
 use Aurora\Module\Editorial\Post\Entity\Post;
+use Aurora\Module\Editorial\Post\Entity\PostInterface;
 use Aurora\Module\Editorial\Post\Entity\PostRevision;
 
 interface PostManagerInterface
@@ -21,4 +22,13 @@ interface PostManagerInterface
     public function forceDelete(Post $post): void;
 
     public function restoreRevision(Post $post, PostRevision $revision): void;
+
+    /** Permanently delete all trashed posts. Returns the number deleted. */
+    public function emptyTrash(): int;
+
+    /**
+     * If the caller cannot publish, downgrade Published → PendingReview.
+     * Pass $post when editing an existing post (publish voter checks ownership).
+     */
+    public function demoteIfNotPublishable(PostInputInterface $input, ?PostInterface $post = null): PostInputInterface;
 }

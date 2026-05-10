@@ -134,7 +134,7 @@ final class FormsController extends AbstractController
     {
         $field = $this->loadField($form, $fieldId);
         if (!$field instanceof FormFieldInterface) {
-            return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
+            return $this->jsonNotFound();
         }
 
         $input = $this->formFieldInputFactory->fromArray($this->decodeJson($request));
@@ -152,7 +152,7 @@ final class FormsController extends AbstractController
     {
         $field = $this->loadField($form, $fieldId);
         if (!$field instanceof FormFieldInterface) {
-            return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
+            return $this->jsonNotFound();
         }
 
         $this->formManager->deleteField($field);

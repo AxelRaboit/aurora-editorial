@@ -9,7 +9,6 @@ use Aurora\Core\Enum\HttpStatusEnum;
 use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Frontend\Controller\LocaleTrait;
 use Aurora\Core\Frontend\Service\Context;
-use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Module\Editorial\Comment\Dto\CommentInputFactoryInterface;
 use Aurora\Module\Editorial\Comment\Entity\CommentInterface;
 use Aurora\Module\Editorial\Comment\Enum\ReactionTypeEnum;
@@ -41,7 +40,6 @@ class CommentController extends AbstractController
         private readonly CommentReactionManagerInterface $commentReactionManager,
         private readonly CommentSerializerInterface $commentSerializer,
         private readonly CommentSubmissionValidator $commentValidator,
-        private readonly SettingRepository $settingRepository,
         private readonly Context $context,
         private readonly PostPageRenderer $postPageRenderer,
         private readonly CommentInputFactoryInterface $commentInputFactory,
@@ -58,7 +56,7 @@ class CommentController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        if (!$this->areCommentsEnabled($post)) {
+        if (!$this->commentManager->areCommentsEnabled($post)) {
             return $this->redirectToRoute('editorial_post', ['locale' => $locale, 'postTypeSlug' => $postTypeSlug, 'slug' => $slug]);
         }
 
@@ -93,10 +91,10 @@ class CommentController extends AbstractController
 
         $post = $this->postRepository->findPublishedBySlug($slug, $locale);
         if (!$post instanceof Post) {
-            return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
+            return $this->jsonNotFound();
         }
 
-        if (!$this->areCommentsEnabled($post)) {
+        if (!$this->commentManager->areCommentsEnabled($post)) {
             return $this->jsonSuccess(['roots' => [], 'replies' => [], 'reactionEmojis' => []]);
         }
 
@@ -119,12 +117,12 @@ class CommentController extends AbstractController
 
         $post = $this->postRepository->findPublishedBySlug($slug, $locale);
         if (!$post instanceof Post) {
-            return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
+            return $this->jsonNotFound();
         }
 
         $comment = $this->commentRepository->find($commentId);
         if (!$this->isPubliclyOnPost($comment, $post)) {
-            return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
+            return $this->jsonNotFound();
         }
 
         $typeValue = str_contains((string) $request->headers->get('Content-Type', ''), 'application/json')
@@ -140,11 +138,6 @@ class CommentController extends AbstractController
         $updatedCounts = $this->commentReactionManager->toggle($comment, $reactionType, $fingerprint);
 
         return $this->jsonSuccess(['counts' => $updatedCounts]);
-    }
-
-    private function areCommentsEnabled(Post $post): bool
-    {
-        return $this->settingRepository->getBoolean('comments_enabled') && $post->isCommentsEnabled();
     }
 
     private function resolveParent(Post $post, int $parentId): ?CommentInterface

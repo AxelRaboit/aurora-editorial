@@ -11,14 +11,18 @@ use Aurora\Core\Sequence\SequencePrefixEnum;
 use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
 use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Core\User\Entity\User;
+use Aurora\Core\User\Enum\UserRoleEnum;
 use Aurora\Module\Editorial\Post\Dto\PostInputInterface;
 use Aurora\Module\Editorial\Post\Dto\PostTranslationInput;
 use Aurora\Module\Editorial\Post\Entity\Post;
+use Aurora\Module\Editorial\Post\Entity\PostInterface;
 use Aurora\Module\Editorial\Post\Entity\PostRevision;
 use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
+use Aurora\Module\Editorial\Post\Repository\PostRepository;
 use Aurora\Module\Editorial\Post\Repository\PostRevisionRepository;
 use Aurora\Module\Editorial\Post\Repository\PostSlugHistoryRepository;
 use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
+use Aurora\Module\Editorial\Post\Security\PostVoter;
 use Aurora\Module\Editorial\Post\Service\PostTextExtractor;
 use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyTermRepository;
 use DateTimeImmutable;
@@ -49,6 +53,7 @@ class PostManager implements PostManagerInterface
         protected readonly TranslatorInterface $translator,
         protected readonly AuditLogger $auditLogger,
         protected readonly SequenceGenerator $sequenceGenerator,
+        protected readonly PostRepository $postRepository,
     ) {}
 
     public function create(PostInputInterface $input): Post
@@ -171,6 +176,36 @@ class PostManager implements PostManagerInterface
             ...$this->auditPayload($post),
             'revisionId' => $revision->getId(),
         ]);
+    }
+
+    public function emptyTrash(): int
+    {
+        $posts = $this->postRepository->findAllTrashed();
+        if ([] === $posts) {
+            return 0;
+        }
+
+        foreach ($posts as $post) {
+            $this->auditLogger->log('editorial', 'post.force_deleted', 'Post', $post->getId(), $this->auditPayload($post));
+            $this->entityManager->remove($post);
+        }
+
+        $this->entityManager->flush();
+
+        return count($posts);
+    }
+
+    public function demoteIfNotPublishable(PostInputInterface $input, ?PostInterface $post = null): PostInputInterface
+    {
+        if (PostStatusEnum::Published->value !== $input->getStatus()) {
+            return $input;
+        }
+
+        $allowed = $post instanceof PostInterface
+            ? $this->security->isGranted(PostVoter::PUBLISH, $post)
+            : ($this->security->isGranted(UserRoleEnum::Admin->value) || $this->security->isGranted(UserRoleEnum::Dev->value));
+
+        return $allowed ? $input : $input->withStatus(PostStatusEnum::PendingReview->value);
     }
 
     protected function applyInput(Post $post, PostInputInterface $input): void

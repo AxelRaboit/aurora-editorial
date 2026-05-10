@@ -12,7 +12,6 @@ use Aurora\Core\Frontend\Service\Context;
 use Aurora\Core\Theme\Service\ThemeResolver;
 use Aurora\Module\Editorial\Form\Entity\FormTranslationInterface;
 use Aurora\Module\Editorial\Form\Manager\FormManagerInterface;
-use Aurora\Module\Editorial\Form\Repository\FormTranslationRepository;
 use Aurora\Module\Editorial\Form\Service\FormSubmissionValidator;
 use Aurora\Module\Editorial\Form\View\FormViewBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,7 +26,6 @@ class FormController extends AbstractController
     use JsonResponseTrait;
 
     public function __construct(
-        private readonly FormTranslationRepository $formTranslationRepository,
         private readonly FormManagerInterface $formManager,
         private readonly FormSubmissionValidator $formSubmissionValidator,
         private readonly Context $context,
@@ -41,7 +39,7 @@ class FormController extends AbstractController
         $this->assertActiveLocale($this->context, $locale);
         $request->setLocale($locale);
 
-        $translation = $this->findActiveFormTranslation($locale, $slug);
+        $translation = $this->formManager->findActiveTranslation($locale, $slug);
         if (!$translation instanceof FormTranslationInterface) {
             throw $this->createNotFoundException();
         }
@@ -57,9 +55,9 @@ class FormController extends AbstractController
         $this->assertActiveLocale($this->context, $locale);
         $request->setLocale($locale);
 
-        $translation = $this->findActiveFormTranslation($locale, $slug);
+        $translation = $this->formManager->findActiveTranslation($locale, $slug);
         if (!$translation instanceof FormTranslationInterface) {
-            return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
+            return $this->jsonNotFound();
         }
 
         $form = $translation->getForm();
@@ -77,13 +75,4 @@ class FormController extends AbstractController
         return $this->jsonSuccess();
     }
 
-    private function findActiveFormTranslation(string $locale, string $slug): ?FormTranslationInterface
-    {
-        $translation = $this->formTranslationRepository->findOneByLocaleAndSlug($locale, $slug);
-        if (!$translation instanceof FormTranslationInterface || !$translation->getForm()->isActive()) {
-            return null;
-        }
-
-        return $translation;
-    }
 }

@@ -8,6 +8,7 @@ use Aurora\Module\Editorial\Comment\Dto\CommentInputInterface;
 use Aurora\Module\Editorial\Comment\Entity\CommentInterface;
 use Aurora\Module\Editorial\Comment\Manager\CommentManagerInterface;
 use Aurora\Module\Editorial\Post\Entity\Post;
+use Aurora\Module\Editorial\Post\Entity\PostInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
 
@@ -49,6 +50,11 @@ final readonly class SpamFilterCommentManagerDecorator implements CommentManager
         $this->inner->delete($comment);
     }
 
+    public function areCommentsEnabled(PostInterface $post): bool
+    {
+        return $this->inner->areCommentsEnabled($post);
+    }
+
     private function isSpam(string $content): bool
     {
         $urls = [];
@@ -59,14 +65,17 @@ final readonly class SpamFilterCommentManagerDecorator implements CommentManager
             return true;
         }
 
-        // Contenu quasi vide avec des URLs : ratio suspect
-        if ($urlCount > 0) {
-            $contentWithoutUrls = mb_trim(preg_replace('/https?:\/\/\S+/i', '', $content) ?? '');
-            if (mb_strlen($contentWithoutUrls) < self::MIN_CONTENT_LENGTH_WITH_URLS) {
-                return true;
-            }
+        if ($urlCount > 0 && $this->hasSuspiciousUrlRatio($content)) {
+            return true;
         }
 
         return false;
+    }
+
+    private function hasSuspiciousUrlRatio(string $content): bool
+    {
+        $contentWithoutUrls = mb_trim(preg_replace('/https?:\/\/\S+/i', '', $content) ?? '');
+
+        return mb_strlen($contentWithoutUrls) < self::MIN_CONTENT_LENGTH_WITH_URLS;
     }
 }

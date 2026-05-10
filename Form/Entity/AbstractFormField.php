@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\MappedSuperclass]
 abstract class AbstractFormField implements FormFieldInterface
 {
-    #[ORM\Column(length: 32, unique: true, nullable: true)]
+    #[ORM\Column(length: 64, unique: true, nullable: true)]
     protected ?string $reference = null;
 
     #[ORM\ManyToOne(targetEntity: FormInterface::class, inversedBy: 'fields')]

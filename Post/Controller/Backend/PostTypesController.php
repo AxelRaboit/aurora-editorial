@@ -11,6 +11,7 @@ use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Validation\Service\PayloadValidator;
 use Aurora\Module\Editorial\Post\Dto\PostTypeFieldInputFactoryInterface;
 use Aurora\Module\Editorial\Post\Dto\PostTypeInputFactoryInterface;
+use Aurora\Core\Support\Arr;
 use Aurora\Module\Editorial\Post\Entity\PostType;
 use Aurora\Module\Editorial\Post\Entity\PostTypeField;
 use Aurora\Module\Editorial\Post\Manager\PostTypeManagerInterface;
@@ -118,7 +119,7 @@ class PostTypesController extends AbstractController
     {
         $field = $postType->findFieldById($fieldId);
         if (!$field instanceof PostTypeField) {
-            return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
+            return $this->jsonNotFound();
         }
 
         $input = $this->postTypeFieldInputFactory->fromArray($this->decodeJson($request));
@@ -141,7 +142,7 @@ class PostTypesController extends AbstractController
     {
         $field = $postType->findFieldById($fieldId);
         if (!$field instanceof PostTypeField) {
-            return $this->json(['success' => false], HttpStatusEnum::NotFound->value);
+            return $this->jsonNotFound();
         }
 
         $this->postTypeManager->deleteField($field);
@@ -153,10 +154,7 @@ class PostTypesController extends AbstractController
     public function reorderFields(PostType $postType, Request $request): JsonResponse
     {
         $data = $this->decodeJson($request);
-        $orderedIds = array_values(array_filter(
-            array_map(static fn ($id): int => (int) $id, is_array($data['orderedIds'] ?? null) ? $data['orderedIds'] : []),
-            static fn (int $id): bool => $id > 0,
-        ));
+        $orderedIds = Arr::positiveInts($data['orderedIds'] ?? null);
 
         $this->postTypeManager->reorderFields($postType, $orderedIds);
 

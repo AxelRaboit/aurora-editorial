@@ -15,6 +15,7 @@ use Aurora\Module\Editorial\Comment\Entity\CommentInterface;
 use Aurora\Module\Editorial\Comment\Enum\CommentStatusEnum;
 use Aurora\Module\Editorial\Comment\Service\CommentNotificationService;
 use Aurora\Module\Editorial\Post\Entity\Post;
+use Aurora\Module\Editorial\Post\Entity\PostInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 
@@ -88,6 +89,11 @@ class CommentManager implements CommentManagerInterface
 
         $this->entityManager->remove($comment);
         $this->entityManager->flush();
+    }
+
+    public function areCommentsEnabled(PostInterface $post): bool
+    {
+        return $this->settingRepository->getBoolean('comments_enabled') && $post->isCommentsEnabled();
     }
 
     protected function createComment(): CommentInterface

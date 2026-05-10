@@ -116,6 +116,16 @@ class FormManager implements FormManagerInterface
         $this->entityManager->flush();
     }
 
+    public function findActiveTranslation(string $locale, string $slug): ?FormTranslationInterface
+    {
+        $translation = $this->formTranslationRepository->findOneByLocaleAndSlug($locale, $slug);
+        if (!$translation instanceof FormTranslationInterface || !$translation->getForm()->isActive()) {
+            return null;
+        }
+
+        return $translation;
+    }
+
     public function submit(FormInterface $form, array $submittedData, string $locale, string $ip): FormSubmissionInterface
     {
         $submissionPrefix = $this->settingRepository->get(ApplicationParameterEnum::EditorialFormSubmissionPrefix->value, SequencePrefixEnum::FormSubmission->value) ?? SequencePrefixEnum::FormSubmission->value;

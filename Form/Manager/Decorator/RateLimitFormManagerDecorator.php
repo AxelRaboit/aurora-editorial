@@ -9,6 +9,7 @@ use Aurora\Module\Editorial\Form\Dto\FormInputInterface;
 use Aurora\Module\Editorial\Form\Entity\FormFieldInterface;
 use Aurora\Module\Editorial\Form\Entity\FormInterface;
 use Aurora\Module\Editorial\Form\Entity\FormSubmissionInterface;
+use Aurora\Module\Editorial\Form\Entity\FormTranslationInterface;
 use Aurora\Module\Editorial\Form\Manager\FormManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
@@ -71,5 +72,10 @@ final readonly class RateLimitFormManagerDecorator implements FormManagerInterfa
         }
 
         return $this->inner->submit($form, $submittedData, $locale, $ip);
+    }
+
+    public function findActiveTranslation(string $locale, string $slug): ?FormTranslationInterface
+    {
+        return $this->inner->findActiveTranslation($locale, $slug);
     }
 }
