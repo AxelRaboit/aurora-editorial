@@ -39,7 +39,41 @@ final readonly class EditorialModule implements ModuleInterface
             return [];
         }
 
-        return $this->getCatalogNavSections();
+        $items = [];
+
+        if ($this->editorialContext->isPostsEnabled()) {
+            $items[] = new NavItem('backend_posts', 'backend.nav.posts', 'file-text', descriptionKey: 'backend.nav.posts_description');
+        }
+
+        if ($this->editorialContext->isMenusEnabled()) {
+            $items[] = new NavItem('backend_menus', 'backend.nav.menus', 'menu', descriptionKey: 'backend.nav.menus_description');
+        }
+
+        if ($this->editorialContext->isPostTypesEnabled()) {
+            $items[] = new NavItem('backend_post_types', 'backend.nav.postTypes', 'layers', descriptionKey: 'backend.nav.postTypes_description');
+        }
+
+        if ($this->editorialContext->isTaxonomiesEnabled()) {
+            $items[] = new NavItem('backend_taxonomies', 'backend.nav.taxonomies', 'tags', descriptionKey: 'backend.nav.taxonomies_description');
+        }
+
+        if ($this->editorialContext->isCommentsEnabled()) {
+            $items[] = new NavItem('backend_comments', 'backend.nav.comments', 'message-square', descriptionKey: 'backend.nav.comments_description');
+        }
+
+        if ($this->editorialContext->isFormsEnabled()) {
+            $items[] = new NavItem('backend_forms', 'backend.nav.forms', 'clipboard-list', descriptionKey: 'backend.nav.forms_description');
+        }
+
+        if ($this->editorialContext->isSitemapEnabled()) {
+            $items[] = new NavItem('backend_sitemap', 'backend.nav.sitemap', 'map', descriptionKey: 'backend.nav.sitemap_description');
+        }
+
+        if ([] === $items) {
+            return [];
+        }
+
+        return [new NavSection('editorial', $items, priority: 30)];
     }
 
     public function getCatalogNavSections(): array

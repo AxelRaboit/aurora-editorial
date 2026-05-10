@@ -8,7 +8,7 @@ use Aurora\Core\Frontend\Contract\FrontendInterface;
 use Aurora\Core\Menu\Contract\MenuLocationProviderInterface;
 use Aurora\Core\Menu\Enum\MenuItemTargetTypeEnum;
 use Aurora\Core\Menu\Enum\MenuItemVisibilityEnum;
-use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
+use Aurora\Core\Setting\Enum\ModuleParameterEnum;
 
 final class EditorialFrontend implements FrontendInterface, MenuLocationProviderInterface
 {
@@ -34,7 +34,7 @@ final class EditorialFrontend implements FrontendInterface, MenuLocationProvider
 
     public function getModuleSettingKey(): string
     {
-        return ApplicationParameterEnum::EditorialEnabled->value;
+        return ModuleParameterEnum::EditorialEnabled->value;
     }
 
     public function getMenuLocations(): array
