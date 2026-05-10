@@ -11,7 +11,7 @@ namespace Aurora\Module\Editorial\Taxonomy\Service;
 final class TaxonomyReorderParser
 {
     /**
-     * @param mixed $rawEntries Raw value of `data['entries']` from the request (may not be an array).
+     * @param mixed $rawEntries raw value of `data['entries']` from the request (may not be an array)
      *
      * @return list<array{id: int, parentId: int|null, position: int}>
      */

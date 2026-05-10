@@ -65,11 +65,7 @@ final readonly class SpamFilterCommentManagerDecorator implements CommentManager
             return true;
         }
 
-        if ($urlCount > 0 && $this->hasSuspiciousUrlRatio($content)) {
-            return true;
-        }
-
-        return false;
+        return $urlCount > 0 && $this->hasSuspiciousUrlRatio($content);
     }
 
     private function hasSuspiciousUrlRatio(string $content): bool

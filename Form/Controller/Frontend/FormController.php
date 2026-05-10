@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Form\Controller\Frontend;
 
 use Aurora\Core\Enum\HttpMethodEnum;
-use Aurora\Core\Enum\HttpStatusEnum;
 use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Frontend\Controller\LocaleTrait;
 use Aurora\Core\Frontend\Service\Context;
@@ -74,5 +73,4 @@ class FormController extends AbstractController
 
         return $this->jsonSuccess();
     }
-
 }
