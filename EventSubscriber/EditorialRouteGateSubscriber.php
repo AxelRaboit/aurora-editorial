@@ -48,7 +48,7 @@ final readonly class EditorialRouteGateSubscriber implements EventSubscriberInte
 
         foreach (self::ADMIN_PREFIXES as $prefix) {
             if (str_starts_with($route, $prefix)) {
-                if (!$this->editorialContext->isAdminEnabled()) {
+                if (!$this->editorialContext->isBackendEnabled()) {
                     throw new NotFoundHttpException();
                 }
 

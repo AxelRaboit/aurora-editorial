@@ -54,7 +54,7 @@ final readonly class EditorialModule implements ModuleInterface, ModuleTogglePro
 
     public function getNavSections(): array
     {
-        if (!$this->editorialContext->isAdminEnabled()) {
+        if (!$this->editorialContext->isBackendEnabled()) {
             return [];
         }
 
