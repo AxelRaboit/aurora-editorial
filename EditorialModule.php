@@ -44,31 +44,31 @@ final readonly class EditorialModule implements ModuleInterface, ModuleTogglePro
         $items = [];
 
         if ($this->editorialContext->isPostsEnabled()) {
-            $items[] = new NavItem('backend_posts', 'backend.nav.posts', 'file-text', descriptionKey: 'backend.nav.posts_description');
+            $items[] = new NavItem('backend_posts', 'backend.nav.posts', 'file-text', requiredPrivilege: 'editorial.posts.view', descriptionKey: 'backend.nav.posts_description');
         }
 
         if ($this->editorialContext->isMenusEnabled()) {
-            $items[] = new NavItem('backend_menus', 'backend.nav.menus', 'menu', descriptionKey: 'backend.nav.menus_description');
+            $items[] = new NavItem('backend_menus', 'backend.nav.menus', 'menu', requiredPrivilege: 'editorial.menus.manage', descriptionKey: 'backend.nav.menus_description');
         }
 
         if ($this->editorialContext->isPostTypesEnabled()) {
-            $items[] = new NavItem('backend_post_types', 'backend.nav.postTypes', 'layers', descriptionKey: 'backend.nav.postTypes_description');
+            $items[] = new NavItem('backend_post_types', 'backend.nav.postTypes', 'layers', requiredPrivilege: 'editorial.post_types.manage', descriptionKey: 'backend.nav.postTypes_description');
         }
 
         if ($this->editorialContext->isTaxonomiesEnabled()) {
-            $items[] = new NavItem('backend_taxonomies', 'backend.nav.taxonomies', 'tags', descriptionKey: 'backend.nav.taxonomies_description');
+            $items[] = new NavItem('backend_taxonomies', 'backend.nav.taxonomies', 'tags', requiredPrivilege: 'editorial.taxonomies.manage', descriptionKey: 'backend.nav.taxonomies_description');
         }
 
         if ($this->editorialContext->isCommentsEnabled()) {
-            $items[] = new NavItem('backend_comments', 'backend.nav.comments', 'message-square', descriptionKey: 'backend.nav.comments_description');
+            $items[] = new NavItem('backend_comments', 'backend.nav.comments', 'message-square', requiredPrivilege: 'editorial.comments.manage', descriptionKey: 'backend.nav.comments_description');
         }
 
         if ($this->editorialContext->isFormsEnabled()) {
-            $items[] = new NavItem('backend_forms', 'backend.nav.forms', 'clipboard-list', descriptionKey: 'backend.nav.forms_description');
+            $items[] = new NavItem('backend_forms', 'backend.nav.forms', 'clipboard-list', requiredPrivilege: 'editorial.forms.manage', descriptionKey: 'backend.nav.forms_description');
         }
 
         if ($this->editorialContext->isSitemapEnabled()) {
-            $items[] = new NavItem('backend_sitemap', 'backend.nav.sitemap', 'map', descriptionKey: 'backend.nav.sitemap_description');
+            $items[] = new NavItem('backend_sitemap', 'backend.nav.sitemap', 'map', requiredPrivilege: 'editorial.sitemap.manage', descriptionKey: 'backend.nav.sitemap_description');
         }
 
         if ([] === $items) {
@@ -82,13 +82,13 @@ final readonly class EditorialModule implements ModuleInterface, ModuleTogglePro
     {
         return [
             new NavSection('editorial', [
-                new NavItem('backend_posts', 'backend.nav.posts', 'file-text', descriptionKey: 'backend.nav.posts_description'),
-                new NavItem('backend_menus', 'backend.nav.menus', 'menu', descriptionKey: 'backend.nav.menus_description'),
-                new NavItem('backend_post_types', 'backend.nav.postTypes', 'layers', descriptionKey: 'backend.nav.postTypes_description'),
-                new NavItem('backend_taxonomies', 'backend.nav.taxonomies', 'tags', descriptionKey: 'backend.nav.taxonomies_description'),
-                new NavItem('backend_comments', 'backend.nav.comments', 'message-square', descriptionKey: 'backend.nav.comments_description'),
-                new NavItem('backend_forms', 'backend.nav.forms', 'clipboard-list', descriptionKey: 'backend.nav.forms_description'),
-                new NavItem('backend_sitemap', 'backend.nav.sitemap', 'map', descriptionKey: 'backend.nav.sitemap_description'),
+                new NavItem('backend_posts', 'backend.nav.posts', 'file-text', requiredPrivilege: 'editorial.posts.view', descriptionKey: 'backend.nav.posts_description'),
+                new NavItem('backend_menus', 'backend.nav.menus', 'menu', requiredPrivilege: 'editorial.menus.manage', descriptionKey: 'backend.nav.menus_description'),
+                new NavItem('backend_post_types', 'backend.nav.postTypes', 'layers', requiredPrivilege: 'editorial.post_types.manage', descriptionKey: 'backend.nav.postTypes_description'),
+                new NavItem('backend_taxonomies', 'backend.nav.taxonomies', 'tags', requiredPrivilege: 'editorial.taxonomies.manage', descriptionKey: 'backend.nav.taxonomies_description'),
+                new NavItem('backend_comments', 'backend.nav.comments', 'message-square', requiredPrivilege: 'editorial.comments.manage', descriptionKey: 'backend.nav.comments_description'),
+                new NavItem('backend_forms', 'backend.nav.forms', 'clipboard-list', requiredPrivilege: 'editorial.forms.manage', descriptionKey: 'backend.nav.forms_description'),
+                new NavItem('backend_sitemap', 'backend.nav.sitemap', 'map', requiredPrivilege: 'editorial.sitemap.manage', descriptionKey: 'backend.nav.sitemap_description'),
             ], priority: 30),
         ];
     }
