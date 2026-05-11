@@ -289,7 +289,7 @@ backend:
   modules:
     editorial: Editorial
     editorial_description: "Active la section Editorial dans l'administration (articles, menus, formulaires, sitemap)."
-    editorial_front: Site Editorial (front)
+    editorial_front: Site Editorial
     editorial_front_description: Active le site public Editorial servi par Aurora (pages publiques, articles, menus front). Désactiver pour mettre le front hors-ligne.
   nav:
     sections:
