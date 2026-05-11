@@ -37,6 +37,8 @@ backend:
   modules:
     editorial: Editorial
     editorial_description: 'Enables the Editorial section in the admin (posts, menus, forms, sitemap).'
+    editorial_front: Editorial site (front)
+    editorial_front_description: 'Enables the public Editorial site served by Aurora (public pages, posts, front menus). Disable to take the front offline.'
   menus:
     preview:
       untitled: (untitled)
