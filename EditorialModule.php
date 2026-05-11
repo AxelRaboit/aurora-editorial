@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial;
 
 use Aurora\Core\Module\ModuleInterface;
+use Aurora\Core\Module\ModuleToggleProviderInterface;
 use Aurora\Core\Module\NavItem;
 use Aurora\Core\Module\NavPermission;
 use Aurora\Core\Module\NavSection;
+use Aurora\Core\Setting\Enum\ModuleParameterEnum;
 use Aurora\Module\Editorial\Service\EditorialContext;
 
-final readonly class EditorialModule implements ModuleInterface
+final readonly class EditorialModule implements ModuleInterface, ModuleToggleProviderInterface
 {
     public function __construct(private EditorialContext $editorialContext) {}
 
@@ -88,6 +90,20 @@ final readonly class EditorialModule implements ModuleInterface
                 new NavItem('backend_forms', 'backend.nav.forms', 'clipboard-list', descriptionKey: 'backend.nav.forms_description'),
                 new NavItem('backend_sitemap', 'backend.nav.sitemap', 'map', descriptionKey: 'backend.nav.sitemap_description'),
             ], priority: 30),
+        ];
+    }
+
+    public function getToggles(): array
+    {
+        return [
+            ModuleParameterEnum::EditorialEnabled->toToggle(),
+            ModuleParameterEnum::EditorialPostsEnabled->toToggle(),
+            ModuleParameterEnum::EditorialMenusEnabled->toToggle(),
+            ModuleParameterEnum::EditorialPostTypesEnabled->toToggle(),
+            ModuleParameterEnum::EditorialTaxonomiesEnabled->toToggle(),
+            ModuleParameterEnum::EditorialCommentsEnabled->toToggle(),
+            ModuleParameterEnum::EditorialFormsEnabled->toToggle(),
+            ModuleParameterEnum::EditorialSitemapEnabled->toToggle(),
         ];
     }
 }
