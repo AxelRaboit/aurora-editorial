@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/backend/sitemap', name: 'backend_sitemap')]
-#[IsGranted('editorial.sitemap.manage')]
+#[IsGranted('editorial.sitemap.view')]
 final class SitemapController extends AbstractController
 {
     use JsonResponseTrait;
@@ -32,6 +32,7 @@ final class SitemapController extends AbstractController
     }
 
     #[Route('/invalidate', name: '_invalidate', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.sitemap.regenerate')]
     public function invalidate(): JsonResponse
     {
         $this->sitemapManager->invalidate();

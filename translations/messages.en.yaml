@@ -4,19 +4,36 @@ backend:
       editorial:
         posts:
           view: View posts
-          manage: 'Manage posts (create, edit, publish)'
+          create: Create posts
+          edit: Edit and publish posts
+          delete: Delete posts
         post_types:
-          manage: Manage post types
+          view: View post types
+          create: Create post types
+          edit: Edit post types and their fields
+          delete: Delete post types
         comments:
-          manage: Moderate comments
+          view: View comments
+          moderate: Moderate comments (approve, spam)
+          delete: Delete comments
         forms:
-          manage: Manage forms
+          view: View forms
+          create: Create forms
+          edit: Edit forms and their fields
+          delete: Delete forms
         menus:
-          manage: Manage menus
+          view: View menus
+          create: Create menus
+          edit: Edit menus and their items
+          delete: Delete menus
         taxonomies:
-          manage: Manage taxonomies
+          view: View taxonomies
+          create: Create taxonomies
+          edit: Edit taxonomies and their terms
+          delete: Delete taxonomies
         sitemap:
-          manage: Manage sitemap
+          view: View sitemap
+          regenerate: Regenerate sitemap
   modules:
     editorial: Editorial
     editorial_description: 'Enables the Editorial section in the admin (posts, menus, forms, sitemap).'

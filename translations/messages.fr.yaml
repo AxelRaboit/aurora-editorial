@@ -4,19 +4,36 @@ backend:
       editorial:
         posts:
           view: Voir les articles
-          manage: 'Gérer les articles (création, édition, publication)'
+          create: Créer des articles
+          edit: Modifier et publier des articles
+          delete: Supprimer des articles
         post_types:
-          manage: Gérer les types d'articles
+          view: Voir les types d'articles
+          create: Créer des types d'articles
+          edit: Modifier les types d'articles et leurs champs
+          delete: Supprimer des types d'articles
         comments:
-          manage: Modérer les commentaires
+          view: Voir les commentaires
+          moderate: Modérer les commentaires (approuver, spam)
+          delete: Supprimer des commentaires
         forms:
-          manage: Gérer les formulaires
+          view: Voir les formulaires
+          create: Créer des formulaires
+          edit: Modifier les formulaires et leurs champs
+          delete: Supprimer des formulaires
         menus:
-          manage: Gérer les menus
+          view: Voir les menus
+          create: Créer des menus
+          edit: Modifier les menus et leurs entrées
+          delete: Supprimer des menus
         taxonomies:
-          manage: Gérer les taxonomies
+          view: Voir les taxonomies
+          create: Créer des taxonomies
+          edit: Modifier les taxonomies et leurs termes
+          delete: Supprimer des taxonomies
         sitemap:
-          manage: Gérer le sitemap
+          view: Voir le sitemap
+          regenerate: Régénérer le sitemap
   menus:
     preview:
       untitled: (sans titre)

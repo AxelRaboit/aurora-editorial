@@ -31,7 +31,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/backend/forms', name: 'backend_forms')]
-#[IsGranted('editorial.forms.manage')]
+#[IsGranted('editorial.forms.view')]
 final class FormsController extends AbstractController
 {
     use JsonRequestTrait;
@@ -75,6 +75,7 @@ final class FormsController extends AbstractController
     }
 
     #[Route('', name: '_create', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.forms.create')]
     public function create(Request $request): JsonResponse
     {
         $input = $this->formInputFactory->fromArray($this->decodeJson($request));
@@ -92,6 +93,7 @@ final class FormsController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: '_update', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.forms.edit')]
     public function update(Request $request, FormInterface $form): JsonResponse
     {
         $input = $this->formInputFactory->fromArray($this->decodeJson($request));
@@ -109,6 +111,7 @@ final class FormsController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: '_delete', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.forms.delete')]
     public function delete(FormInterface $form): JsonResponse
     {
         $this->formManager->delete($form);
@@ -117,6 +120,7 @@ final class FormsController extends AbstractController
     }
 
     #[Route('/{id}/fields', name: '_field_create', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.forms.edit')]
     public function createField(Request $request, FormInterface $form): JsonResponse
     {
         $input = $this->formFieldInputFactory->fromArray($this->decodeJson($request));
@@ -130,6 +134,7 @@ final class FormsController extends AbstractController
     }
 
     #[Route('/{id}/fields/{fieldId}/edit', name: '_field_update', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.forms.edit')]
     public function updateField(Request $request, FormInterface $form, int $fieldId): JsonResponse
     {
         $field = $this->loadField($form, $fieldId);
@@ -148,6 +153,7 @@ final class FormsController extends AbstractController
     }
 
     #[Route('/{id}/fields/{fieldId}/delete', name: '_field_delete', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.forms.edit')]
     public function deleteField(FormInterface $form, int $fieldId): JsonResponse
     {
         $field = $this->loadField($form, $fieldId);
@@ -161,6 +167,7 @@ final class FormsController extends AbstractController
     }
 
     #[Route('/{id}/fields/reorder', name: '_field_reorder', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.forms.edit')]
     public function reorderFields(Request $request, FormInterface $form): JsonResponse
     {
         $input = ReorderFieldsInput::fromArray($this->decodeJson($request));

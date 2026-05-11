@@ -27,7 +27,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/backend/post-types', name: 'backend_post_types')]
-#[IsGranted('editorial.post_types.manage')]
+#[IsGranted('editorial.post_types.view')]
 class PostTypesController extends AbstractController
 {
     use JsonRequestTrait;
@@ -49,6 +49,7 @@ class PostTypesController extends AbstractController
     }
 
     #[Route('', name: '_create', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.post_types.create')]
     public function create(Request $request): JsonResponse
     {
         $input = $this->postTypeInputFactory->fromArray($this->decodeJson($request));
@@ -67,6 +68,7 @@ class PostTypesController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: '_edit', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.post_types.edit')]
     public function edit(PostType $postType, Request $request): JsonResponse
     {
         $input = $this->postTypeInputFactory->fromArray($this->decodeJson($request));
@@ -85,6 +87,7 @@ class PostTypesController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: '_delete', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.post_types.delete')]
     public function delete(PostType $postType): JsonResponse
     {
         try {
@@ -97,6 +100,7 @@ class PostTypesController extends AbstractController
     }
 
     #[Route('/{id}/fields', name: '_field_create', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.post_types.edit')]
     public function createField(PostType $postType, Request $request): JsonResponse
     {
         $input = $this->postTypeFieldInputFactory->fromArray($this->decodeJson($request));
@@ -115,6 +119,7 @@ class PostTypesController extends AbstractController
     }
 
     #[Route('/{id}/fields/{fieldId}/edit', name: '_field_edit', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.post_types.edit')]
     public function editField(PostType $postType, int $fieldId, Request $request): JsonResponse
     {
         $field = $postType->findFieldById($fieldId);
@@ -138,6 +143,7 @@ class PostTypesController extends AbstractController
     }
 
     #[Route('/{id}/fields/{fieldId}/delete', name: '_field_delete', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.post_types.edit')]
     public function deleteField(PostType $postType, int $fieldId): JsonResponse
     {
         $field = $postType->findFieldById($fieldId);
@@ -151,6 +157,7 @@ class PostTypesController extends AbstractController
     }
 
     #[Route('/{id}/fields/reorder', name: '_field_reorder', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.post_types.edit')]
     public function reorderFields(PostType $postType, Request $request): JsonResponse
     {
         $data = $this->decodeJson($request);

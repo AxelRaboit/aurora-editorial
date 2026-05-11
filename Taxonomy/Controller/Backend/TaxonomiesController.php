@@ -27,7 +27,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/backend/taxonomies', name: 'backend_taxonomies')]
-#[IsGranted('editorial.taxonomies.manage')]
+#[IsGranted('editorial.taxonomies.view')]
 class TaxonomiesController extends AbstractController
 {
     use JsonRequestTrait;
@@ -49,6 +49,7 @@ class TaxonomiesController extends AbstractController
     }
 
     #[Route('', name: '_create', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.taxonomies.create')]
     public function create(Request $request): JsonResponse
     {
         $input = $this->taxonomyInputFactory->fromArray($this->decodeJson($request));
@@ -68,6 +69,7 @@ class TaxonomiesController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: '_edit', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.taxonomies.edit')]
     public function edit(Taxonomy $taxonomy, Request $request): JsonResponse
     {
         $input = $this->taxonomyInputFactory->fromArray($this->decodeJson($request));
@@ -87,6 +89,7 @@ class TaxonomiesController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: '_delete', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.taxonomies.delete')]
     public function delete(Taxonomy $taxonomy): JsonResponse
     {
         try {
@@ -99,6 +102,7 @@ class TaxonomiesController extends AbstractController
     }
 
     #[Route('/{id}/terms', name: '_term_create', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.taxonomies.edit')]
     public function createTerm(Taxonomy $taxonomy, Request $request): JsonResponse
     {
         $input = $this->taxonomyTermInputFactory->fromArray($this->decodeJson($request));
@@ -118,6 +122,7 @@ class TaxonomiesController extends AbstractController
     }
 
     #[Route('/{id}/terms/{termId}/edit', name: '_term_edit', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.taxonomies.edit')]
     public function editTerm(Taxonomy $taxonomy, int $termId, Request $request): JsonResponse
     {
         $term = $taxonomy->findTermById($termId);
@@ -142,6 +147,7 @@ class TaxonomiesController extends AbstractController
     }
 
     #[Route('/{id}/terms/{termId}/delete', name: '_term_delete', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.taxonomies.edit')]
     public function deleteTerm(Taxonomy $taxonomy, int $termId): JsonResponse
     {
         $term = $taxonomy->findTermById($termId);
@@ -155,6 +161,7 @@ class TaxonomiesController extends AbstractController
     }
 
     #[Route('/{id}/terms/reorder', name: '_term_reorder', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.taxonomies.edit')]
     public function reorderTerms(Taxonomy $taxonomy, Request $request): JsonResponse
     {
         $data = $this->decodeJson($request);

@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/backend/comments', name: 'backend_comments')]
-#[IsGranted('editorial.comments.manage')]
+#[IsGranted('editorial.comments.view')]
 final class CommentsController extends AbstractController
 {
     use JsonResponseTrait;
@@ -42,6 +42,7 @@ final class CommentsController extends AbstractController
     }
 
     #[Route('/toggle-moderation', name: '_toggle_moderation', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.comments.moderate')]
     public function toggleModeration(): JsonResponse
     {
         $current = $this->settingRepository->getBoolean(ApplicationParameterEnum::CommentModerationEnabled->value, true);
@@ -71,6 +72,7 @@ final class CommentsController extends AbstractController
     }
 
     #[Route('/{id}/approve', name: '_approve', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.comments.moderate')]
     public function approve(CommentInterface $comment): JsonResponse
     {
         $this->commentManager->approve($comment);
@@ -79,6 +81,7 @@ final class CommentsController extends AbstractController
     }
 
     #[Route('/{id}/spam', name: '_spam', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.comments.moderate')]
     public function spam(CommentInterface $comment): JsonResponse
     {
         $this->commentManager->spam($comment);
@@ -87,6 +90,7 @@ final class CommentsController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: '_delete', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.comments.delete')]
     public function delete(CommentInterface $comment): JsonResponse
     {
         $this->commentManager->delete($comment);

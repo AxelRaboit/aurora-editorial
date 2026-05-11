@@ -106,6 +106,7 @@ class PostsController extends AbstractController
     }
 
     #[Route('', name: '_create', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.posts.create')]
     public function create(Request $request): JsonResponse
     {
         $input = $this->postManager->demoteIfNotPublishable($this->postInputFactory->fromArray($this->decodeJson($request)));
@@ -121,6 +122,7 @@ class PostsController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: '_edit', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.posts.edit')]
     public function edit(Post $post, Request $request): JsonResponse
     {
         $this->denyAccessUnlessGranted(PostVoter::EDIT, $post);
@@ -146,6 +148,7 @@ class PostsController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: '_delete', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.posts.delete')]
     public function delete(Post $post): JsonResponse
     {
         $this->denyAccessUnlessGranted(PostVoter::DELETE, $post);
@@ -156,6 +159,7 @@ class PostsController extends AbstractController
     }
 
     #[Route('/{id}/restore', name: '_restore', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.posts.delete')]
     public function restore(Post $post): JsonResponse
     {
         $this->postManager->restore($post);
@@ -164,6 +168,7 @@ class PostsController extends AbstractController
     }
 
     #[Route('/{id}/force-delete', name: '_force_delete', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.posts.delete')]
     public function forceDelete(Post $post): JsonResponse
     {
         $this->postManager->forceDelete($post);
@@ -172,6 +177,7 @@ class PostsController extends AbstractController
     }
 
     #[Route('/empty-trash', name: '_empty_trash', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.posts.delete')]
     public function emptyTrash(): JsonResponse
     {
         $count = $this->postManager->emptyTrash();
@@ -199,6 +205,7 @@ class PostsController extends AbstractController
     }
 
     #[Route('/{id}/revisions/{revisionId}/restore', name: '_revision_restore', methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.posts.edit')]
     public function restoreRevision(Post $post, int $revisionId): JsonResponse
     {
         $revision = $this->revisionRepository->find($revisionId);
