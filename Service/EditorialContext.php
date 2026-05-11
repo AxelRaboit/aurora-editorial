@@ -13,41 +13,41 @@ final readonly class EditorialContext
 
     public function isAdminEnabled(): bool
     {
-        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialEnabled);
+        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialBackend);
     }
 
     public function isPostsEnabled(): bool
     {
-        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialPostsEnabled);
+        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialPosts);
     }
 
     public function isMenusEnabled(): bool
     {
-        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialMenusEnabled);
+        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialMenus);
     }
 
     public function isPostTypesEnabled(): bool
     {
-        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialPostTypesEnabled);
+        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialPostTypes);
     }
 
     public function isTaxonomiesEnabled(): bool
     {
-        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialTaxonomiesEnabled);
+        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialTaxonomies);
     }
 
     public function isCommentsEnabled(): bool
     {
-        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialCommentsEnabled);
+        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialComments);
     }
 
     public function isFormsEnabled(): bool
     {
-        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialFormsEnabled);
+        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialForms);
     }
 
     public function isSitemapEnabled(): bool
     {
-        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialSitemapEnabled);
+        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialSitemap);
     }
 }

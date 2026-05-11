@@ -34,7 +34,7 @@ final class EditorialFrontend implements FrontendInterface, MenuLocationProvider
 
     public function getModuleSettingKey(): string
     {
-        return ModuleParameterEnum::EditorialFrontEnabled->value;
+        return ModuleParameterEnum::EditorialFrontend->value;
     }
 
     public function getRoutePrefixes(): array

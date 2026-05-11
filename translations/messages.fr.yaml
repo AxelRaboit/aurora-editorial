@@ -288,9 +288,10 @@ backend:
       dndHint: Glisse-dépose les termes pour réorganiser l'arbre.
   modules:
     editorial: Editorial
-    editorial_description: "Active la section Editorial dans l'administration (articles, menus, formulaires, sitemap)."
-    editorial_front: Site Editorial
-    editorial_front_description: Active le site public Editorial servi par Aurora (pages publiques, articles, menus front). Désactiver pour mettre le front hors-ligne.
+    editorial_backend: Editorial
+    editorial_backend_description: "Active la section Editorial dans l'administration (articles, menus, formulaires, sitemap)."
+    editorial_frontend: Site Editorial
+    editorial_frontend_description: Active le site public Editorial servi par Aurora (pages publiques, articles, menus front). Désactiver pour mettre le front hors-ligne.
   nav:
     sections:
       editorial: Editorial

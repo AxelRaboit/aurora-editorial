@@ -113,14 +113,14 @@ final readonly class EditorialModule implements ModuleInterface, ModuleTogglePro
     public function getToggles(): array
     {
         return [
-            ModuleParameterEnum::EditorialEnabled->toToggle(),
-            ModuleParameterEnum::EditorialPostsEnabled->toToggle(),
-            ModuleParameterEnum::EditorialMenusEnabled->toToggle(),
-            ModuleParameterEnum::EditorialPostTypesEnabled->toToggle(),
-            ModuleParameterEnum::EditorialTaxonomiesEnabled->toToggle(),
-            ModuleParameterEnum::EditorialCommentsEnabled->toToggle(),
-            ModuleParameterEnum::EditorialFormsEnabled->toToggle(),
-            ModuleParameterEnum::EditorialSitemapEnabled->toToggle(),
+            ModuleParameterEnum::EditorialBackend->toToggle(),
+            ModuleParameterEnum::EditorialPosts->toToggle(),
+            ModuleParameterEnum::EditorialMenus->toToggle(),
+            ModuleParameterEnum::EditorialPostTypes->toToggle(),
+            ModuleParameterEnum::EditorialTaxonomies->toToggle(),
+            ModuleParameterEnum::EditorialComments->toToggle(),
+            ModuleParameterEnum::EditorialForms->toToggle(),
+            ModuleParameterEnum::EditorialSitemap->toToggle(),
         ];
     }
 }
