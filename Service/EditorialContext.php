@@ -4,50 +4,50 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Service;
 
+use Aurora\Core\Module\ModuleAccessChecker;
 use Aurora\Core\Setting\Enum\ModuleParameterEnum;
-use Aurora\Core\Setting\Repository\SettingRepository;
 
 final readonly class EditorialContext
 {
-    public function __construct(private SettingRepository $settingRepository) {}
+    public function __construct(private ModuleAccessChecker $moduleAccessChecker) {}
 
     public function isAdminEnabled(): bool
     {
-        return $this->settingRepository->getBoolean(ModuleParameterEnum::EditorialEnabled->value, true);
+        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialEnabled);
     }
 
     public function isPostsEnabled(): bool
     {
-        return $this->isAdminEnabled() && $this->settingRepository->getBoolean(ModuleParameterEnum::EditorialPostsEnabled->value, true);
+        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialPostsEnabled);
     }
 
     public function isMenusEnabled(): bool
     {
-        return $this->isAdminEnabled() && $this->settingRepository->getBoolean(ModuleParameterEnum::EditorialMenusEnabled->value, true);
+        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialMenusEnabled);
     }
 
     public function isPostTypesEnabled(): bool
     {
-        return $this->isAdminEnabled() && $this->settingRepository->getBoolean(ModuleParameterEnum::EditorialPostTypesEnabled->value, true);
+        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialPostTypesEnabled);
     }
 
     public function isTaxonomiesEnabled(): bool
     {
-        return $this->isPostTypesEnabled() && $this->settingRepository->getBoolean(ModuleParameterEnum::EditorialTaxonomiesEnabled->value, true);
+        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialTaxonomiesEnabled);
     }
 
     public function isCommentsEnabled(): bool
     {
-        return $this->isPostsEnabled() && $this->settingRepository->getBoolean(ModuleParameterEnum::EditorialCommentsEnabled->value, true);
+        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialCommentsEnabled);
     }
 
     public function isFormsEnabled(): bool
     {
-        return $this->isAdminEnabled() && $this->settingRepository->getBoolean(ModuleParameterEnum::EditorialFormsEnabled->value, true);
+        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialFormsEnabled);
     }
 
     public function isSitemapEnabled(): bool
     {
-        return $this->isPostsEnabled() && $this->settingRepository->getBoolean(ModuleParameterEnum::EditorialSitemapEnabled->value, true);
+        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialSitemapEnabled);
     }
 }
