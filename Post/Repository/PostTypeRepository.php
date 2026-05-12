@@ -8,6 +8,7 @@ use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Aurora\Module\Editorial\Post\Entity\PostType;
 use Aurora\Module\Editorial\Post\Entity\PostTypeInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Common\Collections\Order;
 
 /**
  * @extends ResolveTargetEntityRepository<PostTypeInterface>
@@ -17,6 +18,23 @@ class PostTypeRepository extends ResolveTargetEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, PostType::class, PostTypeInterface::class);
+    }
+
+    /**
+     * Loads all post types with their taxonomies and custom fields so
+     * PostTypeSerializer::serialize does not fire one query per collection.
+     *
+     * @return list<PostTypeInterface>
+     */
+    public function findAllWithRelations(): array
+    {
+        return $this->createQueryBuilder('pt')
+            ->leftJoin('pt.taxonomies', 'tx')
+            ->leftJoin('pt.fields', 'f')
+            ->addSelect('tx', 'f')
+            ->orderBy('pt.label', Order::Ascending->value)
+            ->getQuery()
+            ->getResult();
     }
 
     /**

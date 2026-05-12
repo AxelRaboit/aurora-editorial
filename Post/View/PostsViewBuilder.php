@@ -11,7 +11,6 @@ use Aurora\Module\Editorial\Post\Serializer\PostSerializerInterface;
 use Aurora\Module\Editorial\Post\Serializer\PostTypeSerializerInterface;
 use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
 use Aurora\Module\Editorial\Taxonomy\Serializer\TaxonomySerializerInterface;
-use Doctrine\Common\Collections\Order;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
@@ -59,8 +58,8 @@ final readonly class PostsViewBuilder
         return [
             'posts' => $listPayload,
             'search' => $pagination->search ?? '',
-            'postTypes' => array_map($this->postTypeSerializer->serialize(...), $this->postTypeRepository->findAll()),
-            'taxonomies' => array_map($this->taxonomySerializer->serializeFull(...), $this->taxonomyRepository->findBy([], ['slug' => Order::Ascending->value])),
+            'postTypes' => array_map($this->postTypeSerializer->serialize(...), $this->postTypeRepository->findAllWithRelations()),
+            'taxonomies' => array_map($this->taxonomySerializer->serializeFull(...), $this->taxonomyRepository->findAllForIndex()),
             'trashed' => $trashed,
             'locales' => $this->enabledLocales,
         ];

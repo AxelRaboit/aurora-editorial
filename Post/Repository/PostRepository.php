@@ -75,7 +75,41 @@ class PostRepository extends ResolveTargetEntityRepository
             $countQueryBuilder->andWhere($authorCondition)->setParameter('authorId', $authorId);
         }
 
-        return $this->paginate($queryBuilder, $countQueryBuilder, $page, $limit);
+        $result = $this->paginate($queryBuilder, $countQueryBuilder, $page, $limit);
+        $this->hydratePostCollections($result['items']);
+
+        return $result;
+    }
+
+    /**
+     * Batch-loads terms and relatedPosts for a slice of posts so that
+     * PostSerializer::serialize does not fire one query per post.
+     *
+     * @param list<Post> $posts
+     */
+    private function hydratePostCollections(array $posts): void
+    {
+        if ([] === $posts) {
+            return;
+        }
+
+        $ids = array_map(static fn (Post $post): int => $post->getId(), $posts);
+
+        $this->createQueryBuilder('p')
+            ->leftJoin('p.terms', 'terms')
+            ->addSelect('terms')
+            ->where('p.id IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->getQuery()
+            ->getResult();
+
+        $this->createQueryBuilder('p')
+            ->leftJoin('p.relatedPosts', 'rp')
+            ->addSelect('rp')
+            ->where('p.id IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->getQuery()
+            ->getResult();
     }
 
     /**
