@@ -8,7 +8,6 @@ use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
 use Aurora\Module\Editorial\Post\Serializer\PostTypeSerializerInterface;
 use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
 use Aurora\Module\Editorial\Taxonomy\Serializer\TaxonomySerializerInterface;
-use Doctrine\Common\Collections\Order;
 
 /**
  * Builds the Twig payloads consumed by the admin post-types views.
@@ -29,12 +28,12 @@ final readonly class PostTypesViewBuilder
     {
         $postTypes = array_map(
             $this->postTypeSerializer->serialize(...),
-            $this->postTypeRepository->findBy([], ['slug' => Order::Ascending->value]),
+            $this->postTypeRepository->findAllWithRelations(),
         );
 
         $taxonomies = array_map(
             $this->taxonomySerializer->serialize(...),
-            $this->taxonomyRepository->findBy([], ['slug' => Order::Ascending->value]),
+            $this->taxonomyRepository->findAllWithTranslationsAndPostTypes(),
         );
 
         return [

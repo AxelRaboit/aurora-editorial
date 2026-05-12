@@ -26,6 +26,23 @@ class TaxonomyRepository extends ResolveTargetEntityRepository
     }
 
     /**
+     * Loads all taxonomies with translations and postTypes — for views that
+     * call TaxonomySerializer::serialize (no terms needed).
+     *
+     * @return list<TaxonomyInterface>
+     */
+    public function findAllWithTranslationsAndPostTypes(): array
+    {
+        return $this->createQueryBuilder('tx')
+            ->leftJoin('tx.translations', 'trt')
+            ->leftJoin('tx.postTypes', 'pt')
+            ->addSelect('trt', 'pt')
+            ->orderBy('tx.slug', Order::Ascending->value)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * Loads all taxonomies with their translations, postTypes, terms and term
      * translations in a single query so TaxonomySerializer::serializeFull does
      * not fire one query per association per taxonomy.
