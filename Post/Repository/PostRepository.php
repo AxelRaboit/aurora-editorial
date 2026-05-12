@@ -352,6 +352,46 @@ class PostRepository extends ResolveTargetEntityRepository
     }
 
     /**
+     * Returns a map of postTypeId → count for all post types.
+     * Single GROUP BY query replacing one count() call per type.
+     *
+     * @return array<int, int>
+     */
+    public function countGroupedByPostType(): array
+    {
+        $rows = $this->createQueryBuilder('p')
+            ->select('IDENTITY(p.postType) AS typeId, COUNT(p.id) AS cnt')
+            ->groupBy('p.postType')
+            ->getQuery()
+            ->getArrayResult();
+
+        return array_column($rows, 'cnt', 'typeId');
+    }
+
+    /**
+     * Returns a map of status → count for non-trashed posts.
+     * Single GROUP BY query replacing five separate count() calls.
+     *
+     * @return array<string, int>
+     */
+    public function countGroupedByStatus(): array
+    {
+        $rows = $this->createQueryBuilder('p')
+            ->select('p.status, COUNT(p.id) AS cnt')
+            ->where('p.deletedAt IS NULL')
+            ->groupBy('p.status')
+            ->getQuery()
+            ->getArrayResult();
+
+        $result = [];
+        foreach ($rows as $row) {
+            $result[$row['status'] instanceof PostStatusEnum ? $row['status']->value : (string) $row['status']] = (int) $row['cnt'];
+        }
+
+        return $result;
+    }
+
+    /**
      * @return list<Post>
      */
     public function findRecent(int $limit = 5): array
