@@ -7,8 +7,8 @@ namespace Aurora\Module\Editorial\Post\Repository;
 use Aurora\Core\Repository\ResolveTargetEntityRepository;
 use Aurora\Module\Editorial\Post\Entity\PostType;
 use Aurora\Module\Editorial\Post\Entity\PostTypeInterface;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Common\Collections\Order;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ResolveTargetEntityRepository<PostTypeInterface>
