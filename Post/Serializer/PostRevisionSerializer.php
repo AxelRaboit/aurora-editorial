@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Post\Serializer;
 
 use Aurora\Core\User\Entity\User;
-use Aurora\Module\Editorial\Post\Entity\PostRevision;
+use Aurora\Module\Editorial\Post\Entity\PostRevisionInterface;
 use DateTimeInterface;
+use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 
-final readonly class PostRevisionSerializer
+#[AsAlias(PostRevisionSerializerInterface::class)]
+class PostRevisionSerializer implements PostRevisionSerializerInterface
 {
-    public function serialize(PostRevision $revision): array
+    public function serialize(PostRevisionInterface $revision): array
     {
         $author = $revision->getAuthor();
 
@@ -18,7 +20,7 @@ final readonly class PostRevisionSerializer
             'id' => $revision->getId(),
             'postVersion' => $revision->getPostVersion(),
             'status' => $revision->getStatus()->value,
-            'createdAt' => $revision->getCreatedAt()->format(DateTimeInterface::ATOM),
+            'createdAt' => $revision->getCreatedAtImmutable()->format(DateTimeInterface::ATOM),
             'author' => $author instanceof User ? [
                 'id' => $author->getId(),
                 'email' => $author->getEmail(),
@@ -26,7 +28,7 @@ final readonly class PostRevisionSerializer
         ];
     }
 
-    public function serializeFull(PostRevision $revision): array
+    public function serializeFull(PostRevisionInterface $revision): array
     {
         return [
             ...$this->serialize($revision),
