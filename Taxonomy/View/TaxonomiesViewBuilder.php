@@ -8,7 +8,6 @@ use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
 use Aurora\Module\Editorial\Post\Serializer\PostTypeSerializerInterface;
 use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
 use Aurora\Module\Editorial\Taxonomy\Serializer\TaxonomySerializerInterface;
-use Doctrine\Common\Collections\Order;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
@@ -35,12 +34,12 @@ final readonly class TaxonomiesViewBuilder
     {
         $taxonomies = array_map(
             $this->taxonomySerializer->serializeFull(...),
-            $this->taxonomyRepository->findBy([], ['slug' => Order::Ascending->value]),
+            $this->taxonomyRepository->findAllForIndex(),
         );
 
         $postTypes = array_map(
             $this->postTypeSerializer->serialize(...),
-            $this->postTypeRepository->findAll(),
+            $this->postTypeRepository->findAllWithRelations(),
         );
 
         return [
