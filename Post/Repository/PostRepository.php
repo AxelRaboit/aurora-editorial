@@ -50,22 +50,26 @@ class PostRepository extends ResolveTargetEntityRepository
         $countQueryBuilder->andWhere($trashCondition);
 
         if (null !== $search && '' !== mb_trim($search)) {
-            $rankedIds = $this->fullTextPostIds($search);
-            if ([] === $rankedIds) {
+            $rankedIds  = $this->fullTextPostIds($search);
+            $likeIds    = $this->titleSlugMatchIds($search);
+            $allIds     = array_values(array_unique(array_merge($rankedIds, $likeIds)));
+
+            if ([] === $allIds) {
                 return ['items' => [], 'total' => 0, 'page' => max(1, $page), 'totalPages' => 1];
             }
 
-            $queryBuilder->andWhere('p.id IN (:rankedIds)')->setParameter('rankedIds', $rankedIds);
-            $countQueryBuilder->andWhere('p.id IN (:rankedIds)')->setParameter('rankedIds', $rankedIds);
+            $queryBuilder->andWhere('p.id IN (:searchIds)')->setParameter('searchIds', $allIds);
+            $countQueryBuilder->andWhere('p.id IN (:searchIds)')->setParameter('searchIds', $allIds);
 
-            // Preserve tsvector ranking order
-            $caseExpr = 'CASE p.id';
-            foreach ($rankedIds as $index => $id) {
-                $caseExpr .= sprintf(' WHEN %d THEN %d', (int) $id, $index);
+            // Full-text ranked IDs first, then LIKE-only matches at the end
+            if ([] !== $rankedIds) {
+                $caseExpr = 'CASE p.id';
+                foreach ($rankedIds as $index => $id) {
+                    $caseExpr .= sprintf(' WHEN %d THEN %d', (int) $id, $index);
+                }
+                $caseExpr .= ' ELSE '.count($rankedIds).' END';
+                $queryBuilder->resetDQLPart('orderBy')->orderBy($caseExpr, Order::Ascending->value);
             }
-
-            $caseExpr .= ' END';
-            $queryBuilder->resetDQLPart('orderBy')->orderBy($caseExpr, Order::Ascending->value);
         }
 
         if ([] !== $postTypeIds) {
@@ -153,9 +157,39 @@ class PostRepository extends ResolveTargetEntityRepository
     }
 
     /**
+     * Returns post IDs whose title or slug contains the search string (case-insensitive, any locale).
+     * When the search looks like a URL path (contains "/"), the last non-empty path segment is used
+     * so that typing "/fr/page/confidentialite" correctly finds the post with slug "confidentialite".
+     *
+     * @return list<int>
+     */
+    private function titleSlugMatchIds(string $search): array
+    {
+        $term = $search;
+        if (str_contains($search, '/')) {
+            $segments = array_values(array_filter(explode('/', $search), static fn (string $s): bool => '' !== $s));
+            if ([] !== $segments) {
+                $term = end($segments);
+            }
+        }
+
+        $pattern = '%'.mb_strtolower(addcslashes($term, '%_\\')).'%';
+
+        $rows = $this->createQueryBuilder('p')
+            ->select('DISTINCT p.id AS post_id')
+            ->innerJoin('p.translations', 'ts')
+            ->andWhere('p.deletedAt IS NULL')
+            ->andWhere('LOWER(ts.title) LIKE :pattern OR LOWER(ts.slug) LIKE :pattern')
+            ->setParameter('pattern', $pattern)
+            ->getQuery()
+            ->getArrayResult();
+
+        return array_map(static fn (array $row): int => (int) $row['post_id'], $rows);
+    }
+
+    /**
      * @return list<Post>
      */
-    /** @return list<Post> */
     public function findAllTrashed(): array
     {
         return $this->createQueryBuilder('p')
