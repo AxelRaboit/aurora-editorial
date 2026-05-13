@@ -59,13 +59,17 @@ class PostsController extends AbstractController
     {
         $postTypeId = $request->query->getInt('postTypeId') ?: null;
         $trashed = $request->query->getBoolean('trashed');
-        $payload = $this->viewBuilder->buildListPayload($pagination, $postTypeId, $trashed, $this->postAccessService->scopedAuthorId());
+        $termIds = array_values(array_filter(
+            array_map(intval(...), $request->query->all('termIds')),
+            static fn (int $id): bool => $id > 0,
+        ));
+        $payload = $this->viewBuilder->buildListPayload($pagination, $postTypeId, $trashed, $this->postAccessService->scopedAuthorId(), $termIds);
 
         if ('XMLHttpRequest' === $request->headers->get('X-Requested-With')) {
             return $this->json($payload);
         }
 
-        return $this->render('@Editorial/backend/posts/index.html.twig', $this->viewBuilder->indexView($payload, $pagination, $trashed));
+        return $this->render('@Editorial/backend/posts/index.html.twig', $this->viewBuilder->indexView($payload, $pagination, $trashed, $postTypeId, $termIds));
     }
 
     #[Route('/search', name: '_search', methods: [HttpMethodEnum::Get->value])]

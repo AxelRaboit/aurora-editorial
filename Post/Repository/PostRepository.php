@@ -26,7 +26,10 @@ class PostRepository extends ResolveTargetEntityRepository
         parent::__construct($registry, Post::class, PostInterface::class);
     }
 
-    public function findPaginated(int $page, int $limit = 20, ?string $search = null, ?int $postTypeId = null, string $locale = 'fr', bool $trashed = false, ?int $authorId = null): array
+    /**
+     * @param list<int> $termIds When non-empty, only posts tagged with ALL listed term IDs are returned.
+     */
+    public function findPaginated(int $page, int $limit = 20, ?string $search = null, ?int $postTypeId = null, string $locale = 'fr', bool $trashed = false, ?int $authorId = null, array $termIds = []): array
     {
         $queryBuilder = $this->createQueryBuilder('p')
             ->leftJoin('p.translations', 't', 'WITH', 't.locale = :locale')
@@ -73,6 +76,11 @@ class PostRepository extends ResolveTargetEntityRepository
             $authorCondition = 'p.author = :authorId';
             $queryBuilder->andWhere($authorCondition)->setParameter('authorId', $authorId);
             $countQueryBuilder->andWhere($authorCondition)->setParameter('authorId', $authorId);
+        }
+
+        if ([] !== $termIds) {
+            $queryBuilder->innerJoin('p.terms', 'filterTerm')->andWhere('filterTerm.id IN (:termIds)')->setParameter('termIds', $termIds);
+            $countQueryBuilder->innerJoin('p.terms', 'filterTerm')->andWhere('filterTerm.id IN (:termIds)')->setParameter('termIds', $termIds);
         }
 
         $result = $this->paginate($queryBuilder, $countQueryBuilder, $page, $limit);

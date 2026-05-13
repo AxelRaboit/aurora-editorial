@@ -135,6 +135,9 @@ backend:
     emptyTrash: Empty trash
     emptyTrashConfirm: Permanently delete all posts in the trash? This action cannot be undone.
     emptyTrashDone: '{count} post(s) permanently deleted.'
+    filterByType: By type
+    filterByTerm: By term
+    clearFilters: Clear filters
     tabs:
       active: Active
       active_description: 'All published, draft and scheduled posts.'

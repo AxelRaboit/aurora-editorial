@@ -129,6 +129,9 @@ backend:
     emptyTrash: Vider la corbeille
     emptyTrashConfirm: Supprimer définitivement tous les contenus de la corbeille ? Cette action est irréversible.
     emptyTrashDone: '{count} contenu(s) supprimé(s) définitivement.'
+    filterByType: Par type
+    filterByTerm: Par terme
+    clearFilters: Effacer les filtres
     tabs:
       active: Actifs
       active_description: 'Tous les contenus publiés, brouillons et planifiés.'
