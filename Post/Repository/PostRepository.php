@@ -27,9 +27,11 @@ class PostRepository extends ResolveTargetEntityRepository
     }
 
     /**
-     * @param list<int> $termIds When non-empty, only posts tagged with ALL listed term IDs are returned.
+     * @param list<int>    $postTypeIds When non-empty, restricts to posts of those types (OR logic).
+     * @param list<string> $statuses    When non-empty, restricts to posts with those statuses (OR logic).
+     * @param list<int>    $termIds     When non-empty, only posts tagged with ALL listed term IDs are returned.
      */
-    public function findPaginated(int $page, int $limit = 20, ?string $search = null, ?int $postTypeId = null, string $locale = 'fr', bool $trashed = false, ?int $authorId = null, array $termIds = []): array
+    public function findPaginated(int $page, int $limit = 20, ?string $search = null, array $postTypeIds = [], string $locale = 'fr', bool $trashed = false, ?int $authorId = null, array $termIds = [], array $statuses = []): array
     {
         $queryBuilder = $this->createQueryBuilder('p')
             ->leftJoin('p.translations', 't', 'WITH', 't.locale = :locale')
@@ -66,10 +68,14 @@ class PostRepository extends ResolveTargetEntityRepository
             $queryBuilder->resetDQLPart('orderBy')->orderBy($caseExpr, Order::Ascending->value);
         }
 
-        if (null !== $postTypeId) {
-            $condition = 'p.postType = :postTypeId';
-            $queryBuilder->andWhere($condition)->setParameter('postTypeId', $postTypeId);
-            $countQueryBuilder->andWhere($condition)->setParameter('postTypeId', $postTypeId);
+        if ([] !== $postTypeIds) {
+            $queryBuilder->andWhere('p.postType IN (:postTypeIds)')->setParameter('postTypeIds', $postTypeIds);
+            $countQueryBuilder->andWhere('p.postType IN (:postTypeIds)')->setParameter('postTypeIds', $postTypeIds);
+        }
+
+        if ([] !== $statuses) {
+            $queryBuilder->andWhere('p.status IN (:statuses)')->setParameter('statuses', $statuses);
+            $countQueryBuilder->andWhere('p.status IN (:statuses)')->setParameter('statuses', $statuses);
         }
 
         if (null !== $authorId) {

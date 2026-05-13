@@ -33,13 +33,15 @@ final readonly class PostsViewBuilder
     ) {}
 
     /**
-     * @param list<int> $termIds
+     * @param list<int>    $postTypeIds
+     * @param list<int>    $termIds
+     * @param list<string> $statuses
      *
      * @return array{success: bool, items: list<array<string, mixed>>, total: int, page: int, totalPages: int}
      */
-    public function buildListPayload(PaginationRequest $pagination, ?int $postTypeId = null, bool $trashed = false, ?int $authorId = null, array $termIds = []): array
+    public function buildListPayload(PaginationRequest $pagination, array $postTypeIds = [], bool $trashed = false, ?int $authorId = null, array $termIds = [], array $statuses = []): array
     {
-        $result = $this->postRepository->findPaginated($pagination->page, 10, $pagination->search, $postTypeId, trashed: $trashed, authorId: $authorId, termIds: $termIds);
+        $result = $this->postRepository->findPaginated($pagination->page, 10, $pagination->search, $postTypeIds, trashed: $trashed, authorId: $authorId, termIds: $termIds, statuses: $statuses);
 
         return [
             'success' => true,
@@ -52,11 +54,13 @@ final readonly class PostsViewBuilder
 
     /**
      * @param array<string, mixed> $listPayload
+     * @param list<int>            $postTypeIds
      * @param list<int>            $termIds
+     * @param list<string>         $statuses
      *
      * @return array<string, mixed>
      */
-    public function indexView(array $listPayload, PaginationRequest $pagination, bool $trashed, ?int $postTypeId = null, array $termIds = []): array
+    public function indexView(array $listPayload, PaginationRequest $pagination, bool $trashed, array $postTypeIds = [], array $termIds = [], array $statuses = []): array
     {
         return [
             'posts' => $listPayload,
@@ -65,8 +69,9 @@ final readonly class PostsViewBuilder
             'taxonomies' => array_map($this->taxonomySerializer->serializeFull(...), $this->taxonomyRepository->findAllForIndex()),
             'trashed' => $trashed,
             'locales' => $this->enabledLocales,
-            'postTypeId' => $postTypeId,
+            'postTypeIds' => $postTypeIds,
             'termIds' => $termIds,
+            'statuses' => $statuses,
         ];
     }
 }

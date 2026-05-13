@@ -15,6 +15,7 @@ use Aurora\Module\Editorial\Post\Entity\Post;
 use Aurora\Module\Editorial\Post\Entity\PostRevision;
 use Aurora\Module\Editorial\Post\Entity\PostTranslation;
 use Aurora\Module\Editorial\Post\Manager\PostManagerInterface;
+use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
 use Aurora\Module\Editorial\Post\Repository\PostRepository;
 use Aurora\Module\Editorial\Post\Repository\PostRevisionRepository;
 use Aurora\Module\Editorial\Post\Security\PostVoter;
@@ -57,19 +58,26 @@ class PostsController extends AbstractController
     #[Route('', name: '', methods: [HttpMethodEnum::Get->value])]
     public function index(PaginationRequest $pagination, Request $request): Response
     {
-        $postTypeId = $request->query->getInt('postTypeId') ?: null;
         $trashed = $request->query->getBoolean('trashed');
+        $postTypeIds = array_values(array_filter(
+            array_map(intval(...), $request->query->all('postTypeIds')),
+            static fn (int $id): bool => $id > 0,
+        ));
         $termIds = array_values(array_filter(
             array_map(intval(...), $request->query->all('termIds')),
             static fn (int $id): bool => $id > 0,
         ));
-        $payload = $this->viewBuilder->buildListPayload($pagination, $postTypeId, $trashed, $this->postAccessService->scopedAuthorId(), $termIds);
+        $statuses = array_values(array_intersect(
+            $request->query->all('statuses'),
+            PostStatusEnum::values(),
+        ));
+        $payload = $this->viewBuilder->buildListPayload($pagination, $postTypeIds, $trashed, $this->postAccessService->scopedAuthorId(), $termIds, $statuses);
 
         if ('XMLHttpRequest' === $request->headers->get('X-Requested-With')) {
             return $this->json($payload);
         }
 
-        return $this->render('@Editorial/backend/posts/index.html.twig', $this->viewBuilder->indexView($payload, $pagination, $trashed, $postTypeId, $termIds));
+        return $this->render('@Editorial/backend/posts/index.html.twig', $this->viewBuilder->indexView($payload, $pagination, $trashed, $postTypeIds, $termIds, $statuses));
     }
 
     #[Route('/search', name: '_search', methods: [HttpMethodEnum::Get->value])]
