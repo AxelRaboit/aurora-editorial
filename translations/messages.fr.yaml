@@ -563,6 +563,12 @@ backend:
     notifyEmail: Email de notification
     notifyEmailPlaceholder: "admin@monsite.com"
     notifyEmailHint: 'Si renseigné, un e-mail est envoyé à chaque nouvelle soumission.'
+    preview: Prévisualiser
+    previewTitle: Simulation du formulaire
+    previewHint: Simulation interactive — les soumissions ne sont pas enregistrées.
+    previewNoFields: Aucun champ à afficher pour cette étape.
+    previewSubmitSuccess: 'Simulation réussie ! En production, la soumission serait enregistrée.'
+    previewReset: Recommencer la simulation
     webhookUrl: URL Webhook
     webhookUrlPlaceholder: "https://hooks.exemple.com/aurora"
     webhookUrlHint: 'Payload JSON envoyé en POST à chaque soumission (compatible Zapier, n8n, Make…)'
