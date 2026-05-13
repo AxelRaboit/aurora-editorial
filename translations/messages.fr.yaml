@@ -563,6 +563,32 @@ backend:
     notifyEmail: Email de notification
     notifyEmailPlaceholder: "admin@monsite.com"
     notifyEmailHint: 'Si renseigné, un e-mail est envoyé à chaque nouvelle soumission.'
+    webhookUrl: URL Webhook
+    webhookUrlPlaceholder: "https://hooks.exemple.com/aurora"
+    webhookUrlHint: 'Payload JSON envoyé en POST à chaque soumission (compatible Zapier, n8n, Make…)'
+    crmSync: Synchroniser avec le CRM
+    crmSyncHint: 'Crée automatiquement un contact CRM à partir du champ email de chaque soumission.'
+    steps: Étapes (multi-étapes)
+    addStep: Ajouter une étape
+    stepLabel: Étape
+    stepsEmpty: Aucune étape — le formulaire s'affiche en une seule page.
+    stepsHint: 'Les champs peuvent être assignés à une étape depuis l''éditeur de champ.'
+    fieldStep: Étape
+    fieldStepNone: Sans étape (toutes)
+    conditions: Conditions d''affichage
+    addCondition: Ajouter une condition
+    conditionsEmpty: Aucune condition — le champ est toujours visible.
+    conditionsLogicLabel: Logique
+    conditionsLogic:
+      and: ET
+      or: OU
+    conditionValue: Valeur
+    operators:
+      eq: égal à
+      neq: différent de
+      contains: contient
+      not_empty: non vide
+      empty: vide
     active: Formulaire actif
     addField: Ajouter un champ
     addFieldTitle: Ajouter un champ

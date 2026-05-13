@@ -563,6 +563,32 @@ backend:
     notifyEmail: Notification email
     notifyEmailPlaceholder: "admin@mysite.com"
     notifyEmailHint: 'If set, an email is sent on each new submission.'
+    webhookUrl: Webhook URL
+    webhookUrlPlaceholder: "https://hooks.example.com/aurora"
+    webhookUrlHint: 'JSON payload sent via POST on each submission (Zapier, n8n, Make compatible).'
+    crmSync: Sync with CRM
+    crmSyncHint: 'Automatically creates a CRM contact from the email field of each submission.'
+    steps: Steps (multi-step)
+    addStep: Add step
+    stepLabel: Step
+    stepsEmpty: No steps — the form is displayed on a single page.
+    stepsHint: 'Fields can be assigned to a step from the field editor.'
+    fieldStep: Step
+    fieldStepNone: No step (all)
+    conditions: Display conditions
+    addCondition: Add condition
+    conditionsEmpty: No conditions — the field is always visible.
+    conditionsLogicLabel: Logic
+    conditionsLogic:
+      and: AND
+      or: OR
+    conditionValue: Value
+    operators:
+      eq: equals
+      neq: not equal to
+      contains: contains
+      not_empty: is not empty
+      empty: is empty
     active: Form active
     addField: Add field
     addFieldTitle: Add a field
