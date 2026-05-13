@@ -138,6 +138,8 @@ backend:
     filterByType: By type
     filterByTerm: By term
     clearFilters: Clear filters
+    viewCompact: Compact view
+    viewDetailed: Detailed view
     tabs:
       active: Active
       active_description: 'All published, draft and scheduled posts.'

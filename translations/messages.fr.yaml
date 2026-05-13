@@ -132,6 +132,8 @@ backend:
     filterByType: Par type
     filterByTerm: Par terme
     clearFilters: Effacer les filtres
+    viewCompact: Vue compacte
+    viewDetailed: Vue détaillée
     tabs:
       active: Actifs
       active_description: 'Tous les contenus publiés, brouillons et planifiés.'
