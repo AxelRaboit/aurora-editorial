@@ -20,6 +20,16 @@ abstract class AbstractForm implements FormInterface
     #[ORM\Column(length: 180, nullable: true)]
     protected ?string $notifyEmail = null;
 
+    #[ORM\Column(length: 500, nullable: true)]
+    protected ?string $webhookUrl = null;
+
+    #[ORM\Column(options: ['default' => false])]
+    protected bool $crmSync = false;
+
+    /** @var list<array<string, string>>|null Steps labels per locale, e.g. [['fr'=>'Infos','en'=>'Info'], ...] */
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    protected ?array $steps = null;
+
     #[ORM\Column]
     protected bool $active = true;
 
@@ -59,6 +69,42 @@ abstract class AbstractForm implements FormInterface
     public function setNotifyEmail(?string $notifyEmail): static
     {
         $this->notifyEmail = $notifyEmail;
+
+        return $this;
+    }
+
+    public function getWebhookUrl(): ?string
+    {
+        return $this->webhookUrl;
+    }
+
+    public function setWebhookUrl(?string $webhookUrl): static
+    {
+        $this->webhookUrl = $webhookUrl;
+
+        return $this;
+    }
+
+    public function isCrmSync(): bool
+    {
+        return $this->crmSync;
+    }
+
+    public function setCrmSync(bool $crmSync): static
+    {
+        $this->crmSync = $crmSync;
+
+        return $this;
+    }
+
+    public function getSteps(): ?array
+    {
+        return $this->steps;
+    }
+
+    public function setSteps(?array $steps): static
+    {
+        $this->steps = $steps ?: null;
 
         return $this;
     }

@@ -28,6 +28,9 @@ class FormSerializer implements FormSerializerInterface
         $result = [
             'id' => $form->getId(),
             'notifyEmail' => $form->getNotifyEmail(),
+            'webhookUrl' => $form->getWebhookUrl(),
+            'crmSync' => $form->isCrmSync(),
+            'steps' => $form->getSteps(),
             'active' => $form->isActive(),
             'submissionCount' => $form->getSubmissions()->count(),
             'createdAt' => $form->getCreatedAt()->format(DATE_ATOM),
@@ -56,6 +59,9 @@ class FormSerializer implements FormSerializerInterface
             'typeLabel' => $this->translator->trans($field->getType()->getLabelKey()),
             'required' => $field->isRequired(),
             'position' => $field->getPosition(),
+            'step' => $field->getStep(),
+            'conditions' => $field->getConditions() ?? [],
+            'conditionsLogic' => $field->getConditionsLogic() ?? 'and',
             'translations' => $this->serializeFieldTranslations($field),
         ];
     }
@@ -78,6 +84,9 @@ class FormSerializer implements FormSerializerInterface
             'type' => $field->getType()->value,
             'typeLabel' => $this->translator->trans($field->getType()->getLabelKey()),
             'required' => $field->isRequired(),
+            'step' => $field->getStep(),
+            'conditions' => $field->getConditions() ?? [],
+            'conditionsLogic' => $field->getConditionsLogic() ?? 'and',
             'label' => $translation?->getLabel() ?? '',
             'placeholder' => $translation?->getPlaceholder(),
             'options' => $translation?->getOptions() ?? [],

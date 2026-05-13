@@ -35,8 +35,21 @@ class FormInputFactory implements FormInputFactoryInterface
             ];
         }
 
+        $rawSteps = is_array($data['steps'] ?? null) ? $data['steps'] : null;
+        $steps = null;
+        if ($rawSteps) {
+            foreach ($rawSteps as $step) {
+                if (is_array($step) && array_filter($step)) {
+                    $steps[] = array_map(strval(...), array_filter($step, is_string(...)));
+                }
+            }
+        }
+
         return new FormInput(
             notifyEmail: Str::trimOrNull((string) ($data['notifyEmail'] ?? '')),
+            webhookUrl: Str::trimOrNull((string) ($data['webhookUrl'] ?? '')),
+            crmSync: (bool) ($data['crmSync'] ?? false),
+            steps: $steps ?: null,
             active: (bool) ($data['active'] ?? true),
             translations: $translations,
         );

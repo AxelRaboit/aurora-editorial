@@ -31,6 +31,12 @@ final readonly class FormViewBuilder
             $form->getFields()->toArray(),
         ));
 
+        $rawSteps = $form->getSteps() ?? [];
+        $steps = array_values(array_map(
+            static fn (array $step): string => $step[$locale] ?? (reset($step) ?: ''),
+            $rawSteps,
+        ));
+
         return [
             'locale' => $locale,
             'context' => $this->context,
@@ -39,6 +45,7 @@ final readonly class FormViewBuilder
             'form' => $form,
             'translation' => $translation,
             'fields' => $fields,
+            'steps' => $steps,
         ];
     }
 }

@@ -19,6 +19,20 @@ interface FormInterface
 
     public function setNotifyEmail(?string $notifyEmail): static;
 
+    public function getWebhookUrl(): ?string;
+
+    public function setWebhookUrl(?string $webhookUrl): static;
+
+    public function isCrmSync(): bool;
+
+    public function setCrmSync(bool $crmSync): static;
+
+    /** @return list<array<string, string>>|null */
+    public function getSteps(): ?array;
+
+    /** @param list<array<string, string>>|null $steps */
+    public function setSteps(?array $steps): static;
+
     public function isActive(): bool;
 
     public function setActive(bool $active): static;

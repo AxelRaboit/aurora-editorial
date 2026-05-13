@@ -14,6 +14,13 @@ interface FormFieldInputInterface
 
     public function isRequired(): bool;
 
+    public function getStep(): ?int;
+
+    /** @return list<array{fieldId: int, operator: string, value: ?string}>|null */
+    public function getConditions(): ?array;
+
+    public function getConditionsLogic(): string;
+
     /** @return array<string, array{label: string, placeholder: ?string, options: string[]}> */
     public function getTranslations(): array;
 }

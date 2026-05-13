@@ -36,9 +36,26 @@ class FormFieldInputFactory implements FormFieldInputFactoryInterface
             ];
         }
 
+        $rawConditions = is_array($data['conditions'] ?? null) ? $data['conditions'] : null;
+        $conditions = null;
+        if ($rawConditions) {
+            foreach ($rawConditions as $condition) {
+                if (is_array($condition) && isset($condition['fieldId'], $condition['operator'])) {
+                    $conditions[] = [
+                        'fieldId' => (int) $condition['fieldId'],
+                        'operator' => (string) $condition['operator'],
+                        'value' => isset($condition['value']) ? (string) $condition['value'] : null,
+                    ];
+                }
+            }
+        }
+
         return new FormFieldInput(
             type: Str::trimOrNull((string) ($data['type'] ?? '')) ?? '',
             required: (bool) ($data['required'] ?? false),
+            step: isset($data['step']) && is_numeric($data['step']) ? (int) $data['step'] : null,
+            conditions: $conditions ?: null,
+            conditionsLogic: in_array($data['conditionsLogic'] ?? null, ['and', 'or'], true) ? (string) $data['conditionsLogic'] : 'and',
             translations: $translations,
         );
     }

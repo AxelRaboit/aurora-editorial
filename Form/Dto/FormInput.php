@@ -11,8 +11,15 @@ class FormInput implements FormInputInterface
     /**
      * @param array<string, array{title: string, slug: string, description: ?string}> $translations
      */
+    /**
+     * @param list<array<string, string>>|null                                        $steps
+     * @param array<string, array{title: string, slug: string, description: ?string}> $translations
+     */
     public function __construct(
         public readonly ?string $notifyEmail,
+        public readonly ?string $webhookUrl,
+        public readonly bool $crmSync,
+        public readonly ?array $steps,
         public readonly bool $active,
         #[Assert\Count(min: 1, minMessage: 'forms.errors.translations_required')]
         public readonly array $translations,
@@ -21,6 +28,21 @@ class FormInput implements FormInputInterface
     public function getNotifyEmail(): ?string
     {
         return $this->notifyEmail;
+    }
+
+    public function getWebhookUrl(): ?string
+    {
+        return $this->webhookUrl;
+    }
+
+    public function isCrmSync(): bool
+    {
+        return $this->crmSync;
+    }
+
+    public function getSteps(): ?array
+    {
+        return $this->steps;
     }
 
     public function isActive(): bool

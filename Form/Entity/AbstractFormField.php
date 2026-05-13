@@ -7,6 +7,7 @@ namespace Aurora\Module\Editorial\Form\Entity;
 use Aurora\Module\Editorial\Form\Enum\FormFieldTypeEnum;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\MappedSuperclass]
@@ -27,6 +28,18 @@ abstract class AbstractFormField implements FormFieldInterface
 
     #[ORM\Column]
     protected int $position = 0;
+
+    /** @var list<array{fieldId: int, operator: string, value: ?string}>|null */
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    protected ?array $conditions = null;
+
+    /** 'and'|'or' — how multiple conditions are combined */
+    #[ORM\Column(length: 3, nullable: true)]
+    protected ?string $conditionsLogic = 'and';
+
+    /** Step index (0-based) within Form::steps — null means no steps */
+    #[ORM\Column(nullable: true)]
+    protected ?int $step = null;
 
     /** @var Collection<string, FormFieldTranslationInterface> */
     #[ORM\OneToMany(targetEntity: FormFieldTranslationInterface::class, mappedBy: 'field', cascade: ['persist', 'remove'], orphanRemoval: true, indexBy: 'locale')]
@@ -93,6 +106,42 @@ abstract class AbstractFormField implements FormFieldInterface
     public function setPosition(int $position): static
     {
         $this->position = $position;
+
+        return $this;
+    }
+
+    public function getConditions(): ?array
+    {
+        return $this->conditions;
+    }
+
+    public function setConditions(?array $conditions): static
+    {
+        $this->conditions = $conditions ?: null;
+
+        return $this;
+    }
+
+    public function getConditionsLogic(): ?string
+    {
+        return $this->conditionsLogic ?? 'and';
+    }
+
+    public function setConditionsLogic(?string $conditionsLogic): static
+    {
+        $this->conditionsLogic = $conditionsLogic;
+
+        return $this;
+    }
+
+    public function getStep(): ?int
+    {
+        return $this->step;
+    }
+
+    public function setStep(?int $step): static
+    {
+        $this->step = $step;
 
         return $this;
     }

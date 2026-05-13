@@ -20,12 +20,15 @@ use Aurora\Module\Editorial\Form\Entity\FormSubmission;
 use Aurora\Module\Editorial\Form\Entity\FormSubmissionInterface;
 use Aurora\Module\Editorial\Form\Entity\FormTranslation;
 use Aurora\Module\Editorial\Form\Entity\FormTranslationInterface;
+use Aurora\Module\Editorial\Form\Event\FormSubmissionCreatedEvent;
 use Aurora\Module\Editorial\Form\Repository\FormTranslationRepository;
 use Aurora\Module\Editorial\Form\Service\FormNotificationService;
+use Aurora\Module\Editorial\Form\Service\FormWebhookService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AsAlias(FormManagerInterface::class)]
@@ -36,8 +39,10 @@ class FormManager implements FormManagerInterface
         protected readonly FormTranslationRepository $formTranslationRepository,
         protected readonly TranslatorInterface $translator,
         protected readonly FormNotificationService $notificationService,
+        protected readonly FormWebhookService $webhookService,
         protected readonly SequenceGenerator $sequenceGenerator,
         protected readonly SettingRepository $settingRepository,
+        protected readonly EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function create(FormInputInterface $input): FormInterface
@@ -143,6 +148,9 @@ class FormManager implements FormManagerInterface
         $this->notificationService->notifyAdmin($form, $submission, $locale);
         $this->notificationService->notifyAuthorIfPresent($form, $submission, $locale);
 
+        $this->eventDispatcher->dispatch(new FormSubmissionCreatedEvent($form, $submission));
+        $this->webhookService->send($form, $submission, $locale);
+
         return $submission;
     }
 
@@ -178,6 +186,9 @@ class FormManager implements FormManagerInterface
     protected function applyInput(FormInterface $form, FormInputInterface $input): void
     {
         $form->setNotifyEmail($input->getNotifyEmail());
+        $form->setWebhookUrl($input->getWebhookUrl());
+        $form->setCrmSync($input->isCrmSync());
+        $form->setSteps($input->getSteps());
         $form->setActive($input->isActive());
         $this->applyTranslations($form, $input);
     }
@@ -187,6 +198,9 @@ class FormManager implements FormManagerInterface
         $field->setType($input->getTypeEnum());
         $field->setRequired($input->isRequired());
         $field->setPosition($position);
+        $field->setStep($input->getStep());
+        $field->setConditions($input->getConditions());
+        $field->setConditionsLogic($input->getConditionsLogic());
         $this->applyFieldTranslations($field, $input);
     }
 

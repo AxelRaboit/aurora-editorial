@@ -31,6 +31,20 @@ interface FormFieldInterface
 
     public function setPosition(int $position): static;
 
+    /** @return list<array{fieldId: int, operator: string, value: ?string}>|null */
+    public function getConditions(): ?array;
+
+    /** @param list<array{fieldId: int, operator: string, value: ?string}>|null $conditions */
+    public function setConditions(?array $conditions): static;
+
+    public function getConditionsLogic(): ?string;
+
+    public function setConditionsLogic(?string $conditionsLogic): static;
+
+    public function getStep(): ?int;
+
+    public function setStep(?int $step): static;
+
     /** @return Collection<string, FormFieldTranslationInterface> */
     public function getTranslations(): Collection;
 
