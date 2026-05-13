@@ -27,9 +27,9 @@ class PostRepository extends ResolveTargetEntityRepository
     }
 
     /**
-     * @param list<int>    $postTypeIds When non-empty, restricts to posts of those types (OR logic).
-     * @param list<string> $statuses    When non-empty, restricts to posts with those statuses (OR logic).
-     * @param list<int>    $termIds     When non-empty, only posts tagged with ALL listed term IDs are returned.
+     * @param list<int>    $postTypeIds when non-empty, restricts to posts of those types (OR logic)
+     * @param list<string> $statuses    when non-empty, restricts to posts with those statuses (OR logic)
+     * @param list<int>    $termIds     when non-empty, only posts tagged with ALL listed term IDs are returned
      */
     public function findPaginated(int $page, int $limit = 20, ?string $search = null, array $postTypeIds = [], string $locale = 'fr', bool $trashed = false, ?int $authorId = null, array $termIds = [], array $statuses = []): array
     {
@@ -50,9 +50,9 @@ class PostRepository extends ResolveTargetEntityRepository
         $countQueryBuilder->andWhere($trashCondition);
 
         if (null !== $search && '' !== mb_trim($search)) {
-            $rankedIds  = $this->fullTextPostIds($search);
-            $likeIds    = $this->titleSlugMatchIds($search);
-            $allIds     = array_values(array_unique(array_merge($rankedIds, $likeIds)));
+            $rankedIds = $this->fullTextPostIds($search);
+            $likeIds = $this->titleSlugMatchIds($search);
+            $allIds = array_values(array_unique(array_merge($rankedIds, $likeIds)));
 
             if ([] === $allIds) {
                 return ['items' => [], 'total' => 0, 'page' => max(1, $page), 'totalPages' => 1];
@@ -67,6 +67,7 @@ class PostRepository extends ResolveTargetEntityRepository
                 foreach ($rankedIds as $index => $id) {
                     $caseExpr .= sprintf(' WHEN %d THEN %d', (int) $id, $index);
                 }
+
                 $caseExpr .= ' ELSE '.count($rankedIds).' END';
                 $queryBuilder->resetDQLPart('orderBy')->orderBy($caseExpr, Order::Ascending->value);
             }
