@@ -32,10 +32,10 @@ final readonly class FormViewBuilder
         ));
 
         $rawSteps = $form->getSteps() ?? [];
-        $steps = array_values(array_map(
+        $steps = array_map(
             static fn (array $step): string => $step[$locale] ?? (reset($step) ?: ''),
             $rawSteps,
-        ));
+        );
 
         return [
             'locale' => $locale,
