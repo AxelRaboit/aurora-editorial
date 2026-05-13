@@ -132,6 +132,7 @@ backend:
     filterByType: Type de contenu
     filterByStatus: Statut
     filterByTerm: Par terme
+    searchTerms: Rechercher…
     clearFilters: Effacer les filtres
     viewCompact: Vue compacte
     viewDetailed: Vue détaillée

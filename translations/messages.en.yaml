@@ -138,6 +138,7 @@ backend:
     filterByType: Content type
     filterByStatus: Status
     filterByTerm: By term
+    searchTerms: Search…
     clearFilters: Clear filters
     viewCompact: Compact view
     viewDetailed: Detailed view
