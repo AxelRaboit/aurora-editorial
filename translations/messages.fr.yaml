@@ -63,7 +63,8 @@ backend:
       has_posts: Ce type de contenu contient des contenus et ne peut pas être supprimé.
       field_name_taken: 'Un champ nommé "{name}" existe déjà sur ce type de contenu.'
     title: Types de contenu
-    add: Ajouter
+    add: Ajouter un type de contenu
+    create: Nouveau type de contenu
     editPostType: Modifier le type de contenu
     deleteConfirm: 'Supprimer « {label} » ?'
     deleteHasPosts: Impossible de supprimer un type de contenu qui contient encore des contenus.
@@ -113,7 +114,8 @@ backend:
       archived: Archivé
     errors:
       post_type_not_found: 'Type de contenu #{id} introuvable.'
-    add: Nouveau contenu
+    add: Ajouter un contenu
+    create: Nouveau contenu
     edit: Modifier le contenu
     searchPlaceholder: Rechercher un contenu…
     empty: Aucun contenu trouvé.
@@ -540,6 +542,7 @@ backend:
     spamConfirm: Marquer comme spam ?
     spamConfirmDesc: Ce commentaire sera masqué et classé comme indésirable.
   forms:
+    add: Ajouter un formulaire
     create: Nouveau formulaire
     newForm: Nouveau formulaire
     empty: Aucun formulaire.

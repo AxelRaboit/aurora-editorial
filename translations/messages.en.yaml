@@ -69,7 +69,8 @@ backend:
       has_posts: This post type contains posts and cannot be deleted.
       field_name_taken: 'A field named "{name}" already exists on this post type.'
     title: Post types
-    add: Add
+    add: Add post type
+    create: New post type
     editPostType: Edit post type
     deleteConfirm: 'Delete "{label}"?'
     deleteHasPosts: Cannot delete a post type that still contains posts.
@@ -119,7 +120,8 @@ backend:
       archived: Archived
     errors:
       post_type_not_found: 'Post type #{id} not found.'
-    add: New content
+    add: Add content
+    create: New content
     edit: Edit content
     searchPlaceholder: Search content…
     empty: No content found.
@@ -540,6 +542,7 @@ backend:
     spamConfirm: Mark as spam?
     spamConfirmDesc: This comment will be hidden and flagged as unwanted.
   forms:
+    add: Add form
     create: New form
     newForm: New form
     empty: No forms yet.
