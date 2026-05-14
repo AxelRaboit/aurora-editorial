@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Entity;
 
+use Aurora\Core\Timestampable\TimestampableTrait;
 use Aurora\Core\User\Entity\User;
 use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
-use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
 
 #[ORM\MappedSuperclass]
-abstract class AbstractPostRevision implements PostRevisionInterface, TimestampableInterface
+#[ORM\HasLifecycleCallbacks]
+abstract class AbstractPostRevision implements PostRevisionInterface
 {
     use TimestampableTrait;
 
@@ -97,6 +97,6 @@ abstract class AbstractPostRevision implements PostRevisionInterface, Timestampa
 
     public function getCreatedAtImmutable(): DateTimeImmutable
     {
-        return DateTimeImmutable::createFromInterface($this->getCreatedAt());
+        return $this->getCreatedAt();
     }
 }

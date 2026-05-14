@@ -82,7 +82,7 @@ class PostManager implements PostManagerInterface
         // Force the Post entity to be marked as dirty so Doctrine's @Version increments
         // even when only related entities (translations, tags) changed — @Version only
         // bumps when the owning entity itself is scheduled for UPDATE.
-        $post->updateTimestamps();
+        $this->entityManager->getUnitOfWork()->scheduleForUpdate($post);
         $this->entityManager->flush();
 
         $this->snapshotRevision($post);
@@ -97,7 +97,6 @@ class PostManager implements PostManagerInterface
         }
 
         $post->setDeletedAt(new DateTimeImmutable());
-        $post->updateTimestamps();
 
         $this->entityManager->flush();
 
@@ -107,7 +106,6 @@ class PostManager implements PostManagerInterface
     public function restore(Post $post): void
     {
         $post->setDeletedAt(null);
-        $post->updateTimestamps();
 
         $this->entityManager->flush();
 
@@ -167,7 +165,6 @@ class PostManager implements PostManagerInterface
             $translation->setSearchContent($this->textExtractor->extract($translation));
         }
 
-        $post->updateTimestamps();
         $this->entityManager->flush();
 
         $this->snapshotRevision($post);

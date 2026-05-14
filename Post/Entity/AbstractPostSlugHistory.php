@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Entity;
 
+use Aurora\Core\Timestampable\TimestampableTrait;
 use Doctrine\ORM\Mapping as ORM;
-use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
-use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
 
 #[ORM\MappedSuperclass]
-abstract class AbstractPostSlugHistory implements PostSlugHistoryInterface, TimestampableInterface
+#[ORM\HasLifecycleCallbacks]
+abstract class AbstractPostSlugHistory implements PostSlugHistoryInterface
 {
     use TimestampableTrait;
 

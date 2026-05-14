@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Taxonomy\Entity;
 
+use Aurora\Core\Timestampable\TimestampableTrait;
 use Aurora\Module\Editorial\Post\Entity\PostInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
-use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
 
 #[ORM\MappedSuperclass]
-abstract class AbstractTaxonomyTerm implements TaxonomyTermInterface, TimestampableInterface
+#[ORM\HasLifecycleCallbacks]
+abstract class AbstractTaxonomyTerm implements TaxonomyTermInterface
 {
     use TimestampableTrait;
 
