@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Post\Service;
 
 use Aurora\Core\Frontend\Service\Context;
+use Aurora\Core\Media\Entity\MediaInterface;
 use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Core\Theme\Service\ThemeContext;
 use Aurora\Core\Theme\Service\ThemeResolver;
@@ -46,7 +47,7 @@ final readonly class PostPageRenderer
         $featuredMedia = $post->getFeaturedMedia();
 
         $featuredMediaData = null;
-        if (null !== $featuredMedia) {
+        if ($featuredMedia instanceof MediaInterface) {
             $featuredMediaData = [
                 'publicUrl' => $featuredMedia->getPublicUrl(),
                 'variantLargeUrl' => $featuredMedia->getVariantUrl('large'),
@@ -68,7 +69,7 @@ final readonly class PostPageRenderer
 
         $ogImageMedia = $translation->getOgImage() ?? $featuredMedia;
         $ogImageData = null;
-        if (null !== $ogImageMedia) {
+        if ($ogImageMedia instanceof MediaInterface) {
             $ogImageData = [
                 'publicUrl' => $ogImageMedia->getPublicUrl(),
             ];
