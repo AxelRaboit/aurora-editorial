@@ -433,7 +433,7 @@ class PostManager implements PostManagerInterface
         return new PostRevision();
     }
 
-    protected function auditCreated(Post $post): void
+    protected function auditCreated(PostInterface $post): void
     {
         $this->auditLogger->log('editorial', 'post.created', 'Post', $post->getId(), $this->auditPayload($post));
     }
