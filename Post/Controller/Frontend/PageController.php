@@ -63,7 +63,7 @@ class PageController extends AbstractController
             ? $this->postRepository->findPublishedByPostType($postType->getId(), (int) $request->query->get('page', 1), $this->postsPerPage(), $locale)
             : ['items' => [], 'total' => 0, 'page' => 1, 'totalPages' => 1];
 
-        $response = $this->render($this->themeResolver->resolve('home'), $this->viewBuilder->homeView($locale, $result, $postType));
+        $response = $this->render($this->themeResolver->resolve('editorial/home'), $this->viewBuilder->homeView($locale, $result, $postType));
 
         return $this->withI18nHeaders($response, $locale);
     }
@@ -118,7 +118,7 @@ class PageController extends AbstractController
         $page = max(1, (int) $request->query->get('page', 1));
         $result = $this->postRepository->findPublishedByPostType($postType->getId(), $page, $this->postsPerPage(), $locale);
 
-        $response = $this->render($this->themeResolver->resolve('archive'), $this->viewBuilder->archiveView($locale, $postType, $result));
+        $response = $this->render($this->themeResolver->resolve('editorial/archive'), $this->viewBuilder->archiveView($locale, $postType, $result));
 
         $this->httpCache->setSharedCache($response);
 
@@ -151,7 +151,7 @@ class PageController extends AbstractController
         $page = max(1, (int) $request->query->get('page', 1));
         $result = $this->postRepository->findPublishedByTerm($term->getId(), $page, $this->postsPerPage(), $locale);
 
-        $response = $this->render($this->themeResolver->resolve('term'), $this->viewBuilder->termView($locale, $taxonomy, $term, $result));
+        $response = $this->render($this->themeResolver->resolve('editorial/term'), $this->viewBuilder->termView($locale, $taxonomy, $term, $result));
 
         $this->httpCache->setSharedCache($response);
 

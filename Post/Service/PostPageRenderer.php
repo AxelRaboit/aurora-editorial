@@ -43,7 +43,7 @@ final readonly class PostPageRenderer
 
         $commentsEnabled = $this->settingRepository->getBoolean('comments_enabled') && $post->isCommentsEnabled();
 
-        $body = $this->twig->render($this->themeResolver->resolve('post'), [
+        $body = $this->twig->render($this->themeResolver->resolve('editorial/post'), [
             'locale' => $locale,
             'context' => $this->context,
             'showFrontMenus' => true,
