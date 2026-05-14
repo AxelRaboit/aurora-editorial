@@ -5,23 +5,22 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Post\Manager;
 
 use Aurora\Module\Editorial\Post\Dto\PostInputInterface;
-use Aurora\Module\Editorial\Post\Entity\Post;
 use Aurora\Module\Editorial\Post\Entity\PostInterface;
-use Aurora\Module\Editorial\Post\Entity\PostRevision;
+use Aurora\Module\Editorial\Post\Entity\PostRevisionInterface;
 
 interface PostManagerInterface
 {
-    public function create(PostInputInterface $input): Post;
+    public function create(PostInputInterface $input): PostInterface;
 
-    public function update(Post $post, PostInputInterface $input): void;
+    public function update(PostInterface $post, PostInputInterface $input): void;
 
-    public function delete(Post $post): void;
+    public function delete(PostInterface $post): void;
 
-    public function restore(Post $post): void;
+    public function restore(PostInterface $post): void;
 
-    public function forceDelete(Post $post): void;
+    public function forceDelete(PostInterface $post): void;
 
-    public function restoreRevision(Post $post, PostRevision $revision): void;
+    public function restoreRevision(PostInterface $post, PostRevisionInterface $revision): void;
 
     /** Permanently delete all trashed posts. Returns the number deleted. */
     public function emptyTrash(): int;

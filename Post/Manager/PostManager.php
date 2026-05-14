@@ -17,6 +17,7 @@ use Aurora\Module\Editorial\Post\Dto\PostTranslationInput;
 use Aurora\Module\Editorial\Post\Entity\Post;
 use Aurora\Module\Editorial\Post\Entity\PostInterface;
 use Aurora\Module\Editorial\Post\Entity\PostRevision;
+use Aurora\Module\Editorial\Post\Entity\PostRevisionInterface;
 use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
 use Aurora\Module\Editorial\Post\Repository\PostRepository;
 use Aurora\Module\Editorial\Post\Repository\PostRevisionRepository;
@@ -56,7 +57,7 @@ class PostManager implements PostManagerInterface
         protected readonly PostRepository $postRepository,
     ) {}
 
-    public function create(PostInputInterface $input): Post
+    public function create(PostInputInterface $input): PostInterface
     {
         $post = $this->createPost();
         $this->applyInput($post, $input);
@@ -76,7 +77,7 @@ class PostManager implements PostManagerInterface
         return $post;
     }
 
-    public function update(Post $post, PostInputInterface $input): void
+    public function update(PostInterface $post, PostInputInterface $input): void
     {
         $this->applyInput($post, $input);
         // Force the Post entity to be marked as dirty so Doctrine's @Version increments
@@ -90,7 +91,7 @@ class PostManager implements PostManagerInterface
         $this->auditUpdated($post);
     }
 
-    public function delete(Post $post): void
+    public function delete(PostInterface $post): void
     {
         if ($post->isTrashed()) {
             return;
@@ -103,7 +104,7 @@ class PostManager implements PostManagerInterface
         $this->auditDeleted($post);
     }
 
-    public function restore(Post $post): void
+    public function restore(PostInterface $post): void
     {
         $post->setDeletedAt(null);
 
@@ -112,14 +113,14 @@ class PostManager implements PostManagerInterface
         $this->auditLogger->log('editorial', 'post.restored', 'Post', $post->getId(), $this->auditPayload($post));
     }
 
-    public function forceDelete(Post $post): void
+    public function forceDelete(PostInterface $post): void
     {
         $this->auditLogger->log('editorial', 'post.force_deleted', 'Post', $post->getId(), $this->auditPayload($post));
         $this->entityManager->remove($post);
         $this->entityManager->flush();
     }
 
-    public function restoreRevision(Post $post, PostRevision $revision): void
+    public function restoreRevision(PostInterface $post, PostRevisionInterface $revision): void
     {
         $snapshot = $revision->getSnapshot();
 
@@ -129,7 +130,16 @@ class PostManager implements PostManagerInterface
         $post->setScheduledAt($this->hydrateDate($snapshot['scheduledAt'] ?? null));
 
         $featuredMediaId = $snapshot['featuredMediaId'] ?? null;
-        $post->setFeaturedMedia(null !== $featuredMediaId ? $this->mediaRepository->find($featuredMediaId) : null);
+        $ogImageIds = array_filter(array_map(
+            static fn (array $t): ?int => isset($t['ogImageMediaId']) ? (int) $t['ogImageMediaId'] : null,
+            (array) ($snapshot['translations'] ?? []),
+        ));
+        $mediaMap = $this->buildMediaMap(array_values(array_filter([
+            $featuredMediaId,
+            ...$ogImageIds,
+        ])));
+
+        $post->setFeaturedMedia(null !== $featuredMediaId ? ($mediaMap[$featuredMediaId] ?? null) : null);
 
         $this->syncTerms($post, array_values(array_filter(
             array_map(intval(...), $snapshot['termIds'] ?? []),
@@ -154,8 +164,8 @@ class PostManager implements PostManagerInterface
             $translation->setMetaDescription($translationData['metaDescription'] ?? null);
             $translation->setCustomFields($translationData['customFields'] ?? []);
 
-            $ogImageId = $translationData['ogImageMediaId'] ?? null;
-            $translation->setOgImage(null !== $ogImageId ? $this->mediaRepository->find($ogImageId) : null);
+            $ogImageId = isset($translationData['ogImageMediaId']) ? (int) $translationData['ogImageMediaId'] : null;
+            $translation->setOgImage(null !== $ogImageId ? ($mediaMap[$ogImageId] ?? null) : null);
             $translation->setCanonicalUrl($translationData['canonicalUrl'] ?? null);
             $translation->setNoindex((bool) ($translationData['noindex'] ?? false));
             $translation->setFocusKeyword($translationData['focusKeyword'] ?? null);
@@ -205,7 +215,7 @@ class PostManager implements PostManagerInterface
         return $allowed ? $input : $input->withStatus(PostStatusEnum::PendingReview->value);
     }
 
-    protected function applyInput(Post $post, PostInputInterface $input): void
+    protected function applyInput(PostInterface $post, PostInputInterface $input): void
     {
         $postType = $this->postTypeRepository->find($input->getPostTypeId());
         if (null === $postType) {
@@ -236,8 +246,13 @@ class PostManager implements PostManagerInterface
         $this->syncTerms($post, $input->getTermIds());
         $this->syncRelatedPosts($post, $input->getRelatedPostIds());
 
+        $ogImageIds = array_values(array_filter(
+            array_map(static fn (PostTranslationInput $t): ?int => $t->ogImageMediaId, $input->getTranslations()),
+        ));
+        $ogImageMap = $this->buildMediaMap($ogImageIds);
+
         foreach ($input->getTranslations() as $locale => $translationInput) {
-            $this->applyTranslation($post, $locale, $translationInput);
+            $this->applyTranslation($post, $locale, $translationInput, $ogImageMap);
         }
     }
 
@@ -275,14 +290,14 @@ class PostManager implements PostManagerInterface
         $missingIds = array_values(array_filter($relatedPostIds, static fn (int $id): bool => !in_array($id, $currentIds, true)));
 
         if ([] !== $missingIds) {
-            $repository = $this->entityManager->getRepository(Post::class);
-            foreach ($repository->findBy(['id' => $missingIds]) as $related) {
+            foreach ($this->postRepository->findBy(['id' => $missingIds]) as $related) {
                 $post->addRelatedPost($related);
             }
         }
     }
 
-    private function applyTranslation(Post $post, string $locale, PostTranslationInput $input): void
+    /** @param array<int, object> $ogImageMap */
+    private function applyTranslation(PostInterface $post, string $locale, PostTranslationInput $input, array $ogImageMap = []): void
     {
         $translation = $post->translate($locale);
 
@@ -293,7 +308,7 @@ class PostManager implements PostManagerInterface
         $translation->setCustomFields($input->customFields);
 
         $translation->setOgImage(
-            null !== $input->ogImageMediaId ? $this->mediaRepository->find($input->ogImageMediaId) : null,
+            null !== $input->ogImageMediaId ? ($ogImageMap[$input->ogImageMediaId] ?? null) : null,
         );
         $translation->setCanonicalUrl($input->canonicalUrl);
         $translation->setNoindex($input->noindex);
@@ -319,9 +334,9 @@ class PostManager implements PostManagerInterface
         $translation->setSearchContent($this->textExtractor->extract($translation));
     }
 
-    private function snapshotRevision(Post $post): void
+    private function snapshotRevision(PostInterface $post): void
     {
-        $revision = new PostRevision();
+        $revision = $this->createPostRevision();
         $revision->setPost($post);
         $revision->setPostVersion($post->getVersion());
         $revision->setStatus($post->getStatus());
@@ -377,6 +392,18 @@ class PostManager implements PostManagerInterface
         ];
     }
 
+    /** @param array<int> $ids @return array<int, object> */
+    private function buildMediaMap(array $ids): array
+    {
+        if ([] === $ids) {
+            return [];
+        }
+
+        $medias = $this->mediaRepository->findBy(['id' => $ids]);
+
+        return array_combine(array_map(static fn ($m): int => $m->getId(), $medias), $medias);
+    }
+
     private function hydrateDate(?string $value): ?DateTimeImmutable
     {
         if (null === $value || '' === $value) {
@@ -401,6 +428,11 @@ class PostManager implements PostManagerInterface
         return new Post();
     }
 
+    protected function createPostRevision(): PostRevision
+    {
+        return new PostRevision();
+    }
+
     protected function auditCreated(Post $post): void
     {
         $this->auditLogger->log('editorial', 'post.created', 'Post', $post->getId(), $this->auditPayload($post));
@@ -416,10 +448,18 @@ class PostManager implements PostManagerInterface
         $this->auditLogger->log('editorial', 'post.deleted', 'Post', $post->getId(), $this->auditPayload($post));
     }
 
-    protected function auditPayload(Post $post): array
+    protected function auditPayload(PostInterface $post): array
     {
+        $title = null;
+        foreach ($post->getTranslations() as $translation) {
+            $title = $translation->getTitle();
+            if (null !== $title) {
+                break;
+            }
+        }
+
         return [
-            'title' => $post->translate('fr')->getTitle() ?? $post->translate('en')->getTitle(),
+            'title' => $title,
             'status' => $post->getStatus()->value,
         ];
     }
