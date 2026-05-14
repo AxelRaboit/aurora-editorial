@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Serializer;
 
-use Aurora\Module\Editorial\Post\Entity\Post;
 use Aurora\Module\Editorial\Post\Entity\PostInterface;
 use DateTimeInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
@@ -16,7 +15,7 @@ class PostSerializer implements PostSerializerInterface
      * Compact projection used by reference pickers (post link block, related posts…).
      * Falls back to the first available translation when the default locale has none.
      */
-    public function serializeReference(Post $post): array
+    public function serializeReference(PostInterface $post): array
     {
         return [
             'id' => $post->getId(),
@@ -27,7 +26,7 @@ class PostSerializer implements PostSerializerInterface
         ];
     }
 
-    public function serialize(Post $post): array
+    public function serialize(PostInterface $post): array
     {
         $defaultTranslation = $post->getTranslation('fr');
 
@@ -54,7 +53,7 @@ class PostSerializer implements PostSerializerInterface
         ];
     }
 
-    public function serializeFull(Post $post): array
+    public function serializeFull(PostInterface $post): array
     {
         $translations = [];
         foreach ($post->getTranslations() as $locale => $translation) {

@@ -257,7 +257,7 @@ class PostManager implements PostManagerInterface
     }
 
     /** @param array<int> $termIds */
-    private function syncTerms(Post $post, array $termIds): void
+    private function syncTerms(PostInterface $post, array $termIds): void
     {
         foreach ($post->getTerms() as $existingTerm) {
             if (!in_array($existingTerm->getId(), $termIds, true)) {
@@ -276,7 +276,7 @@ class PostManager implements PostManagerInterface
     }
 
     /** @param array<int> $relatedPostIds */
-    private function syncRelatedPosts(Post $post, array $relatedPostIds): void
+    private function syncRelatedPosts(PostInterface $post, array $relatedPostIds): void
     {
         $relatedPostIds = array_values(array_filter($relatedPostIds, fn (int $id): bool => $id !== $post->getId()));
 
@@ -361,7 +361,7 @@ class PostManager implements PostManagerInterface
     }
 
     /** @return array<string, mixed> */
-    private function buildSnapshot(Post $post): array
+    private function buildSnapshot(PostInterface $post): array
     {
         $translations = [];
         foreach ($post->getTranslations() as $locale => $translation) {
@@ -438,12 +438,12 @@ class PostManager implements PostManagerInterface
         $this->auditLogger->log('editorial', 'post.created', 'Post', $post->getId(), $this->auditPayload($post));
     }
 
-    protected function auditUpdated(Post $post): void
+    protected function auditUpdated(PostInterface $post): void
     {
         $this->auditLogger->log('editorial', 'post.updated', 'Post', $post->getId(), $this->auditPayload($post));
     }
 
-    protected function auditDeleted(Post $post): void
+    protected function auditDeleted(PostInterface $post): void
     {
         $this->auditLogger->log('editorial', 'post.deleted', 'Post', $post->getId(), $this->auditPayload($post));
     }

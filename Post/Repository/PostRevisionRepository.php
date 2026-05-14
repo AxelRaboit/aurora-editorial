@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Post\Repository;
 
 use Aurora\Core\Repository\ResolveTargetEntityRepository;
-use Aurora\Module\Editorial\Post\Entity\Post;
+use Aurora\Module\Editorial\Post\Entity\PostInterface;
 use Aurora\Module\Editorial\Post\Entity\PostRevision;
 use Aurora\Module\Editorial\Post\Entity\PostRevisionInterface;
 use Doctrine\Common\Collections\Order;
@@ -24,7 +24,7 @@ class PostRevisionRepository extends ResolveTargetEntityRepository
     /**
      * @return list<PostRevision>
      */
-    public function findByPost(Post $post): array
+    public function findByPost(PostInterface $post): array
     {
         return $this->createQueryBuilder('r')
             ->where('r.post = :post')
@@ -35,7 +35,7 @@ class PostRevisionRepository extends ResolveTargetEntityRepository
             ->getResult();
     }
 
-    public function pruneOlderThanLimit(Post $post, int $limit): int
+    public function pruneOlderThanLimit(PostInterface $post, int $limit): int
     {
         if ($limit <= 0) {
             return 0;

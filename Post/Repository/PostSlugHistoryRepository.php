@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Post\Repository;
 
 use Aurora\Core\Repository\ResolveTargetEntityRepository;
-use Aurora\Module\Editorial\Post\Entity\Post;
+use Aurora\Module\Editorial\Post\Entity\PostInterface;
 use Aurora\Module\Editorial\Post\Entity\PostSlugHistory;
 use Aurora\Module\Editorial\Post\Entity\PostSlugHistoryInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -37,7 +37,7 @@ class PostSlugHistoryRepository extends ResolveTargetEntityRepository
         }
     }
 
-    public function recordIfNew(Post $post, string $locale, string $oldSlug): void
+    public function recordIfNew(PostInterface $post, string $locale, string $oldSlug): void
     {
         if ($this->findOneByLocaleAndSlug($locale, $oldSlug) instanceof PostSlugHistoryInterface) {
             return;

@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Post\Entity;
 
 use Aurora\Core\Media\Entity\MediaInterface;
+use Aurora\Core\Timestampable\TimestampableInterface;
 use Aurora\Core\User\Entity\User;
 use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTermInterface;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 
-interface PostInterface
+interface PostInterface extends TimestampableInterface
 {
     public function getId(): ?int;
 

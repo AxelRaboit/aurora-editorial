@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Serializer;
 
-use Aurora\Module\Editorial\Post\Entity\Post;
+use Aurora\Module\Editorial\Post\Entity\PostInterface;
 
 interface PostSerializerInterface
 {
@@ -13,11 +13,11 @@ interface PostSerializerInterface
      *
      * @return array<string, mixed>
      */
-    public function serializeReference(Post $post): array;
+    public function serializeReference(PostInterface $post): array;
 
     /** @return array<string, mixed> */
-    public function serialize(Post $post): array;
+    public function serialize(PostInterface $post): array;
 
     /** @return array<string, mixed> */
-    public function serializeFull(Post $post): array;
+    public function serializeFull(PostInterface $post): array;
 }
