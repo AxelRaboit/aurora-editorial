@@ -43,7 +43,7 @@ class FormController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $response = $this->render($this->themeResolver->resolve('editorial/form'), $this->viewBuilder->showView($translation, $locale));
+        $response = $this->render($this->themeResolver->resolve('editorial/form/index'), $this->viewBuilder->showView($translation, $locale));
 
         return $this->withI18nHeaders($response, $locale);
     }

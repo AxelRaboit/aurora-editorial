@@ -11,6 +11,7 @@ use Aurora\Core\Theme\Service\ThemeResolver;
 use Aurora\Module\Editorial\Post\Entity\PostInterface;
 use Aurora\Module\Editorial\Post\Entity\PostTranslationInterface;
 use Aurora\Module\Editorial\Seo\Service\AlternatesBuilder;
+use DateTimeInterface;
 use LogicException;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
@@ -42,14 +43,56 @@ final readonly class PostPageRenderer
         }
 
         $commentsEnabled = $this->settingRepository->getBoolean('comments_enabled') && $post->isCommentsEnabled();
+        $featuredMedia = $post->getFeaturedMedia();
 
-        $body = $this->twig->render($this->themeResolver->resolve('editorial/post'), [
+        $featuredMediaData = null;
+        if (null !== $featuredMedia) {
+            $featuredMediaData = [
+                'publicUrl' => $featuredMedia->getPublicUrl(),
+                'variantLargeUrl' => $featuredMedia->getVariantUrl('large'),
+                'url' => $featuredMedia->getVariantUrl('large') ?? $featuredMedia->getPublicUrl(),
+                'alt' => $featuredMedia->getAlt(),
+                'focalPositionCss' => $featuredMedia->getFocalPositionCss(),
+                'focalPosition' => $featuredMedia->getFocalPositionCss(),
+            ];
+        }
+
+        $postData = [
+            'id' => $post->getId(),
+            'publishedAt' => $post->getPublishedAt()?->format(DateTimeInterface::ATOM),
+            'postType' => [
+                'slug' => $post->getPostType()->getSlug(),
+            ],
+            'postTypeSlug' => $post->getPostType()->getSlug(),
+        ];
+
+        $ogImageMedia = $translation->getOgImage() ?? $featuredMedia;
+        $ogImageData = null;
+        if (null !== $ogImageMedia) {
+            $ogImageData = [
+                'publicUrl' => $ogImageMedia->getPublicUrl(),
+            ];
+        }
+
+        $translationData = [
+            'title' => $translation->getTitle(),
+            'slug' => $translation->getSlug(),
+            'metaTitle' => $translation->getMetaTitle(),
+            'metaDescription' => $translation->getMetaDescription(),
+            'canonicalUrl' => $translation->getCanonicalUrl(),
+            'noindex' => $translation->isNoindex(),
+            'ogImage' => $ogImageData,
+            'jsonLd' => $translation->getJsonLd(),
+        ];
+
+        $body = $this->twig->render($this->themeResolver->resolve('editorial/post/index'), [
             'locale' => $locale,
             'context' => $this->context,
             'showFrontMenus' => true,
             'themeContext' => $this->themeContext,
-            'post' => $post,
-            'translation' => $translation,
+            'postData' => $postData,
+            'translationData' => $translationData,
+            'featuredMediaData' => $featuredMediaData,
             'content' => $this->blocksRenderer->render($translation->getBlocks(), $locale),
             'alternates' => $this->alternatesBuilder->forPost($post),
             'commentsEnabled' => $commentsEnabled,

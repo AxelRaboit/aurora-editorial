@@ -68,9 +68,27 @@ final readonly class PageViewBuilder
             'context' => $this->context,
             'themeContext' => $this->themeContext,
             'showFrontMenus' => true,
-            'postType' => $postType,
-            'posts' => $posts,
+            'postType' => [
+                'label' => $postType->getLabel(),
+                'slug' => $postType->getSlug(),
+            ],
+            'posts' => $this->serializePostsPage($posts, $locale),
             'alternates' => $this->alternatesBuilder->forRoute('editorial_archive', ['postTypeSlug' => $postType->getSlug()]),
+        ];
+    }
+
+    /**
+     * @param array{items: array<int, mixed>, total: int, page: int, totalPages: int} $result
+     *
+     * @return array{items: array<int, array<string, mixed>>, page: int, totalPages: int, total: int}
+     */
+    private function serializePostsPage(array $result, string $locale): array
+    {
+        return [
+            'items' => array_map(fn (PostInterface $p): array => $this->postSerializer->serializeCard($p, $locale), $result['items']),
+            'page' => $result['page'],
+            'totalPages' => $result['totalPages'],
+            'total' => $result['total'],
         ];
     }
 
@@ -81,14 +99,24 @@ final readonly class PageViewBuilder
      */
     public function termView(string $locale, Taxonomy $taxonomy, TaxonomyTerm $term, array $posts): array
     {
+        $translation = $term->getTranslation($locale);
+
         return [
             'locale' => $locale,
             'context' => $this->context,
             'themeContext' => $this->themeContext,
             'showFrontMenus' => true,
-            'taxonomy' => $taxonomy,
-            'term' => $term,
-            'posts' => $posts,
+            'taxonomy' => [
+                'slug' => $taxonomy->getSlug(),
+            ],
+            'term' => [
+                'translation' => [
+                    'name' => $translation?->getName(),
+                    'slug' => $translation?->getSlug(),
+                    'description' => $translation?->getDescription(),
+                ],
+            ],
+            'posts' => $this->serializePostsPage($posts, $locale),
             'alternates' => $this->alternatesBuilder->forTerm($taxonomy, $term),
         ];
     }
