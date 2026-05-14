@@ -6,7 +6,9 @@ namespace Aurora\Module\Editorial\Post\View;
 
 use Aurora\Core\Frontend\Service\Context;
 use Aurora\Core\Theme\Service\ThemeContext;
+use Aurora\Module\Editorial\Post\Entity\PostInterface;
 use Aurora\Module\Editorial\Post\Entity\PostTypeInterface;
+use Aurora\Module\Editorial\Post\Serializer\PostSerializerInterface;
 use Aurora\Module\Editorial\Seo\Service\AlternatesBuilder;
 use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
@@ -20,23 +22,37 @@ final readonly class PageViewBuilder
         private Context $context,
         private ThemeContext $themeContext,
         private AlternatesBuilder $alternatesBuilder,
+        private PostSerializerInterface $postSerializer,
     ) {}
 
     /**
-     * @param array{items: array<int, mixed>, total: int, page: int, totalPages: int} $posts
-     *
      * @return array<string, mixed>
      */
-    public function homeView(string $locale, array $posts, ?PostTypeInterface $postType): array
+    public function homeView(string $locale, array $result, ?PostTypeInterface $postType, string $searchPath): array
     {
         return [
             'locale' => $locale,
             'context' => $this->context,
             'themeContext' => $this->themeContext,
             'showFrontMenus' => true,
-            'posts' => $posts,
-            'postType' => $postType,
             'alternates' => $this->alternatesBuilder->forRoute('editorial_home'),
+            'initialPosts' => array_map(fn (PostInterface $p): array => $this->postSerializer->serializeCard($p, $locale), $result['items']),
+            'initialPage' => $result['page'],
+            'initialTotalPages' => $result['totalPages'],
+            'initialTotal' => $result['total'],
+            'searchPath' => $searchPath,
+            'postTypeSlug' => $postType?->getSlug() ?? 'article',
+        ];
+    }
+
+    /** @return array{posts: array<mixed>, page: int, totalPages: int, total: int} */
+    public function serializePageData(array $result, string $locale): array
+    {
+        return [
+            'posts' => array_map(fn (PostInterface $p): array => $this->postSerializer->serializeCard($p, $locale), $result['items']),
+            'page' => $result['page'],
+            'totalPages' => $result['totalPages'],
+            'total' => $result['total'],
         ];
     }
 

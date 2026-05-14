@@ -228,9 +228,12 @@ class PostRepository extends ResolveTargetEntityRepository
     /**
      * @return array{items: list<Post>, total: int, page: int, totalPages: int}
      */
-    public function findPublishedByPostType(int $postTypeId, int $page, int $limit, string $locale = 'fr'): array
+    /**
+     * @return array{items: list<Post>, total: int, page: int, totalPages: int}
+     */
+    public function findPublishedByPostTypeWithSearch(int $postTypeId, int $page, int $limit, string $locale, ?string $search = null): array
     {
-        $queryBuilder = $this->createQueryBuilder('p')
+        $qb = $this->createQueryBuilder('p')
             ->leftJoin('p.translations', 't', 'WITH', 't.locale = :locale')
             ->addSelect('t')
             ->andWhere('p.postType = :postTypeId')
@@ -242,7 +245,7 @@ class PostRepository extends ResolveTargetEntityRepository
             ->orderBy('p.publishedAt', Order::Descending->value)
             ->addOrderBy('p.createdAt', Order::Descending->value);
 
-        $countQueryBuilder = $this->createQueryBuilder('p')
+        $countQb = $this->createQueryBuilder('p')
             ->select('COUNT(p.id)')
             ->andWhere('p.postType = :postTypeId')
             ->andWhere('p.status = :status')
@@ -250,7 +253,20 @@ class PostRepository extends ResolveTargetEntityRepository
             ->setParameter('postTypeId', $postTypeId)
             ->setParameter('status', PostStatusEnum::Published);
 
-        return $this->paginate($queryBuilder, $countQueryBuilder, $page, $limit);
+        if (null !== $search && '' !== mb_trim($search)) {
+            $rankedIds = $this->fullTextPostIds($search);
+            $likeIds = $this->titleSlugMatchIds($search);
+            $allIds = array_values(array_unique(array_merge($rankedIds, $likeIds)));
+
+            if ([] === $allIds) {
+                return ['items' => [], 'total' => 0, 'page' => 1, 'totalPages' => 1];
+            }
+
+            $qb->andWhere('p.id IN (:searchIds)')->setParameter('searchIds', $allIds);
+            $countQb->andWhere('p.id IN (:searchIds)')->setParameter('searchIds', $allIds);
+        }
+
+        return $this->paginate($qb, $countQb, $page, $limit);
     }
 
     /**

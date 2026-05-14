@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Controller\Frontend;
 
+use Aurora\Core\Enum\HttpMethodEnum;
 use Aurora\Core\Enum\HttpStatusEnum;
+use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Frontend\Controller\LocaleTrait;
 use Aurora\Core\Frontend\Service\Context;
 use Aurora\Core\Frontend\Service\HttpCacheService;
@@ -13,6 +15,7 @@ use Aurora\Core\Theme\Service\ThemeResolver;
 use Aurora\Module\Editorial\Post\Entity\Post;
 use Aurora\Module\Editorial\Post\Entity\PostSlugHistory;
 use Aurora\Module\Editorial\Post\Entity\PostTranslation;
+use Aurora\Module\Editorial\Post\Entity\PostTypeInterface;
 use Aurora\Module\Editorial\Post\Repository\PostRepository;
 use Aurora\Module\Editorial\Post\Repository\PostSlugHistoryRepository;
 use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
@@ -22,6 +25,7 @@ use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
 use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,6 +34,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class PageController extends AbstractController
 {
     use LocaleTrait;
+    use JsonResponseTrait;
 
     public function __construct(
         private readonly PostRepository $postRepository,
@@ -58,14 +63,26 @@ class PageController extends AbstractController
             }
         }
 
-        $postType = $this->postTypeRepository->findOneBy(['slug' => 'article']);
-        $result = null !== $postType
-            ? $this->postRepository->findPublishedByPostType($postType->getId(), (int) $request->query->get('page', 1), $this->postsPerPage(), $locale)
-            : ['items' => [], 'total' => 0, 'page' => 1, 'totalPages' => 1];
+        $postType = $this->findArticlePostType();
+        $result = $this->findPostsPage($postType, (int) $request->query->get('page', 1), $locale);
 
-        $response = $this->render($this->themeResolver->resolve('editorial/home'), $this->viewBuilder->homeView($locale, $result, $postType));
+        $searchPath = $this->generateUrl('editorial_home_search', ['locale' => $locale]);
+        $response = $this->render($this->themeResolver->resolve('editorial/home'), $this->viewBuilder->homeView($locale, $result, $postType, $searchPath));
 
         return $this->withI18nHeaders($response, $locale);
+    }
+
+    #[Route('/{locale}/editorial/search', name: 'editorial_home_search', requirements: ['locale' => '[a-z]{2}'], methods: [HttpMethodEnum::Get->value], priority: 10)]
+    public function searchPosts(string $locale, Request $request): JsonResponse
+    {
+        $this->assertActiveLocale($this->context, $locale);
+
+        $query = mb_trim($request->query->getString('q', ''));
+        $page = max(1, $request->query->getInt('page', 1));
+        $postType = $this->findArticlePostType();
+        $result = $this->findPostsPage($postType, $page, $locale, '' !== $query ? $query : null);
+
+        return $this->jsonSuccess($this->viewBuilder->serializePageData($result, $locale));
     }
 
     #[Route('/{locale}/editorial/{postTypeSlug}/{slug}', name: 'editorial_post', requirements: ['locale' => '[a-z]{2}'], priority: 5)]
@@ -116,7 +133,7 @@ class PageController extends AbstractController
         }
 
         $page = max(1, (int) $request->query->get('page', 1));
-        $result = $this->postRepository->findPublishedByPostType($postType->getId(), $page, $this->postsPerPage(), $locale);
+        $result = $this->postRepository->findPublishedByPostTypeWithSearch($postType->getId(), $page, $this->postsPerPage(), $locale);
 
         $response = $this->render($this->themeResolver->resolve('editorial/archive'), $this->viewBuilder->archiveView($locale, $postType, $result));
 
@@ -156,6 +173,21 @@ class PageController extends AbstractController
         $this->httpCache->setSharedCache($response);
 
         return $this->withI18nHeaders($response, $locale);
+    }
+
+    private function findArticlePostType(): ?PostTypeInterface
+    {
+        return $this->postTypeRepository->findOneBy(['slug' => 'article']);
+    }
+
+    /** @return array{items: list<Post>, total: int, page: int, totalPages: int} */
+    private function findPostsPage(?PostTypeInterface $postType, int $page, string $locale, ?string $search = null): array
+    {
+        if (!$postType instanceof PostTypeInterface) {
+            return ['items' => [], 'total' => 0, 'page' => 1, 'totalPages' => 1];
+        }
+
+        return $this->postRepository->findPublishedByPostTypeWithSearch($postType->getId(), $page, $this->postsPerPage(), $locale, $search);
     }
 
     private function tryRedirectFromHistory(string $locale, string $slug): ?RedirectResponse

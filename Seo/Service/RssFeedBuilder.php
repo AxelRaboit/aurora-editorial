@@ -23,7 +23,7 @@ final readonly class RssFeedBuilder
     {
         $postType = $this->postTypeRepository->findOneBy(['slug' => 'article']);
         $posts = null !== $postType
-            ? $this->postRepository->findPublishedByPostType($postType->getId(), 1, 20, $locale)['items']
+            ? $this->postRepository->findPublishedByPostTypeWithSearch($postType->getId(), 1, 20, $locale)['items']
             : [];
 
         $siteUrl = $this->context->siteUrl();

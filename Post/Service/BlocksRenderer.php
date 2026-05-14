@@ -372,7 +372,7 @@ final readonly class BlocksRenderer
         } else {
             $perPage = max(1, min(100, (int) ($data['perPage'] ?? $data['limit'] ?? 12)));
             $page = max(1, (int) ($this->requestStack->getCurrentRequest()?->query->get('page') ?? 1));
-            $result = $this->postRepository->findPublishedByPostType($postType->getId(), $page, $perPage, $locale);
+            $result = $this->postRepository->findPublishedByPostTypeWithSearch($postType->getId(), $page, $perPage, $locale);
             $items = $result['items'];
             $totalPages = (int) $result['totalPages'];
             if ($totalPages > 1) {

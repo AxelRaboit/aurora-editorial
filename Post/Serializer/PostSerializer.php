@@ -93,4 +93,21 @@ class PostSerializer implements PostSerializerInterface
             'relatedPosts' => $relatedPosts,
         ];
     }
+
+    public function serializeCard(PostInterface $post, string $locale): array
+    {
+        $translation = $post->getTranslation($locale);
+        $featured = $post->getFeaturedMedia();
+
+        return [
+            'id' => $post->getId(),
+            'title' => $translation?->getTitle(),
+            'slug' => $translation?->getSlug(),
+            'metaDescription' => $translation?->getMetaDescription(),
+            'publishedAt' => $post->getPublishedAt()?->format(DateTimeInterface::ATOM),
+            'postTypeSlug' => $post->getPostType()->getSlug(),
+            'featuredMediaUrl' => $featured?->getVariantUrl('medium') ?? $featured?->getPublicUrl(),
+            'featuredMediaFocalPosition' => $featured?->getFocalPositionCss(),
+        ];
+    }
 }

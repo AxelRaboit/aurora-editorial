@@ -20,4 +20,7 @@ interface PostSerializerInterface
 
     /** @return array<string, mixed> */
     public function serializeFull(PostInterface $post): array;
+
+    /** Minimal locale-aware projection for public post card grids. @return array<string, mixed> */
+    public function serializeCard(PostInterface $post, string $locale): array;
 }
