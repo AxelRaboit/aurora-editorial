@@ -63,7 +63,6 @@ backend:
       has_posts: Ce type de contenu contient des contenus et ne peut pas être supprimé.
       field_name_taken: 'Un champ nommé "{name}" existe déjà sur ce type de contenu.'
     title: Types de contenu
-    add: Ajouter
     create: Nouveau type de contenu
     editPostType: Modifier le type de contenu
     deleteConfirm: 'Supprimer « {label} » ?'
@@ -266,7 +265,7 @@ backend:
       reorder_cycle: 'La réorganisation créerait un cycle impliquant le terme #{id}.'
       parent_wrong_taxonomy: "Le terme parent #{parentId} n'appartient pas à la taxonomie \"{taxonomy}\"."
     title: Taxonomies
-    addTaxonomy: Ajouter
+    addTaxonomy: Ajouter une taxonomie
     editTaxonomy: Modifier la taxonomie
     deleteTaxonomyConfirm: 'Supprimer « {label} » ? Tous les termes associés seront supprimés.'
     empty: Sélectionne une taxonomie à gauche.
@@ -285,7 +284,7 @@ backend:
       empty: Aucun terme pour l'instant.
       errors:
         name_required: Le nom est requis.
-      addTerm: Ajouter
+      addTerm: Ajouter un terme
       editTerm: Modifier le terme
       deleteTermConfirm: 'Supprimer « {name} » ? Les enfants directs seront rattachés au parent.'
       name: Nom
