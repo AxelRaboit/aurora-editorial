@@ -235,6 +235,7 @@ class FormManager implements FormManagerInterface
         foreach ($form->getTranslations() as $existing) {
             $existingByLocale[$existing->getLocale()] = $existing;
         }
+
         foreach ($this->translationSyncer->stale($existingByLocale, array_keys($input->getTranslations())) as $stale) {
             $form->removeTranslation($stale);
             $this->entityManager->remove($stale);
@@ -262,6 +263,7 @@ class FormManager implements FormManagerInterface
         foreach ($field->getTranslations() as $existing) {
             $existingByLocale[$existing->getLocale()] = $existing;
         }
+
         foreach ($this->translationSyncer->stale($existingByLocale, array_keys($kept)) as $stale) {
             $field->removeTranslation($stale);
             $this->entityManager->remove($stale);
