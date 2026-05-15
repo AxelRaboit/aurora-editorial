@@ -63,7 +63,7 @@ backend:
       has_posts: Ce type de contenu contient des contenus et ne peut pas être supprimé.
       field_name_taken: 'Un champ nommé "{name}" existe déjà sur ce type de contenu.'
     title: Types de contenu
-    add: Ajouter un type de contenu
+    add: Ajouter
     create: Nouveau type de contenu
     editPostType: Modifier le type de contenu
     deleteConfirm: 'Supprimer « {label} » ?'
