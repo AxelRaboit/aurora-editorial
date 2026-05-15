@@ -37,7 +37,7 @@ final readonly class PostsViewBuilder
      */
     public function buildListPayload(PaginationRequest $pagination, array $postTypeIds = [], bool $trashed = false, ?int $authorId = null, array $termIds = [], array $statuses = []): array
     {
-        $result = $this->postRepository->findPaginated($pagination->page, 10, $pagination->search, $postTypeIds, trashed: $trashed, authorId: $authorId, termIds: $termIds, statuses: $statuses);
+        $result = $this->postRepository->findPaginated($pagination->page, $this->localeContext->getDefaultLocale(), 10, $pagination->search, $postTypeIds, trashed: $trashed, authorId: $authorId, termIds: $termIds, statuses: $statuses);
 
         return [
             'success' => true,

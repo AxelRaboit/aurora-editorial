@@ -31,7 +31,7 @@ class PostRepository extends ResolveTargetEntityRepository
      * @param list<string> $statuses    when non-empty, restricts to posts with those statuses (OR logic)
      * @param list<int>    $termIds     when non-empty, only posts tagged with ALL listed term IDs are returned
      */
-    public function findPaginated(int $page, int $limit = 20, ?string $search = null, array $postTypeIds = [], string $locale = 'fr', bool $trashed = false, ?int $authorId = null, array $termIds = [], array $statuses = []): array
+    public function findPaginated(int $page, string $locale, int $limit = 20, ?string $search = null, array $postTypeIds = [], bool $trashed = false, ?int $authorId = null, array $termIds = [], array $statuses = []): array
     {
         $queryBuilder = $this->createQueryBuilder('p')
             ->leftJoin('p.translations', 't', 'WITH', 't.locale = :locale')
@@ -272,7 +272,7 @@ class PostRepository extends ResolveTargetEntityRepository
     /**
      * @return array{items: list<Post>, total: int, page: int, totalPages: int}
      */
-    public function findPublishedByTerm(int $termId, int $page, int $limit, string $locale = 'fr'): array
+    public function findPublishedByTerm(int $termId, int $page, int $limit, string $locale): array
     {
         $queryBuilder = $this->createQueryBuilder('p')
             ->leftJoin('p.translations', 't', 'WITH', 't.locale = :locale')

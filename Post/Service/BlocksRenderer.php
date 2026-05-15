@@ -36,7 +36,7 @@ final readonly class BlocksRenderer
     /**
      * @param array<int, array<string, mixed>> $blocks
      */
-    public function render(array $blocks, string $locale = 'fr'): string
+    public function render(array $blocks, string $locale): string
     {
         $output = '';
         foreach ($blocks as $block) {
