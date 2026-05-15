@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Serializer;
 
+use Aurora\Core\Locale\Service\LocaleContextInterface;
 use Aurora\Module\Editorial\Post\Entity\PostInterface;
 use DateTimeInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
@@ -11,6 +12,10 @@ use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 #[AsAlias(PostSerializerInterface::class)]
 class PostSerializer implements PostSerializerInterface
 {
+    public function __construct(
+        protected readonly LocaleContextInterface $localeContext,
+    ) {}
+
     /**
      * Compact projection used by reference pickers (post link block, related posts…).
      * Falls back to the first available translation when the default locale has none.
@@ -19,16 +24,23 @@ class PostSerializer implements PostSerializerInterface
     {
         return [
             'id' => $post->getId(),
-            'title' => $post->getTranslation('fr')?->getTitle() ?? ($post->getTranslations()->first() ?: null)?->getTitle(),
+            'title' => $this->preferredTitle($post),
             'status' => $post->getStatus()->value,
             'postTypeId' => $post->getPostType()->getId(),
             'postType' => $post->getPostType()->getLabel(),
         ];
     }
 
+    private function preferredTitle(PostInterface $post): ?string
+    {
+        $defaultTranslation = $post->getTranslation($this->localeContext->getDefaultLocale());
+
+        return $defaultTranslation?->getTitle() ?? ($post->getTranslations()->first() ?: null)?->getTitle();
+    }
+
     public function serialize(PostInterface $post): array
     {
-        $defaultTranslation = $post->getTranslation('fr');
+        $defaultTranslation = $post->getTranslation($this->localeContext->getDefaultLocale());
 
         return [
             'id' => $post->getId(),
@@ -78,7 +90,7 @@ class PostSerializer implements PostSerializerInterface
         foreach ($post->getRelatedPosts() as $related) {
             $relatedPosts[] = [
                 'id' => $related->getId(),
-                'title' => $related->getTranslation('fr')?->getTitle() ?? ($related->getTranslations()->first() ?: null)?->getTitle(),
+                'title' => $this->preferredTitle($related),
                 'status' => $related->getStatus()->value,
                 'postType' => $related->getPostType()->getLabel(),
             ];

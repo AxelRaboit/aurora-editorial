@@ -121,7 +121,7 @@ final readonly class SitemapBuilder
     {
         $entries = [];
         foreach ($this->postRepository->findAllPublishedForSitemap() as $post) {
-            if ($post->getTranslation('fr')?->isNoindex()) {
+            if ($post->getTranslation($this->context->defaultLocale())?->isNoindex()) {
                 continue;
             }
 

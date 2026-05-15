@@ -8,8 +8,12 @@ use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTermInterface;
 
 interface TaxonomyTermSerializerInterface
 {
-    /** @return array<string, mixed> */
-    public function serialize(TaxonomyTermInterface $term, string $locale = 'fr'): array;
+    /**
+     * @param string|null $locale Locale to render labels for. Null falls back to the default locale.
+     *
+     * @return array<string, mixed>
+     */
+    public function serialize(TaxonomyTermInterface $term, ?string $locale = null): array;
 
     /** @return array<string, mixed> */
     public function serializeFull(TaxonomyTermInterface $term): array;

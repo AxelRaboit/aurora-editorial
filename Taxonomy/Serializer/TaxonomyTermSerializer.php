@@ -4,17 +4,23 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Taxonomy\Serializer;
 
+use Aurora\Core\Locale\Service\LocaleContextInterface;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTermInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 
 #[AsAlias(TaxonomyTermSerializerInterface::class)]
 class TaxonomyTermSerializer implements TaxonomyTermSerializerInterface
 {
+    public function __construct(
+        protected readonly LocaleContextInterface $localeContext,
+    ) {}
+
     /**
      * @return array<string, mixed>
      */
-    public function serialize(TaxonomyTermInterface $term, string $locale = 'fr'): array
+    public function serialize(TaxonomyTermInterface $term, ?string $locale = null): array
     {
+        $locale ??= $this->localeContext->getDefaultLocale();
         $translation = $term->getTranslation($locale) ?? $term->getTranslations()->first() ?: null;
 
         return [
