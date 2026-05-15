@@ -4,19 +4,15 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Form\View;
 
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Aurora\Core\Locale\Service\LocaleContextInterface;
 
 /**
  * Builds the Twig payloads consumed by the admin forms views.
  */
 final readonly class FormsViewBuilder
 {
-    /**
-     * @param list<string> $enabledLocales
-     */
     public function __construct(
-        #[Autowire(param: 'kernel.enabled_locales')]
-        private array $enabledLocales,
+        private LocaleContextInterface $localeContext,
     ) {}
 
     /**
@@ -25,7 +21,7 @@ final readonly class FormsViewBuilder
     public function indexView(): array
     {
         return [
-            'locales' => $this->enabledLocales,
+            'locales' => $this->localeContext->getActiveLocales(),
         ];
     }
 }

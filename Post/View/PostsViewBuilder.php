@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\View;
 
+use Aurora\Core\Locale\Service\LocaleContextInterface;
 use Aurora\Core\Validation\Dto\PaginationRequest;
 use Aurora\Module\Editorial\Post\Repository\PostRepository;
 use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
@@ -11,16 +12,12 @@ use Aurora\Module\Editorial\Post\Serializer\PostSerializerInterface;
 use Aurora\Module\Editorial\Post\Serializer\PostTypeSerializerInterface;
 use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
 use Aurora\Module\Editorial\Taxonomy\Serializer\TaxonomySerializerInterface;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Builds the Twig payloads consumed by the admin posts views.
  */
 final readonly class PostsViewBuilder
 {
-    /**
-     * @param list<string> $enabledLocales
-     */
     public function __construct(
         private PostTypeRepository $postTypeRepository,
         private TaxonomyRepository $taxonomyRepository,
@@ -28,8 +25,7 @@ final readonly class PostsViewBuilder
         private TaxonomySerializerInterface $taxonomySerializer,
         private PostRepository $postRepository,
         private PostSerializerInterface $postSerializer,
-        #[Autowire(param: 'kernel.enabled_locales')]
-        private array $enabledLocales,
+        private LocaleContextInterface $localeContext,
     ) {}
 
     /**
@@ -68,7 +64,7 @@ final readonly class PostsViewBuilder
             'postTypes' => array_map($this->postTypeSerializer->serialize(...), $this->postTypeRepository->findAllWithRelations()),
             'taxonomies' => array_map($this->taxonomySerializer->serializeFull(...), $this->taxonomyRepository->findAllForIndex()),
             'trashed' => $trashed,
-            'locales' => $this->enabledLocales,
+            'locales' => $this->localeContext->getActiveLocales(),
             'postTypeIds' => $postTypeIds,
             'termIds' => $termIds,
             'statuses' => $statuses,

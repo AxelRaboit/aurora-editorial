@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Form\Manager;
 
+use Aurora\Core\Locale\Service\TranslationLocaleSyncerInterface;
 use Aurora\Core\Sequence\SequenceGenerator;
 use Aurora\Core\Sequence\SequencePrefixEnum;
 use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
@@ -43,6 +44,7 @@ class FormManager implements FormManagerInterface
         protected readonly SequenceGenerator $sequenceGenerator,
         protected readonly SettingRepository $settingRepository,
         protected readonly EventDispatcherInterface $eventDispatcher,
+        protected readonly TranslationLocaleSyncerInterface $translationSyncer,
     ) {}
 
     public function create(FormInputInterface $input): FormInterface
@@ -227,13 +229,15 @@ class FormManager implements FormManagerInterface
             $translation->setDescription($data['description']);
         }
 
-        // Remove translations for locales no longer in the input
-        $kept = $input->getTranslations();
+        // Locales actives absentes de l'input → suppression. Locales hors
+        // mode actif → préservées par le syncer (réversibilité du single mode).
+        $existingByLocale = [];
         foreach ($form->getTranslations() as $existing) {
-            if (!isset($kept[$existing->getLocale()])) {
-                $form->removeTranslation($existing);
-                $this->entityManager->remove($existing);
-            }
+            $existingByLocale[$existing->getLocale()] = $existing;
+        }
+        foreach ($this->translationSyncer->stale($existingByLocale, array_keys($input->getTranslations())) as $stale) {
+            $form->removeTranslation($stale);
+            $this->entityManager->remove($stale);
         }
     }
 
@@ -254,12 +258,13 @@ class FormManager implements FormManagerInterface
             $translation->setOptions($data['options']);
         }
 
-        // Remove translations for locales no longer in the input
+        $existingByLocale = [];
         foreach ($field->getTranslations() as $existing) {
-            if (!isset($kept[$existing->getLocale()])) {
-                $field->removeTranslation($existing);
-                $this->entityManager->remove($existing);
-            }
+            $existingByLocale[$existing->getLocale()] = $existing;
+        }
+        foreach ($this->translationSyncer->stale($existingByLocale, array_keys($kept)) as $stale) {
+            $field->removeTranslation($stale);
+            $this->entityManager->remove($stale);
         }
     }
 
