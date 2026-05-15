@@ -259,6 +259,8 @@ backend:
   taxonomies:
     errors:
       slug_taken: 'Une taxonomie avec le slug "{slug}" existe déjà.'
+      slug_required: Le slug est requis.
+      label_required: Le libellé est requis.
       builtin_protected: Les taxonomies intégrées ne peuvent pas être supprimées.
       term_self_nested: Un terme ne peut pas être placé sous lui-même ou un de ses descendants.
       reorder_cycle: 'La réorganisation créerait un cycle impliquant le terme #{id}.'
@@ -281,6 +283,8 @@ backend:
     terms:
       title: Termes
       empty: Aucun terme pour l'instant.
+      errors:
+        name_required: Le nom est requis.
       addTerm: Ajouter
       editTerm: Modifier le terme
       deleteTermConfirm: 'Supprimer « {name} » ? Les enfants directs seront rattachés au parent.'
