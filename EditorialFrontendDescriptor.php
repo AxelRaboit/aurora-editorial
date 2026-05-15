@@ -10,7 +10,7 @@ use Aurora\Core\Menu\Enum\MenuItemTargetTypeEnum;
 use Aurora\Core\Menu\Enum\MenuItemVisibilityEnum;
 use Aurora\Core\Setting\Enum\ModuleParameterEnum;
 
-final class EditorialFrontDescriptor implements FrontendInterface, MenuLocationProviderInterface
+final class EditorialFrontendDescriptor implements FrontendInterface, MenuLocationProviderInterface
 {
     public function getSlug(): string
     {
