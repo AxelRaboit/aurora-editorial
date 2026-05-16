@@ -6,6 +6,7 @@ namespace Aurora\Module\Editorial\Post\Service;
 
 use Aurora\Core\Frontend\Service\Context;
 use Aurora\Core\Media\Entity\MediaInterface;
+use Aurora\Core\Media\Service\MediaUrlGenerator;
 use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Core\Theme\Service\ThemeContext;
 use Aurora\Core\Theme\Service\ThemeResolver;
@@ -16,7 +17,6 @@ use DateTimeInterface;
 use LogicException;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
-use Aurora\Core\Media\Service\MediaUrlGenerator;
 
 /**
  * Renders the public post page. Shared by PageController (full post view)
@@ -32,7 +32,7 @@ final readonly class PostPageRenderer
         private BlocksRenderer $blocksRenderer,
         private AlternatesBuilder $alternatesBuilder,
         private SettingRepository $settingRepository,
-        protected readonly MediaUrlGenerator $mediaUrlGenerator,
+        private MediaUrlGenerator $mediaUrlGenerator,
     ) {}
 
     /**
