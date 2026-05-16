@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Post\Service;
 
 use Aurora\Core\Media\Entity\Media;
+use Aurora\Core\Support\Num;
 use Aurora\Module\Ecommerce\Listing\Entity\ListingInterface;
 use Aurora\Module\Ecommerce\Listing\Repository\ListingRepository;
 use Aurora\Module\Ecommerce\Service\EcommerceContext;
@@ -91,7 +92,7 @@ final readonly class BlocksRenderer
             array_map(intval(...), (array) ($data['listingIds'] ?? [])),
             static fn (int $id): bool => $id > 0,
         ));
-        $columns = max(1, min(4, (int) ($data['columns'] ?? 3)));
+        $columns = Num::clamp((int) ($data['columns'] ?? 3), 1, 4);
         $title = $this->safeHtml($data['title'] ?? '');
 
         if ([] === $listingIds) {
@@ -169,7 +170,7 @@ final readonly class BlocksRenderer
     private function renderHeader(array $data): string
     {
         $level = (int) ($data['level'] ?? 2);
-        $level = max(1, min(6, $level));
+        $level = Num::clamp($level, 1, 6);
 
         $text = $this->safeHtml($data['text'] ?? '');
 
@@ -335,7 +336,7 @@ final readonly class BlocksRenderer
     {
         $mode = ('manual' === ($data['mode'] ?? null)) ? 'manual' : 'auto';
         $postTypeSlug = (string) ($data['postTypeSlug'] ?? 'article');
-        $columns = max(1, min(4, (int) ($data['columns'] ?? 3)));
+        $columns = Num::clamp((int) ($data['columns'] ?? 3), 1, 4);
         $title = $this->safeHtml($data['title'] ?? '');
 
         $postType = $this->postTypeRepository->findOneBy(['slug' => $postTypeSlug]);
@@ -370,7 +371,7 @@ final readonly class BlocksRenderer
                 }
             }
         } else {
-            $perPage = max(1, min(100, (int) ($data['perPage'] ?? $data['limit'] ?? 12)));
+            $perPage = Num::clamp((int) ($data['perPage'] ?? $data['limit'] ?? 12), 1, 100);
             $page = max(1, (int) ($this->requestStack->getCurrentRequest()?->query->get('page') ?? 1));
             $result = $this->postRepository->findPublishedByPostTypeWithSearch($postType->getId(), $page, $perPage, $locale);
             $items = $result['items'];
