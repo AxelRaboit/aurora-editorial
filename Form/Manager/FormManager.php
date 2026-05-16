@@ -6,8 +6,6 @@ namespace Aurora\Module\Editorial\Form\Manager;
 
 use Aurora\Core\Locale\Service\TranslationLocaleSyncerInterface;
 use Aurora\Core\Sequence\SequenceGenerator;
-use Aurora\Core\Sequence\SequencePrefixEnum;
-use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
 use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Module\Editorial\Form\Dto\FormFieldInputInterface;
 use Aurora\Module\Editorial\Form\Dto\FormInputInterface;
@@ -25,6 +23,7 @@ use Aurora\Module\Editorial\Form\Event\FormSubmissionCreatedEvent;
 use Aurora\Module\Editorial\Form\Repository\FormTranslationRepository;
 use Aurora\Module\Editorial\Form\Service\FormNotificationService;
 use Aurora\Module\Editorial\Form\Service\FormWebhookService;
+use Aurora\Module\Editorial\Setting\EditorialSettingEnum;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
@@ -51,7 +50,7 @@ class FormManager implements FormManagerInterface
     {
         $form = $this->createForm();
         $this->applyInput($form, $input);
-        $prefix = $this->settingRepository->get(ApplicationParameterEnum::EditorialFormPrefix->value, SequencePrefixEnum::Form->value) ?? SequencePrefixEnum::Form->value;
+        $prefix = $this->settingRepository->getOrDefault(EditorialSettingEnum::FormPrefix);
         $form->setReference($this->sequenceGenerator->next($prefix));
         $this->entityManager->persist($form);
         $this->entityManager->flush();
@@ -82,7 +81,7 @@ class FormManager implements FormManagerInterface
         $form->setUpdatedAt(new DateTimeImmutable());
         $this->entityManager->flush();
 
-        $fieldPrefix = $this->settingRepository->get(ApplicationParameterEnum::EditorialFormFieldPrefix->value, SequencePrefixEnum::FormField->value) ?? SequencePrefixEnum::FormField->value;
+        $fieldPrefix = $this->settingRepository->getOrDefault(EditorialSettingEnum::FormFieldPrefix);
         $field->setReference($this->sequenceGenerator->next($fieldPrefix));
         $this->entityManager->flush();
 
@@ -135,7 +134,7 @@ class FormManager implements FormManagerInterface
 
     public function submit(FormInterface $form, array $submittedData, string $locale, string $ip): FormSubmissionInterface
     {
-        $submissionPrefix = $this->settingRepository->get(ApplicationParameterEnum::EditorialFormSubmissionPrefix->value, SequencePrefixEnum::FormSubmission->value) ?? SequencePrefixEnum::FormSubmission->value;
+        $submissionPrefix = $this->settingRepository->getOrDefault(EditorialSettingEnum::FormSubmissionPrefix);
 
         $submission = $this->createFormSubmission();
         $submission->setForm($form);

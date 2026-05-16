@@ -7,7 +7,6 @@ namespace Aurora\Module\Editorial\Post\Manager;
 use Aurora\Core\Audit\Service\AuditLogger;
 use Aurora\Core\Media\Repository\MediaRepository;
 use Aurora\Core\Sequence\SequenceGenerator;
-use Aurora\Core\Sequence\SequencePrefixEnum;
 use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
 use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Core\User\Entity\User;
@@ -25,6 +24,7 @@ use Aurora\Module\Editorial\Post\Repository\PostSlugHistoryRepository;
 use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
 use Aurora\Module\Editorial\Post\Security\PostVoter;
 use Aurora\Module\Editorial\Post\Service\PostTextExtractor;
+use Aurora\Module\Editorial\Setting\EditorialSettingEnum;
 use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyTermRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -67,7 +67,7 @@ class PostManager implements PostManagerInterface
             $post->setAuthor($currentUser);
         }
 
-        $prefix = $this->settingRepository->get(ApplicationParameterEnum::EditorialPostPrefix->value, SequencePrefixEnum::Post->value) ?? SequencePrefixEnum::Post->value;
+        $prefix = $this->settingRepository->getOrDefault(EditorialSettingEnum::PostPrefix);
         $post->setReference($this->sequenceGenerator->next($prefix));
         $this->entityManager->persist($post);
         $this->entityManager->flush();

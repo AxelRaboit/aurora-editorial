@@ -1,4 +1,23 @@
 backend:
+  parameters:
+    editorial_post_prefix:
+      label: Préfixe des numéros d'articles
+      description: 'Préfixe de la référence article auto-générée (ex: ART).'
+    editorial_form_prefix:
+      label: Préfixe des numéros de formulaires
+      description: 'Préfixe de la référence formulaire auto-générée (ex: FRM).'
+    editorial_form_submission_prefix:
+      label: Préfixe des numéros de soumissions
+      description: 'Préfixe de la référence auto-générée (ex: XXX). Laissez vide pour désactiver.'
+    editorial_comment_prefix:
+      label: Préfixe des numéros de commentaires
+      description: 'Préfixe de la référence auto-générée (ex: XXX). Laissez vide pour désactiver.'
+    editorial_form_field_prefix:
+      label: Préfixe des références champs de formulaire
+      description: 'Préfixe de la référence auto-générée (ex: XXX). Laissez vide pour désactiver.'
+    editorial_taxonomy_term_prefix:
+      label: Préfixe des références termes de taxonomie
+      description: 'Préfixe de la référence auto-générée (ex: XXX). Laissez vide pour désactiver.'
   permissions:
     names:
       editorial:

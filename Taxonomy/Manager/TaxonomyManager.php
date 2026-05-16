@@ -6,10 +6,9 @@ namespace Aurora\Module\Editorial\Taxonomy\Manager;
 
 use Aurora\Core\Audit\Service\AuditLogger;
 use Aurora\Core\Sequence\SequenceGenerator;
-use Aurora\Core\Sequence\SequencePrefixEnum;
-use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
 use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
+use Aurora\Module\Editorial\Setting\EditorialSettingEnum;
 use Aurora\Module\Editorial\Taxonomy\Dto\TaxonomyInputInterface;
 use Aurora\Module\Editorial\Taxonomy\Dto\TaxonomyTermInputInterface;
 use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
@@ -96,7 +95,7 @@ class TaxonomyManager implements TaxonomyManagerInterface
         $this->entityManager->persist($term);
         $this->entityManager->flush();
 
-        $termPrefix = $this->settingRepository->get(ApplicationParameterEnum::EditorialTaxonomyTermPrefix->value, SequencePrefixEnum::TaxonomyTerm->value) ?? SequencePrefixEnum::TaxonomyTerm->value;
+        $termPrefix = $this->settingRepository->getOrDefault(EditorialSettingEnum::TaxonomyTermPrefix);
         $term->setReference($this->sequenceGenerator->next($termPrefix));
         $this->entityManager->flush();
 

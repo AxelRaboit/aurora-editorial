@@ -6,7 +6,6 @@ namespace Aurora\Module\Editorial\Comment\Manager;
 
 use Aurora\Core\Audit\Service\AuditLogger;
 use Aurora\Core\Sequence\SequenceGenerator;
-use Aurora\Core\Sequence\SequencePrefixEnum;
 use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
 use Aurora\Core\Setting\Repository\SettingRepository;
 use Aurora\Module\Editorial\Comment\Dto\CommentInputInterface;
@@ -16,6 +15,7 @@ use Aurora\Module\Editorial\Comment\Enum\CommentStatusEnum;
 use Aurora\Module\Editorial\Comment\Service\CommentNotificationService;
 use Aurora\Module\Editorial\Post\Entity\Post;
 use Aurora\Module\Editorial\Post\Entity\PostInterface;
+use Aurora\Module\Editorial\Setting\EditorialSettingEnum;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 
@@ -33,7 +33,7 @@ class CommentManager implements CommentManagerInterface
     public function submit(Post $post, CommentInputInterface $input, ?CommentInterface $parent = null): CommentInterface
     {
         $moderationEnabled = $this->settingRepository->getBoolean(ApplicationParameterEnum::CommentModerationEnabled->value, true);
-        $prefix = $this->settingRepository->get(ApplicationParameterEnum::EditorialCommentPrefix->value, SequencePrefixEnum::Comment->value) ?? SequencePrefixEnum::Comment->value;
+        $prefix = $this->settingRepository->getOrDefault(EditorialSettingEnum::CommentPrefix);
 
         $comment = $this->createComment();
         $comment->setPost($post);

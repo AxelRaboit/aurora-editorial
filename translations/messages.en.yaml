@@ -1,4 +1,23 @@
 backend:
+  parameters:
+    editorial_post_prefix:
+      label: Post reference prefix
+      description: Auto-generated post reference prefix (e.g. ART).
+    editorial_form_prefix:
+      label: Form reference prefix
+      description: Auto-generated form reference prefix (e.g. FRM).
+    editorial_form_submission_prefix:
+      label: Form submission reference prefix
+      description: Auto-generated reference prefix (e.g. XXX). Leave empty to disable.
+    editorial_comment_prefix:
+      label: Comment reference prefix
+      description: Auto-generated reference prefix (e.g. XXX). Leave empty to disable.
+    editorial_form_field_prefix:
+      label: Form field reference prefix
+      description: Auto-generated reference prefix (e.g. XXX). Leave empty to disable.
+    editorial_taxonomy_term_prefix:
+      label: Taxonomy term reference prefix
+      description: Auto-generated reference prefix (e.g. XXX). Leave empty to disable.
   permissions:
     names:
       editorial:
