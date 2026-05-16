@@ -12,14 +12,11 @@ use Aurora\Core\Validation\Dto\PaginationRequest;
 use Aurora\Core\Validation\Service\PayloadValidator;
 use Aurora\Module\Editorial\Post\Dto\PostInputFactoryInterface;
 use Aurora\Module\Editorial\Post\Entity\Post;
-use Aurora\Module\Editorial\Post\Entity\PostRevision;
 use Aurora\Module\Editorial\Post\Entity\PostTranslation;
 use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
 use Aurora\Module\Editorial\Post\Manager\PostManagerInterface;
 use Aurora\Module\Editorial\Post\Repository\PostRepository;
-use Aurora\Module\Editorial\Post\Repository\PostRevisionRepository;
 use Aurora\Module\Editorial\Post\Security\PostVoter;
-use Aurora\Module\Editorial\Post\Serializer\PostRevisionSerializer;
 use Aurora\Module\Editorial\Post\Serializer\PostSerializerInterface;
 use Aurora\Module\Editorial\Post\Service\PostAccessService;
 use Aurora\Module\Editorial\Post\Service\PostPageRenderer;
@@ -46,8 +43,6 @@ class PostsController extends AbstractController
         private readonly PostManagerInterface $postManager,
         private readonly PostSerializerInterface $postSerializer,
         private readonly PostInputFactoryInterface $postInputFactory,
-        private readonly PostRevisionRepository $revisionRepository,
-        private readonly PostRevisionSerializer $revisionSerializer,
         private readonly PayloadValidator $payloadValidator,
         private readonly EntityManagerInterface $entityManager,
         private readonly PostPageRenderer $postPageRenderer,
@@ -99,7 +94,7 @@ class PostsController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/preview/{locale}', name: '_preview', methods: [HttpMethodEnum::Get->value])]
+    #[Route('/{id}/preview/{locale}', name: '_preview', requirements: ['id' => '\d+|__id__'], methods: [HttpMethodEnum::Get->value])]
     public function preview(Post $post, string $locale, Request $request): Response
     {
         if (!$post->getTranslation($locale) instanceof PostTranslation) {
@@ -111,7 +106,7 @@ class PostsController extends AbstractController
         return $this->postPageRenderer->render($post, $locale);
     }
 
-    #[Route('/{id}', name: '_show', methods: [HttpMethodEnum::Get->value])]
+    #[Route('/{id}', name: '_show', requirements: ['id' => '\d+|__id__'], methods: [HttpMethodEnum::Get->value])]
     public function show(Post $post): JsonResponse
     {
         return $this->jsonSuccess(['post' => $this->postSerializer->serializeFull($post)]);
@@ -133,7 +128,7 @@ class PostsController extends AbstractController
         return $this->jsonSuccess(['post' => $this->postSerializer->serialize($post)]);
     }
 
-    #[Route('/{id}/edit', name: '_edit', methods: [HttpMethodEnum::Post->value])]
+    #[Route('/{id}/edit', name: '_edit', requirements: ['id' => '\d+|__id__'], methods: [HttpMethodEnum::Post->value])]
     #[IsGranted('editorial.posts.edit')]
     public function edit(Post $post, Request $request): JsonResponse
     {
@@ -159,7 +154,7 @@ class PostsController extends AbstractController
         return $this->jsonSuccess(['post' => $this->postSerializer->serialize($post)]);
     }
 
-    #[Route('/{id}/delete', name: '_delete', methods: [HttpMethodEnum::Post->value])]
+    #[Route('/{id}/delete', name: '_delete', requirements: ['id' => '\d+|__id__'], methods: [HttpMethodEnum::Post->value])]
     #[IsGranted('editorial.posts.delete')]
     public function delete(Post $post): JsonResponse
     {
@@ -168,65 +163,5 @@ class PostsController extends AbstractController
         $this->postManager->delete($post);
 
         return $this->jsonSuccess();
-    }
-
-    #[Route('/{id}/restore', name: '_restore', methods: [HttpMethodEnum::Post->value])]
-    #[IsGranted('editorial.posts.delete')]
-    public function restore(Post $post): JsonResponse
-    {
-        $this->postManager->restore($post);
-
-        return $this->jsonSuccess(['post' => $this->postSerializer->serialize($post)]);
-    }
-
-    #[Route('/{id}/force-delete', name: '_force_delete', methods: [HttpMethodEnum::Post->value])]
-    #[IsGranted('editorial.posts.delete')]
-    public function forceDelete(Post $post): JsonResponse
-    {
-        $this->postManager->forceDelete($post);
-
-        return $this->jsonSuccess();
-    }
-
-    #[Route('/empty-trash', name: '_empty_trash', methods: [HttpMethodEnum::Post->value])]
-    #[IsGranted('editorial.posts.delete')]
-    public function emptyTrash(): JsonResponse
-    {
-        $count = $this->postManager->emptyTrash();
-
-        return $this->jsonSuccess(['count' => $count]);
-    }
-
-    #[Route('/{id}/revisions', name: '_revisions', methods: [HttpMethodEnum::Get->value])]
-    public function listRevisions(Post $post): JsonResponse
-    {
-        return $this->jsonSuccess([
-            'revisions' => array_map($this->revisionSerializer->serialize(...), $this->revisionRepository->findByPost($post)),
-        ]);
-    }
-
-    #[Route('/{id}/revisions/{revisionId}', name: '_revision_show', methods: [HttpMethodEnum::Get->value])]
-    public function showRevision(Post $post, int $revisionId): JsonResponse
-    {
-        $revision = $this->revisionRepository->find($revisionId);
-        if (!$revision instanceof PostRevision || $revision->getPost() !== $post) {
-            return $this->jsonNotFound();
-        }
-
-        return $this->jsonSuccess(['revision' => $this->revisionSerializer->serializeFull($revision)]);
-    }
-
-    #[Route('/{id}/revisions/{revisionId}/restore', name: '_revision_restore', methods: [HttpMethodEnum::Post->value])]
-    #[IsGranted('editorial.posts.edit')]
-    public function restoreRevision(Post $post, int $revisionId): JsonResponse
-    {
-        $revision = $this->revisionRepository->find($revisionId);
-        if (!$revision instanceof PostRevision || $revision->getPost() !== $post) {
-            return $this->jsonNotFound();
-        }
-
-        $this->postManager->restoreRevision($post, $revision);
-
-        return $this->jsonSuccess(['post' => $this->postSerializer->serialize($post)]);
     }
 }
