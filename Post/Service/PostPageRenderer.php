@@ -16,6 +16,7 @@ use DateTimeInterface;
 use LogicException;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
+use Aurora\Core\Media\Service\MediaUrlGenerator;
 
 /**
  * Renders the public post page. Shared by PageController (full post view)
@@ -31,6 +32,7 @@ final readonly class PostPageRenderer
         private BlocksRenderer $blocksRenderer,
         private AlternatesBuilder $alternatesBuilder,
         private SettingRepository $settingRepository,
+        protected readonly MediaUrlGenerator $mediaUrlGenerator,
     ) {}
 
     /**
@@ -49,9 +51,9 @@ final readonly class PostPageRenderer
         $featuredMediaData = null;
         if ($featuredMedia instanceof MediaInterface) {
             $featuredMediaData = [
-                'publicUrl' => $featuredMedia->getPublicUrl(),
-                'variantLargeUrl' => $featuredMedia->getVariantUrl('large'),
-                'url' => $featuredMedia->getVariantUrl('large') ?? $featuredMedia->getPublicUrl(),
+                'publicUrl' => $this->mediaUrlGenerator->publicUrl($featuredMedia),
+                'variantLargeUrl' => $this->mediaUrlGenerator->variantUrl($featuredMedia, 'large'),
+                'url' => $this->mediaUrlGenerator->variantUrl($featuredMedia, 'large') ?? $this->mediaUrlGenerator->publicUrl($featuredMedia),
                 'alt' => $featuredMedia->getAlt(),
                 'focalPositionCss' => $featuredMedia->getFocalPositionCss(),
                 'focalPosition' => $featuredMedia->getFocalPositionCss(),
@@ -71,7 +73,7 @@ final readonly class PostPageRenderer
         $ogImageData = null;
         if ($ogImageMedia instanceof MediaInterface) {
             $ogImageData = [
-                'publicUrl' => $ogImageMedia->getPublicUrl(),
+                'publicUrl' => $this->mediaUrlGenerator->publicUrl($ogImageMedia),
             ];
         }
 

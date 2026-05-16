@@ -8,12 +8,14 @@ use Aurora\Core\Locale\Service\LocaleContextInterface;
 use Aurora\Module\Editorial\Post\Entity\PostInterface;
 use DateTimeInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
+use Aurora\Core\Media\Service\MediaUrlGenerator;
 
 #[AsAlias(PostSerializerInterface::class)]
 class PostSerializer implements PostSerializerInterface
 {
     public function __construct(
         protected readonly LocaleContextInterface $localeContext,
+        protected readonly MediaUrlGenerator $mediaUrlGenerator,
     ) {}
 
     /**
@@ -77,7 +79,7 @@ class PostSerializer implements PostSerializerInterface
                 'metaDescription' => $translation->getMetaDescription(),
                 'customFields' => $translation->getCustomFields(),
                 'ogImageMediaId' => $translation->getOgImage()?->getId(),
-                'ogImageUrl' => $translation->getOgImage()?->getPublicUrl(),
+                'ogImageUrl' => $this->mediaUrlGenerator->publicUrl($translation->getOgImage()),
                 'ogImageFocalPosition' => $translation->getOgImage()?->getFocalPositionCss(),
                 'canonicalUrl' => $translation->getCanonicalUrl(),
                 'noindex' => $translation->isNoindex(),
@@ -99,7 +101,7 @@ class PostSerializer implements PostSerializerInterface
         return [
             ...$this->serialize($post),
             'featuredMediaId' => $post->getFeaturedMedia()?->getId(),
-            'featuredMediaUrl' => $post->getFeaturedMedia()?->getPublicUrl(),
+            'featuredMediaUrl' => $this->mediaUrlGenerator->publicUrl($post->getFeaturedMedia()),
             'featuredMediaFocalPosition' => $post->getFeaturedMedia()?->getFocalPositionCss(),
             'translations' => $translations,
             'relatedPosts' => $relatedPosts,
@@ -118,7 +120,7 @@ class PostSerializer implements PostSerializerInterface
             'metaDescription' => $translation?->getMetaDescription(),
             'publishedAt' => $post->getPublishedAt()?->format(DateTimeInterface::ATOM),
             'postTypeSlug' => $post->getPostType()->getSlug(),
-            'featuredMediaUrl' => $featured?->getVariantUrl('medium') ?? $featured?->getPublicUrl(),
+            'featuredMediaUrl' => $this->mediaUrlGenerator->variantUrl($featured, 'medium') ?? $this->mediaUrlGenerator->publicUrl($featured),
             'featuredMediaFocalPosition' => $featured?->getFocalPositionCss(),
         ];
     }
