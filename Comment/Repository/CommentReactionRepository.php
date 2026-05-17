@@ -13,7 +13,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ResolveTargetEntityRepository<CommentReactionInterface>
  */
-final class CommentReactionRepository extends ResolveTargetEntityRepository
+class CommentReactionRepository extends ResolveTargetEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
