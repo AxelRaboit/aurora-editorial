@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Taxonomy\Manager;
 
-use Aurora\Core\Dev\Audit\Service\AuditLogger;
+use Aurora\Module\Dev\Audit\Service\AuditLogger;
 use Aurora\Core\Sequence\SequenceGenerator;
 use Aurora\Core\Configuration\Setting\Repository\SettingRepository;
 use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;

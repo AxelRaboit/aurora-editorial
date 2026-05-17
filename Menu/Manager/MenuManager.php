@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Menu\Manager;
 
-use Aurora\Core\Dev\Audit\Service\AuditLogger;
+use Aurora\Module\Dev\Audit\Service\AuditLogger;
 use Aurora\Module\Editorial\Menu\Dto\MenuInputInterface;
 use Aurora\Module\Editorial\Menu\Dto\MenuItemInputInterface;
 use Aurora\Module\Editorial\Menu\Entity\Menu;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Manager;
 
-use Aurora\Core\Dev\Audit\Service\AuditLogger;
+use Aurora\Module\Dev\Audit\Service\AuditLogger;
 use Aurora\Module\Editorial\Post\Dto\PostTypeFieldInputInterface;
 use Aurora\Module\Editorial\Post\Dto\PostTypeInputInterface;
 use Aurora\Module\Editorial\Post\Entity\PostType;
