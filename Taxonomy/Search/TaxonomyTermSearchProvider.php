@@ -6,7 +6,7 @@ namespace Aurora\Module\Editorial\Taxonomy\Search;
 
 use Aurora\Core\Locale\Service\LocaleContextInterface;
 use Aurora\Core\General\Search\Provider\SearchProviderInterface;
-use Aurora\Core\User\Entity\CoreUserInterface;
+use Aurora\Core\Platform\User\Entity\CoreUserInterface;
 use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyTermRepository;
 
 use function sprintf;

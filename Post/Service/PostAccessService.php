@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Service;
 
-use Aurora\Core\User\Entity\CoreUserInterface;
-use Aurora\Core\User\Enum\UserRoleEnum;
+use Aurora\Core\Platform\User\Entity\CoreUserInterface;
+use Aurora\Core\Platform\User\Enum\UserRoleEnum;
 use Symfony\Bundle\SecurityBundle\Security;
 
 /**
