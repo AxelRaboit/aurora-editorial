@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Service;
 
-use Aurora\Core\Media\Entity\Media;
-use Aurora\Core\Media\Service\MediaUrlGenerator;
+use Aurora\Core\Media\Library\Entity\Media;
+use Aurora\Core\Media\Library\Service\MediaUrlGenerator;
 use Aurora\Core\Support\Num;
 use Aurora\Module\Ecommerce\Listing\Entity\ListingInterface;
 use Aurora\Module\Ecommerce\Listing\Repository\ListingRepository;

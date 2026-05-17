@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Post\Service;
 
 use Aurora\Core\Frontend\Service\Context;
-use Aurora\Core\Media\Entity\MediaInterface;
-use Aurora\Core\Media\Service\MediaUrlGenerator;
+use Aurora\Core\Media\Library\Entity\MediaInterface;
+use Aurora\Core\Media\Library\Service\MediaUrlGenerator;
 use Aurora\Core\Configuration\Setting\Repository\SettingRepository;
 use Aurora\Core\Configuration\Theme\Service\ThemeContext;
 use Aurora\Core\Configuration\Theme\Service\ThemeResolver;
