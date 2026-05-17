@@ -1,0 +1,86 @@
+backend:
+  menus:
+    title: Menus
+    empty: Aucun menu pour le moment.
+    createMenu: Créer un menu
+    editMenu: Modifier le menu
+    name: Nom
+    location: Emplacement
+    locationPlaceholder: 'header, footer, sidemenu…'
+    description: Description
+    items: Items
+    addItem: Ajouter un item
+    itemsEmpty: Aucun item dans ce menu.
+    selectHint: Sélectionnez un menu à gauche ou créez-en un nouveau.
+    deleteConfirm: 'Supprimer le menu « {name} » ? Tous ses items seront supprimés.'
+    deleteItemConfirm: Supprimer cet item du menu ?
+    editItem: Modifier l'item
+    targetType: Type de cible
+    target: Cible
+    customUrl: URL personnalisée
+    translations: Libellés par langue
+    translationsHint: Le libellé par défaut est tiré de la cible. Surcharge-le ici par langue si besoin.
+    translationPlaceholder: Libellé personnalisé
+    visibility: Visibilité
+    cssClass: Classes CSS
+    openInNewTab: Ouvrir dans un nouvel onglet
+    allTypes: Tous les types
+    allTaxonomies: Toutes les taxonomies
+    searchPostsPlaceholder: Rechercher un article ou une page…
+    searchTermsPlaceholder: Rechercher un terme…
+    protected: Système
+    protectedHint: Menu essentiel — non supprimable.
+    locationLockedHint: L'emplacement est verrouillé pour les menus système.
+    errors:
+      cycle: Impossible de déplacer un item sous l'un de ses descendants.
+      translation_required_for_custom_url: Au moins un libellé de langue est requis pour une URL personnalisée.
+      menu_protected: Ce menu est essentiel et ne peut pas être supprimé.
+      location_locked: L'emplacement d'un menu système ne peut pas être modifié.
+      name_required: Le nom est requis.
+      location_format: "L'emplacement doit contenir uniquement des lettres minuscules, chiffres, tirets ou underscores."
+      location_taken: Cet emplacement est déjà utilisé par un autre menu.
+      target_required: Une cible est requise pour ce type d'item.
+      custom_url_required: Une URL est requise.
+      target_type_invalid: Type de cible invalide.
+      parent_invalid: Parent invalide.
+      parent_cycle: 'Impossible : cela créerait une boucle dans la hiérarchie.'
+  nav:
+    sections:
+      general: Général
+      platform: Plateforme
+      media: Médiathèque
+      configuration: Configuration
+      dev: Administration
+    administration: Accès développeur
+    administration_description: "Outils techniques, audit, requêtes d'accès et configuration avancée"
+    agencies: Agences
+    agencies_description: Gérer les agences et leurs services internes
+    dashboard: Tableau de bord
+    dashboard_description: Vue d'ensemble de l'activité et indicateurs clés
+    galleries: Galeries
+    media: Médias
+    media_description: 'Bibliothèque centralisée des images, vidéos et fichiers'
+    profile: Mon profil
+    services: Services
+    services_description: Définir les services proposés par les agences
+    settings: Réglages
+    settings_description: Paramètres globaux de l'application et préférences
+    themes: Thèmes
+    themes_description: 'Personnalisation visuelle (couleurs, logo, favicon)'
+    users: Utilisateurs
+    users_description: 'Gérer les comptes, rôles et privilèges'
+    resizeHint: Glisser pour redimensionner — double-clic pour réinitialiser
+    filterNav: Filtrer le menu…
+    filterNavEmpty: Aucun élément trouvé
+    viewSite: Voir le site
+    logout: Déconnexion
+    lightMode: Mode clair
+    darkMode: Mode sombre
+frontend:
+  menu:
+    home: Accueil
+    login: Connexion
+    register: Inscription
+    account: Mon compte
+    logout: Se déconnecter
+    label: Menu

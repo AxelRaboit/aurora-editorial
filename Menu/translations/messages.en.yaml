@@ -1,0 +1,86 @@
+backend:
+  menus:
+    title: Menus
+    empty: No menus yet.
+    createMenu: Create menu
+    editMenu: Edit menu
+    name: Name
+    location: Location
+    locationPlaceholder: 'header, footer, sidemenu…'
+    description: Description
+    items: Items
+    addItem: Add item
+    itemsEmpty: No items in this menu.
+    selectHint: Select a menu on the left or create a new one.
+    deleteConfirm: 'Delete menu "{name}"? All its items will be removed.'
+    deleteItemConfirm: Delete this menu item?
+    editItem: Edit item
+    targetType: Target type
+    target: Target
+    customUrl: Custom URL
+    translations: Per-language labels
+    translationsHint: Default label is taken from the target. Override per language if needed.
+    translationPlaceholder: Custom label (optional)
+    visibility: Visibility
+    cssClass: CSS classes
+    openInNewTab: Open in a new tab
+    allTypes: All types
+    allTaxonomies: All taxonomies
+    searchPostsPlaceholder: Search a post or page…
+    searchTermsPlaceholder: Search a term…
+    protected: System
+    protectedHint: Essential menu — cannot be deleted.
+    locationLockedHint: Location is locked for system menus.
+    errors:
+      cycle: Cannot move an item under one of its own descendants.
+      translation_required_for_custom_url: At least one language label is required for a custom URL.
+      menu_protected: This menu is essential and cannot be deleted.
+      location_locked: The location of a system menu cannot be changed.
+      name_required: Name is required.
+      location_format: 'Location must only contain lowercase letters, digits, dashes or underscores.'
+      location_taken: This location is already used by another menu.
+      target_required: A target is required for this item type.
+      custom_url_required: A URL is required.
+      target_type_invalid: Invalid target type.
+      parent_invalid: Invalid parent.
+      parent_cycle: 'Cannot: this would create a cycle in the hierarchy.'
+  nav:
+    sections:
+      general: General
+      platform: Platform
+      media: Media library
+      configuration: Configuration
+      dev: Administration
+    administration: Developer access
+    administration_description: 'Technical tools, audit log, access requests and advanced configuration'
+    agencies: Agencies
+    agencies_description: Manage agencies and their internal services
+    dashboard: Dashboard
+    dashboard_description: Overview of activity and key metrics
+    galleries: Galleries
+    media: Media
+    media_description: 'Centralized library of images, videos and files'
+    profile: My profile
+    services: Services
+    services_description: Define the services offered by your agencies
+    settings: Settings
+    settings_description: Global application parameters and preferences
+    themes: Themes
+    themes_description: 'Visual customization (colors, logo, favicon)'
+    users: Users
+    users_description: 'Manage user accounts, roles and privileges'
+    resizeHint: Drag to resize — double-click to reset
+    filterNav: Filter menu…
+    filterNavEmpty: No items found
+    viewSite: View site
+    logout: Log out
+    lightMode: Light mode
+    darkMode: Dark mode
+frontend:
+  menu:
+    home: Home
+    login: Sign in
+    register: Sign up
+    account: My account
+    logout: Sign out
+    label: Menu

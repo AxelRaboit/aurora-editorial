@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial;
 
 use Aurora\Core\Frontend\Contract\FrontendInterface;
-use Aurora\Core\Menu\Contract\MenuLocationProviderInterface;
-use Aurora\Core\Menu\Enum\MenuItemTargetTypeEnum;
-use Aurora\Core\Menu\Enum\MenuItemVisibilityEnum;
+use Aurora\Module\Editorial\Menu\Contract\MenuLocationProviderInterface;
+use Aurora\Module\Editorial\Menu\Enum\MenuItemTargetTypeEnum;
+use Aurora\Module\Editorial\Menu\Enum\MenuItemVisibilityEnum;
 use Aurora\Core\Configuration\Setting\Enum\ModuleParameterEnum;
 
 final class EditorialFrontendDescriptor implements FrontendInterface, MenuLocationProviderInterface
