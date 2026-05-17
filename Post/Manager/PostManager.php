@@ -296,7 +296,20 @@ class PostManager implements PostManagerInterface
         }
     }
 
-    /** @param array<int, object> $ogImageMap */
+    /**
+     * Hydrate a single translation row from the DTO.
+     *
+     * Note on block image lifecycle: Notes\Block diff-cleans uploaded image
+     * files on each save (per-user `var/uploads/notes-block/{userId}/`).
+     * Posts intentionally do NOT — image blocks reference media-library
+     * entries (`MediaController::upload` → `var/uploads/media/`) which are
+     * shared, addressable by id, and garbage-collected by the Media
+     * module's own usage tracking, not by individual Post saves. So a
+     * dropped image block here leaves the underlying Media row in place
+     * (intended: it may be referenced by another post or reused later).
+     *
+     * @param array<int, object> $ogImageMap
+     */
     private function applyTranslation(PostInterface $post, string $locale, PostTranslationInput $input, array $ogImageMap = []): void
     {
         $translation = $post->translate($locale);

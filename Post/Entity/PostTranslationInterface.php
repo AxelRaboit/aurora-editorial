@@ -22,10 +22,10 @@ interface PostTranslationInterface
 
     public function setSlug(?string $slug): static;
 
-    /** @return array<int, array<string, mixed>> */
+    /** @return list<array{id?: string, type: string, data: array<string, mixed>}> */
     public function getBlocks(): array;
 
-    /** @param array<int, array<string, mixed>> $blocks */
+    /** @param list<array{id?: string, type: string, data: array<string, mixed>}> $blocks */
     public function setBlocks(array $blocks): static;
 
     public function getMetaTitle(): ?string;

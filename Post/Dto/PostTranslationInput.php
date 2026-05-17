@@ -9,9 +9,9 @@ use Aurora\Core\Support\Str;
 final readonly class PostTranslationInput
 {
     /**
-     * @param array<int, array<string, mixed>> $blocks
-     * @param array<string, mixed>             $customFields
-     * @param array<string, mixed>|null        $jsonLd
+     * @param list<array{id?: string, type: string, data: array<string, mixed>}> $blocks       Editor.js native shape
+     * @param array<string, mixed>                                               $customFields
+     * @param array<string, mixed>|null                                          $jsonLd
      */
     public function __construct(
         public ?string $title,

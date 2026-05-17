@@ -20,7 +20,14 @@ abstract class AbstractPostTranslation implements PostTranslationInterface
     #[ORM\Column(length: 255, nullable: true)]
     protected ?string $slug = null;
 
-    /** @var array<int, array<string, mixed>> */
+    /**
+     * Editor.js native shape: ordered list of `{id?, type, data}` entries.
+     * Same shape as Notes\Block::BlockNote — both consume the shared
+     * `AppBlockEditor.vue`. Identity is the Editor.js-generated id;
+     * order is the array order.
+     *
+     * @var list<array{id?: string, type: string, data: array<string, mixed>}>
+     */
     #[ORM\Column(type: 'json')]
     protected array $blocks = [];
 

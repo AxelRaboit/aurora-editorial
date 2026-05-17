@@ -197,6 +197,7 @@ backend:
       jsonLdMustBeObject: Le JSON-LD doit être un objet.
       generateArticle: Générer Article
     featuredImage: Image à la une
+    publish: Publication
     addImage: Ajouter
     slugLock: Verrouiller le slug
     slugUnlock: Modifier le slug
@@ -367,84 +368,15 @@ backend:
     noindex:
       label: Traductions exclues (noindex)
       hint: Traductions de contenus marquées « noindex » et donc absentes du sitemap.
+  # Editor.js — clés génériques (placeholder, toolNames du toolkit
+  # de base, ui, blockTunes, image, quote, mediaText, mediaPicker,
+  # callout) déplacées vers src/Core/translations/messages.fr.yaml.
+  # Ici on garde uniquement ce qui est Editorial-spécifique : le tool
+  # `postsList` et les templates de la PostTemplatesOverlay.
+  # `productGrid` est passé à Ecommerce/translations/messages.fr.yaml.
   editor:
-    placeholder: Commencez à rédiger…
     toolNames:
-      text: Texte
-      heading: Titre
-      list: Liste
-      orderedList: Liste ordonnée
-      unorderedList: Liste non ordonnée
-      checklist: Liste de cases
-      quote: Citation
-      code: Code
-      delimiter: Séparateur
-      table: Tableau
-      image: Image
-      embed: Intégration
-      marker: Marqueur
-      inlineCode: Code inline
-      underline: Souligné
-      strikethrough: Barré
-      textColor: Couleur du texte
-      textBackground: Couleur de fond
-      fontSize: Taille du texte
-      clearFormatting: Effacer le formatage
-      callout: Callout
-      mediaText: Image + Texte
-      twoColumn: 2 Colonnes
       postsList: Liste d'articles
-    ui:
-      blockTunes:
-        toggler:
-          Click to tune: Configurer
-          or drag to move: ou glisser pour déplacer
-      inlineToolbar:
-        converter:
-          Convert to: Convertir en
-      toolbar:
-        toolbox:
-          Add: Ajouter
-      popover:
-        Filter: Filtrer
-        Nothing found: Aucun résultat
-        nothingFoundExtended: Aucun résultat. Essayez un autre terme.
-    blockTunes:
-      delete:
-        Delete: Supprimer
-        Click to delete: Cliquez pour supprimer
-      moveUp:
-        Move up: Déplacer vers le haut
-      moveDown:
-        Move down: Déplacer vers le bas
-    image:
-      captionPlaceholder: Légende…
-    quote:
-      placeholder: Citation…
-      captionPlaceholder: Auteur…
-    mediaText:
-      flipLeft: ⇄ Image à gauche
-      flipRight: ⇄ Image à droite
-      captionPlaceholder: Légende…
-      textPlaceholder: Votre texte…
-      urlPlaceholder: URL de l'image…
-      changeUrl: Changer l'URL
-      confirm: Valider
-      browse: Parcourir
-      actions: Actions
-      or: ou
-      mediaIdPlaceholder: ID média existant…
-      mediaIdNotFound: Média introuvable
-    mediaPicker:
-      title: Choisir un média
-      search: Rechercher par nom ou alt…
-      allFolders: Tous les dossiers
-      empty: Aucun média trouvé
-      loading: Chargement…
-      select: Sélectionner
-    callout:
-      titlePlaceholder: Titre…
-      messagePlaceholder: Message…
     postsList:
       titleLabel: Titre
       postTypeLabel: Type de contenu
@@ -456,13 +388,6 @@ backend:
       searchPlaceholderLabel: Rechercher un article…
       selectedLabel: Articles sélectionnés
       emptyLabel: Aucun article sélectionné
-      noResultsLabel: Aucun résultat
-    productGrid:
-      titleLabel: Titre
-      columnsLabel: Colonnes
-      searchPlaceholderLabel: Rechercher un produit…
-      selectedLabel: Produits sélectionnés
-      emptyLabel: Aucun produit sélectionné
       noResultsLabel: Aucun résultat
     templates:
       title: Choisir un template

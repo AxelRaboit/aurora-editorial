@@ -203,6 +203,7 @@ backend:
       jsonLdMustBeObject: JSON-LD must be an object.
       generateArticle: Generate Article
     featuredImage: Featured image
+    publish: Publish
     addImage: Add
     slugLock: Lock slug
     slugUnlock: Edit slug
@@ -367,84 +368,12 @@ backend:
     noindex:
       label: Excluded translations (noindex)
       hint: Post translations flagged as "noindex" and therefore omitted from the sitemap.
+  # Editor.js — generic keys moved to src/Core/translations/messages.en.yaml.
+  # Editorial keeps only `postsList` (its own tool) and the templates
+  # for PostTemplatesOverlay. `productGrid` belongs to Ecommerce.
   editor:
-    placeholder: Start writing…
     toolNames:
-      text: Text
-      heading: Heading
-      list: List
-      orderedList: Ordered List
-      unorderedList: Unordered List
-      checklist: Checklist
-      quote: Quote
-      code: Code
-      delimiter: Delimiter
-      table: Table
-      image: Image
-      embed: Embed
-      marker: Marker
-      inlineCode: Inline Code
-      underline: Underline
-      strikethrough: Strikethrough
-      textColor: Text Color
-      textBackground: Background Color
-      fontSize: Font Size
-      clearFormatting: Clear formatting
-      callout: Callout
-      mediaText: Image + Text
-      twoColumn: 2 Columns
       postsList: Posts list
-    ui:
-      blockTunes:
-        toggler:
-          Click to tune: Click to tune
-          or drag to move: or drag to move
-      inlineToolbar:
-        converter:
-          Convert to: Convert to
-      toolbar:
-        toolbox:
-          Add: Add
-      popover:
-        Filter: Filter
-        Nothing found: Nothing found
-        nothingFoundExtended: Nothing found. Try searching for something else.
-    blockTunes:
-      delete:
-        Delete: Delete
-        Click to delete: Click to delete
-      moveUp:
-        Move up: Move up
-      moveDown:
-        Move down: Move down
-    image:
-      captionPlaceholder: Caption…
-    quote:
-      placeholder: Quote…
-      captionPlaceholder: Author…
-    mediaText:
-      flipLeft: ⇄ Image left
-      flipRight: ⇄ Image right
-      captionPlaceholder: Caption…
-      textPlaceholder: Your text…
-      urlPlaceholder: Image URL…
-      changeUrl: Change URL
-      confirm: Confirm
-      browse: Browse
-      actions: Actions
-      or: or
-      mediaIdPlaceholder: Existing media ID…
-      mediaIdNotFound: Media not found
-    mediaPicker:
-      title: Choose a media
-      search: Search by name or alt…
-      allFolders: All folders
-      empty: No media found
-      loading: Loading…
-      select: Select
-    callout:
-      titlePlaceholder: Title…
-      messagePlaceholder: Message…
     postsList:
       titleLabel: Title (optional)
       postTypeLabel: Content type
@@ -456,13 +385,6 @@ backend:
       searchPlaceholderLabel: Search a post…
       selectedLabel: Selected posts
       emptyLabel: No post selected
-      noResultsLabel: No results
-    productGrid:
-      titleLabel: Title (optional)
-      columnsLabel: Columns
-      searchPlaceholderLabel: Search a product…
-      selectedLabel: Selected products
-      emptyLabel: No product selected
       noResultsLabel: No results
     templates:
       title: Choose a template
