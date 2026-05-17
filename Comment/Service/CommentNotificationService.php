@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Comment\Service;
 
 use Aurora\Core\Mail\Service\MailService;
-use Aurora\Core\Platform\User\Entity\User;
+use Aurora\Module\Platform\User\Entity\User;
 use Aurora\Module\Editorial\Comment\Entity\CommentInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 

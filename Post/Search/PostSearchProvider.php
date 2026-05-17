@@ -6,7 +6,7 @@ namespace Aurora\Module\Editorial\Post\Search;
 
 use Aurora\Core\Locale\Service\LocaleContextInterface;
 use Aurora\Module\General\Search\Provider\SearchProviderInterface;
-use Aurora\Core\Platform\User\Entity\CoreUserInterface;
+use Aurora\Module\Platform\User\Entity\CoreUserInterface;
 use Aurora\Module\Editorial\Post\Repository\PostRepository;
 
 use function sprintf;

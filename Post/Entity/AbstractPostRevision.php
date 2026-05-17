@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Post\Entity;
 
 use Aurora\Core\Timestampable\TimestampableTrait;
-use Aurora\Core\Platform\User\Entity\User;
+use Aurora\Module\Platform\User\Entity\User;
 use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;

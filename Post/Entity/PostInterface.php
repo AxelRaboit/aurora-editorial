@@ -6,7 +6,7 @@ namespace Aurora\Module\Editorial\Post\Entity;
 
 use Aurora\Module\Media\Library\Entity\MediaInterface;
 use Aurora\Core\Timestampable\TimestampableInterface;
-use Aurora\Core\Platform\User\Entity\User;
+use Aurora\Module\Platform\User\Entity\User;
 use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTermInterface;
 use DateTimeImmutable;
