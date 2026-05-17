@@ -9,7 +9,7 @@ use Aurora\Core\User\Entity\User;
 use Aurora\Module\Editorial\Comment\Entity\CommentInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-final readonly class CommentNotificationService
+readonly class CommentNotificationService
 {
     public function __construct(
         private MailService $mail,
