@@ -9,7 +9,7 @@ use Aurora\Core\Media\Library\Service\MediaUrlGenerator;
 use Aurora\Core\Support\Num;
 use Aurora\Module\Ecommerce\Listing\Entity\ListingInterface;
 use Aurora\Module\Ecommerce\Listing\Repository\ListingRepository;
-use Aurora\Module\Ecommerce\Service\EcommerceContext;
+use Aurora\Module\Ecommerce\EcommerceContext;
 use Aurora\Module\Editorial\Post\Entity\Post;
 use Aurora\Module\Editorial\Post\Entity\PostTranslation;
 use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;

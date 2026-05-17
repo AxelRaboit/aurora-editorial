@@ -10,7 +10,7 @@ use Aurora\Core\Module\Nav\NavItem;
 use Aurora\Core\Module\Nav\NavPermission;
 use Aurora\Core\Module\Nav\NavSection;
 use Aurora\Core\Configuration\Setting\Enum\ModuleParameterEnum;
-use Aurora\Module\Editorial\Service\EditorialContext;
+use Aurora\Module\Editorial\EditorialContext;
 
 final readonly class EditorialModule implements ModuleInterface, ModuleToggleProviderInterface
 {
