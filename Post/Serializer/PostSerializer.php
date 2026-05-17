@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Post\Serializer;
 
 use Aurora\Core\Locale\Service\LocaleContextInterface;
-use Aurora\Core\Media\Library\Service\MediaUrlGenerator;
+use Aurora\Module\Media\Library\Service\MediaUrlGenerator;
 use Aurora\Module\Editorial\Post\Entity\PostInterface;
 use DateTimeInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Comment\View;
 
-use Aurora\Core\Configuration\Setting\Enum\ApplicationParameterEnum;
-use Aurora\Core\Configuration\Setting\Repository\SettingRepository;
+use Aurora\Module\Configuration\Setting\Enum\ApplicationParameterEnum;
+use Aurora\Module\Configuration\Setting\Repository\SettingRepository;
 use Aurora\Module\Editorial\Comment\Repository\CommentRepository;
 
 /**

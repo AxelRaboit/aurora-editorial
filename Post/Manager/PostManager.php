@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Post\Manager;
 
 use Aurora\Module\Dev\Audit\Service\AuditLogger;
-use Aurora\Core\Media\Library\Repository\MediaRepository;
+use Aurora\Module\Media\Library\Repository\MediaRepository;
 use Aurora\Core\Sequence\SequenceGenerator;
-use Aurora\Core\Configuration\Setting\Enum\ApplicationParameterEnum;
-use Aurora\Core\Configuration\Setting\Repository\SettingRepository;
+use Aurora\Module\Configuration\Setting\Enum\ApplicationParameterEnum;
+use Aurora\Module\Configuration\Setting\Repository\SettingRepository;
 use Aurora\Core\Platform\User\Entity\User;
 use Aurora\Core\Platform\User\Enum\UserRoleEnum;
 use Aurora\Module\Editorial\Post\Dto\PostInputInterface;

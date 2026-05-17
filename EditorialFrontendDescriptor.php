@@ -8,7 +8,7 @@ use Aurora\Core\Frontend\Contract\FrontendInterface;
 use Aurora\Module\Editorial\Menu\Contract\MenuLocationProviderInterface;
 use Aurora\Module\Editorial\Menu\Enum\MenuItemTargetTypeEnum;
 use Aurora\Module\Editorial\Menu\Enum\MenuItemVisibilityEnum;
-use Aurora\Core\Configuration\Setting\Enum\ModuleParameterEnum;
+use Aurora\Module\Configuration\Setting\Enum\ModuleParameterEnum;
 
 final class EditorialFrontendDescriptor implements FrontendInterface, MenuLocationProviderInterface
 {

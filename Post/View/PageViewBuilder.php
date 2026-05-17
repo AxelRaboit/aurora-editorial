@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Post\View;
 
 use Aurora\Core\Frontend\Service\Context;
-use Aurora\Core\Configuration\Theme\Service\ThemeContext;
+use Aurora\Module\Configuration\Theme\Service\ThemeContext;
 use Aurora\Module\Editorial\Post\Entity\PostInterface;
 use Aurora\Module\Editorial\Post\Entity\PostTypeInterface;
 use Aurora\Module\Editorial\Post\Serializer\PostSerializerInterface;
