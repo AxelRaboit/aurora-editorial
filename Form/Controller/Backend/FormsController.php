@@ -83,7 +83,7 @@ final class FormsController extends AbstractController
         return $this->jsonSuccess(['form' => $this->formSerializer->serialize($form)], HttpStatusEnum::Created->value);
     }
 
-    #[Route('/{id}/edit', name: '_update', requirements: ['id' => '\d+|__id__'], methods: [HttpMethodEnum::Post->value])]
+    #[Route('/{id}/update', name: '_update', requirements: ['id' => '\d+|__id__'], methods: [HttpMethodEnum::Post->value])]
     #[IsGranted('editorial.forms.edit')]
     public function update(Request $request, FormInterface $form): JsonResponse
     {

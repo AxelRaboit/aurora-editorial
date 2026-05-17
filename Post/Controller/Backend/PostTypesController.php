@@ -67,7 +67,7 @@ class PostTypesController extends AbstractController
         return $this->jsonSuccess(['postType' => $this->postTypeSerializer->serialize($postType)]);
     }
 
-    #[Route('/{id}/edit', name: '_edit', methods: [HttpMethodEnum::Post->value])]
+    #[Route('/{id}/update', name: '_update', methods: [HttpMethodEnum::Post->value])]
     #[IsGranted('editorial.post_types.edit')]
     public function edit(PostType $postType, Request $request): JsonResponse
     {

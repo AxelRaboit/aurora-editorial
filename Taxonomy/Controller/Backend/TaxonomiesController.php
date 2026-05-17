@@ -68,7 +68,7 @@ class TaxonomiesController extends AbstractController
         return $this->jsonSuccess(['taxonomy' => $this->taxonomySerializer->serializeFull($taxonomy)]);
     }
 
-    #[Route('/{id}/edit', name: '_edit', methods: [HttpMethodEnum::Post->value])]
+    #[Route('/{id}/update', name: '_update', methods: [HttpMethodEnum::Post->value])]
     #[IsGranted('editorial.taxonomies.edit')]
     public function edit(Taxonomy $taxonomy, Request $request): JsonResponse
     {
