@@ -6,8 +6,8 @@ namespace Aurora\Module\Editorial\Comment\Manager;
 
 use Aurora\Core\Dev\Audit\Service\AuditLogger;
 use Aurora\Core\Sequence\SequenceGenerator;
-use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
-use Aurora\Core\Setting\Repository\SettingRepository;
+use Aurora\Core\Configuration\Setting\Enum\ApplicationParameterEnum;
+use Aurora\Core\Configuration\Setting\Repository\SettingRepository;
 use Aurora\Module\Editorial\Comment\Dto\CommentInputInterface;
 use Aurora\Module\Editorial\Comment\Entity\Comment;
 use Aurora\Module\Editorial\Comment\Entity\CommentInterface;

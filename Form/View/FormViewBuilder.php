@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Form\View;
 
 use Aurora\Core\Frontend\Service\Context;
-use Aurora\Core\Theme\Service\ThemeContext;
+use Aurora\Core\Configuration\Theme\Service\ThemeContext;
 use Aurora\Module\Editorial\Form\Entity\FormTranslationInterface;
 use Aurora\Module\Editorial\Form\Serializer\FormSerializerInterface;
 

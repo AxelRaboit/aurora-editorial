@@ -6,8 +6,8 @@ namespace Aurora\Module\Editorial\Comment\Controller\Backend;
 
 use Aurora\Core\Enum\HttpMethodEnum;
 use Aurora\Core\Frontend\Controller\JsonResponseTrait;
-use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
-use Aurora\Core\Setting\Repository\SettingRepository;
+use Aurora\Core\Configuration\Setting\Enum\ApplicationParameterEnum;
+use Aurora\Core\Configuration\Setting\Repository\SettingRepository;
 use Aurora\Core\Validation\Dto\PaginationRequest;
 use Aurora\Module\Editorial\Comment\Entity\CommentInterface;
 use Aurora\Module\Editorial\Comment\Manager\CommentManagerInterface;

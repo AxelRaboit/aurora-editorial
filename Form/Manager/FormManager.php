@@ -6,7 +6,7 @@ namespace Aurora\Module\Editorial\Form\Manager;
 
 use Aurora\Core\Locale\Service\TranslationLocaleSyncerInterface;
 use Aurora\Core\Sequence\SequenceGenerator;
-use Aurora\Core\Setting\Repository\SettingRepository;
+use Aurora\Core\Configuration\Setting\Repository\SettingRepository;
 use Aurora\Module\Editorial\Form\Dto\FormFieldInputInterface;
 use Aurora\Module\Editorial\Form\Dto\FormInputInterface;
 use Aurora\Module\Editorial\Form\Entity\Form;

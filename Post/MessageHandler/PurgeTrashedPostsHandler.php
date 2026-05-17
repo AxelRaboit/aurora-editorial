@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\MessageHandler;
 
-use Aurora\Core\Setting\Enum\ApplicationParameterEnum;
-use Aurora\Core\Setting\Repository\SettingRepository;
+use Aurora\Core\Configuration\Setting\Enum\ApplicationParameterEnum;
+use Aurora\Core\Configuration\Setting\Repository\SettingRepository;
 use Aurora\Module\Editorial\Post\Message\PurgeTrashedPostsMessage;
 use Aurora\Module\Editorial\Post\Repository\PostRepository;
 use DateTimeImmutable;
