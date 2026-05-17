@@ -23,7 +23,7 @@ use Throwable;
  *   "fields": [{"label": "Nom", "value": "Pierre"}]
  * }
  */
-final readonly class FormWebhookService
+readonly class FormWebhookService
 {
     public function __construct(
         private HttpClientInterface $httpClient,

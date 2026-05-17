@@ -11,7 +11,7 @@ use Aurora\Module\Editorial\Form\Entity\FormSubmissionInterface;
 use Aurora\Module\Editorial\Form\Entity\FormTranslationInterface;
 use Aurora\Module\Editorial\Form\Enum\FormFieldTypeEnum;
 
-final readonly class FormNotificationService
+readonly class FormNotificationService
 {
     public function __construct(private MailService $mail) {}
 
