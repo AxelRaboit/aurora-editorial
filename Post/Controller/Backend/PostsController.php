@@ -50,6 +50,22 @@ class PostsController extends AbstractController
         private readonly PostAccessService $postAccessService,
     ) {}
 
+    #[Route('/new', name: '_new', methods: [HttpMethodEnum::Get->value])]
+    #[IsGranted('editorial.posts.create')]
+    public function new(): Response
+    {
+        return $this->render('@Editorial/backend/posts/edit.html.twig', $this->viewBuilder->editView(null));
+    }
+
+    #[Route('/{id}/edit', name: '_edit', requirements: ['id' => '\d+|__id__'], methods: [HttpMethodEnum::Get->value])]
+    #[IsGranted('editorial.posts.edit')]
+    public function editPage(Post $post): Response
+    {
+        $this->denyAccessUnlessGranted(PostVoter::EDIT, $post);
+
+        return $this->render('@Editorial/backend/posts/edit.html.twig', $this->viewBuilder->editView($post));
+    }
+
     #[Route('', name: '', methods: [HttpMethodEnum::Get->value])]
     public function index(PaginationRequest $pagination, Request $request): Response
     {
@@ -128,9 +144,9 @@ class PostsController extends AbstractController
         return $this->jsonSuccess(['post' => $this->postSerializer->serialize($post)]);
     }
 
-    #[Route('/{id}/edit', name: '_edit', requirements: ['id' => '\d+|__id__'], methods: [HttpMethodEnum::Post->value])]
+    #[Route('/{id}/update', name: '_update', requirements: ['id' => '\d+|__id__'], methods: [HttpMethodEnum::Post->value])]
     #[IsGranted('editorial.posts.edit')]
-    public function edit(Post $post, Request $request): JsonResponse
+    public function update(Post $post, Request $request): JsonResponse
     {
         $this->denyAccessUnlessGranted(PostVoter::EDIT, $post);
 
