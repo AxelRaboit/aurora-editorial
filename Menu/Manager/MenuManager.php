@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Menu\Manager;
 
+use Aurora\Core\Sequence\SequenceGenerator;
+use Aurora\Core\Sequence\SequencePrefixEnum;
+use Aurora\Module\Configuration\Setting\Enum\ApplicationParameterEnum;
+use Aurora\Module\Configuration\Setting\Repository\SettingRepository;
 use Aurora\Module\Dev\Audit\Service\AuditLogger;
 use Aurora\Module\Editorial\Menu\Dto\MenuInputInterface;
 use Aurora\Module\Editorial\Menu\Dto\MenuItemInputInterface;
@@ -17,10 +21,6 @@ use Aurora\Module\Editorial\Menu\Enum\MenuItemTargetTypeEnum;
 use Aurora\Module\Editorial\Menu\Repository\MenuItemRepository;
 use Aurora\Module\Editorial\Menu\Repository\MenuRepository;
 use Aurora\Module\Editorial\Menu\Service\MenuLocationRegistry;
-use Aurora\Core\Sequence\SequenceGenerator;
-use Aurora\Core\Sequence\SequencePrefixEnum;
-use Aurora\Module\Configuration\Setting\Enum\ApplicationParameterEnum;
-use Aurora\Module\Configuration\Setting\Repository\SettingRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Menu\Entity;
 
+use Aurora\Core\Timestampable\TimestampableTrait;
 use Aurora\Module\Editorial\Menu\Enum\MenuItemTargetTypeEnum;
 use Aurora\Module\Editorial\Menu\Enum\MenuItemVisibilityEnum;
-use Aurora\Core\Timestampable\TimestampableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Order;

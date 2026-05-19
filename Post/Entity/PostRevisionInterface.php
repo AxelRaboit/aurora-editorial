@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Entity;
 
-use Aurora\Module\Platform\User\Entity\User;
 use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
+use Aurora\Module\Platform\User\Entity\User;
 use DateTimeImmutable;
 
 interface PostRevisionInterface

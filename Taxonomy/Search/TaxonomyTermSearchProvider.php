@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Taxonomy\Search;
 
 use Aurora\Core\Locale\Service\LocaleContextInterface;
+use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyTermRepository;
 use Aurora\Module\General\Search\Provider\SearchProviderInterface;
 use Aurora\Module\Platform\User\Entity\CoreUserInterface;
-use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyTermRepository;
 
 use function sprintf;
 

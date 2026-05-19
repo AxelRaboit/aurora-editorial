@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Serializer;
 
-use Aurora\Module\Platform\User\Entity\User;
 use Aurora\Module\Editorial\Post\Entity\PostRevisionInterface;
+use Aurora\Module\Platform\User\Entity\User;
 use DateTimeInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 
