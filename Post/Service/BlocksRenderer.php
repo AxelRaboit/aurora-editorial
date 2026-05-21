@@ -186,8 +186,14 @@ final readonly class BlocksRenderer
 
     private function renderList(array $data): string
     {
-        $style = 'ordered' === ($data['style'] ?? 'unordered') ? 'ol' : 'ul';
+        $style = (string) ($data['style'] ?? 'unordered');
         $items = is_array($data['items'] ?? null) ? $data['items'] : [];
+
+        if ('checklist' === $style) {
+            return $this->renderChecklistItems($items);
+        }
+
+        $tag = 'ordered' === $style ? 'ol' : 'ul';
         $itemsHtml = '';
         foreach ($items as $item) {
             if (is_string($item)) {
@@ -197,20 +203,35 @@ final readonly class BlocksRenderer
             }
         }
 
-        return sprintf('<%s>%s</%s>', $style, $itemsHtml, $style);
+        return sprintf('<%s>%s</%s>', $tag, $itemsHtml, $tag);
     }
 
+    /**
+     * Legacy: blocks saved with the standalone @editorjs/checklist package
+     * before it was unified into @editorjs/list v2.
+     */
     private function renderChecklist(array $data): string
     {
         $items = is_array($data['items'] ?? null) ? $data['items'] : [];
+
+        return $this->renderChecklistItems($items);
+    }
+
+    /**
+     * Renders checkbox items for both list shapes:
+     *   - @editorjs/list v2:   { content, meta: { checked } }
+     *   - @editorjs/checklist: { text, checked }
+     */
+    private function renderChecklistItems(array $items): string
+    {
         $html = '<ul class="checklist">';
         foreach ($items as $item) {
             if (!is_array($item)) {
                 continue;
             }
 
-            $text = $this->safeHtml($item['text'] ?? '');
-            $checked = ($item['checked'] ?? false) ? 'checked' : '';
+            $text = $this->safeHtml($item['content'] ?? $item['text'] ?? '');
+            $checked = ((bool) ($item['meta']['checked'] ?? $item['checked'] ?? false)) ? 'checked' : '';
             $html .= sprintf('<li><input type="checkbox" disabled %s> %s</li>', $checked, $text);
         }
 
