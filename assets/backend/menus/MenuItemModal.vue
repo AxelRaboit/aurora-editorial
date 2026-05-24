@@ -53,7 +53,7 @@ function close() { emit("close"); }
     <AppModal
         :show="show"
         max-width="lg"
-        :title="editing ? t('backend.menus.editItem') : t('backend.menus.addItem')"
+        :title="editing ? t('backend.menus.edit_item') : t('backend.menus.add_item')"
         :icon="editing ? Pencil : Menu"
         :closeable="false"
         v-on:close="close"
@@ -62,7 +62,7 @@ function close() { emit("close"); }
             <AppMultiselect
                 v-model="form.targetType"
                 :options="targetTypeOptions"
-                :label="t('backend.menus.targetType')"
+                :label="t('backend.menus.target_type')"
                 :allow-empty="false"
                 :searchable="false"
             />
@@ -75,7 +75,7 @@ function close() { emit("close"); }
                     v-if="postTypeOptions.length"
                     v-model="postTypeFilter"
                     :options="postTypeOptions.map((pt) => ({ value: pt.id, label: pt.label }))"
-                    :placeholder="t('backend.menus.allTypes')"
+                    :placeholder="t('backend.menus.all_types')"
                     track-by="value"
                 />
                 <div v-if="form.targetId && targetLabel" class="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface-2 border border-line text-sm">
@@ -89,7 +89,7 @@ function close() { emit("close"); }
                     <div class="relative">
                         <AppInput
                             v-model="pickerQuery"
-                            :placeholder="t('backend.menus.searchPostsPlaceholder')"
+                            :placeholder="t('backend.menus.search_posts_placeholder')"
                             v-on:input="debouncedSearch"
                             v-on:focus="onPickerFocus"
                         >
@@ -120,7 +120,7 @@ function close() { emit("close"); }
                     v-if="taxonomyOptions.length"
                     v-model="taxonomyFilter"
                     :options="taxonomyOptions.map((tx) => ({ value: tx.id, label: tx.label }))"
-                    :placeholder="t('backend.menus.allTaxonomies')"
+                    :placeholder="t('backend.menus.all_taxonomies')"
                     track-by="value"
                 />
                 <div v-if="form.targetId && targetLabel" class="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface-2 border border-line text-sm">
@@ -134,7 +134,7 @@ function close() { emit("close"); }
                     <div class="relative">
                         <AppInput
                             v-model="pickerQuery"
-                            :placeholder="t('backend.menus.searchTermsPlaceholder')"
+                            :placeholder="t('backend.menus.search_terms_placeholder')"
                             v-on:input="debouncedSearch"
                             v-on:focus="onPickerFocus"
                         >
@@ -171,7 +171,7 @@ function close() { emit("close"); }
             <AppInput
                 v-else-if="form.targetType === 'custom_url'"
                 v-model="form.customUrl"
-                :label="t('backend.menus.customUrl')"
+                :label="t('backend.menus.custom_url')"
                 placeholder="https://… or /path"
                 :error="errors.customUrl"
                 required
@@ -181,7 +181,7 @@ function close() { emit("close"); }
                 <label class="block text-xs font-semibold text-secondary uppercase tracking-wide">
                     {{ t("backend.menus.translations") }}
                 </label>
-                <p class="text-xs text-muted">{{ t("backend.menus.translationsHint") }}</p>
+                <p class="text-xs text-muted">{{ t("backend.menus.translations_hint") }}</p>
                 <div class="flex gap-1 flex-wrap">
                     <AppTab
                         v-for="locale in locales"
@@ -198,7 +198,7 @@ function close() { emit("close"); }
                 </div>
                 <AppInput
                     :model-value="form.translations[activeLocale] ?? ''"
-                    :placeholder="t('backend.menus.translationPlaceholder')"
+                    :placeholder="t('backend.menus.translation_placeholder')"
                     :error="errors.translations"
                     v-on:update:model-value="setTranslation(activeLocale, $event)"
                 />
@@ -214,12 +214,12 @@ function close() { emit("close"); }
                 />
                 <AppInput
                     v-model="form.cssClass"
-                    :label="t('backend.menus.cssClass')"
+                    :label="t('backend.menus.css_class')"
                     placeholder="font-bold text-accent-500"
                 />
             </div>
 
-            <AppCheckbox v-model="form.openInNewTab" :label="t('backend.menus.openInNewTab')" />
+            <AppCheckbox v-model="form.openInNewTab" :label="t('backend.menus.open_in_new_tab')" />
         </form>
         <template #footer>
             <AppModalFooter>

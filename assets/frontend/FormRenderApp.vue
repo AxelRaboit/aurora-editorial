@@ -79,7 +79,7 @@ const { submitting, submitted, handleSubmit } =
                         v-else-if="field.type === 'select'"
                         v-model="formData[field.id]"
                         :label="field.label"
-                        :placeholder="t('shared.form.selectPlaceholder')"
+                        :placeholder="t('shared.form.select_placeholder')"
                         :required="field.required"
                         :error="errors[field.id] ?? ''"
                     >

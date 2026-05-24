@@ -134,7 +134,7 @@ const { uploading, inputRef: mediaInput, uploadFromEvent: uploadMedia } = useIma
                     :loading="uploading"
                     v-on:change="uploadMedia"
                 >
-                    <Upload class="w-3.5 h-3.5" :stroke-width="2" /> {{ t("backend.posts.customField.upload") }}
+                    <Upload class="w-3.5 h-3.5" :stroke-width="2" /> {{ t("backend.posts.custom_field.upload") }}
                 </AppFilePickerButton>
                 <AppButton v-if="modelValue" variant="ghost" size="sm" v-on:click="update(null)">
                     <X class="w-3.5 h-3.5" :stroke-width="2" />
@@ -152,7 +152,7 @@ const { uploading, inputRef: mediaInput, uploadFromEvent: uploadMedia } = useIma
                     class="flex items-center gap-2 px-3 py-1.5 rounded-md bg-surface border border-line/60"
                 >
                     <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium" :class="statusBadge(result.status)">
-                        {{ t("backend.stats.postStatus." + result.status) }}
+                        {{ t("backend.stats.post_status." + result.status) }}
                     </span>
                     <div class="flex-1 min-w-0">
                         <div class="text-sm text-primary truncate">{{ result.title ?? "(—)" }}</div>
@@ -167,7 +167,7 @@ const { uploading, inputRef: mediaInput, uploadFromEvent: uploadMedia } = useIma
             <div v-if="isMultiple || resolved.length === 0" class="relative">
                 <AppInput
                     v-model="search"
-                    :placeholder="t('backend.posts.relatedPosts.searchPlaceholder')"
+                    :placeholder="t('backend.posts.relatedPosts.search_placeholder')"
                     v-on:focus="open = true; runSearch()"
                     v-on:blur="setTimeout(() => { open = false; }, 150)"
                 />
@@ -182,7 +182,7 @@ const { uploading, inputRef: mediaInput, uploadFromEvent: uploadMedia } = useIma
                         v-on:mousedown.prevent="addReference(result)"
                     >
                         <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium" :class="statusBadge(result.status)">
-                            {{ t("backend.stats.postStatus." + result.status) }}
+                            {{ t("backend.stats.post_status." + result.status) }}
                         </span>
                         <div class="flex-1 min-w-0">
                             <div class="text-sm text-primary truncate">{{ result.title ?? "(—)" }}</div>

@@ -1,12 +1,12 @@
 {% extends '@Core/backend/layout.html.twig' %}
 
-{% block title %}{{ 'backend.nav.postTypes'|trans }} - {{ parent() }}{% endblock %}
+{% block title %}{{ 'backend.nav.post_types'|trans }} - {{ parent() }}{% endblock %}
 
 {% block page_header_slot %}
     {{ include('@Shared/components/page_header.html.twig', {
         crumbs: [
             {label: 'backend.nav.sections.editorial'|trans},
-            {label: 'backend.nav.postTypes'|trans},
+            {label: 'backend.nav.post_types'|trans},
         ],
     }) }}
 {% endblock %}

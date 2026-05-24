@@ -94,7 +94,7 @@ const {
 
     <div v-else class="space-y-4 lg:space-y-6">
         <AppMessage v-if="trashed" variant="trash">
-            {{ t("backend.posts.trashedBanner") }}
+            {{ t("backend.posts.trashed_banner") }}
         </AppMessage>
 
         <AppMessage v-if="conflict" variant="warning">
@@ -102,15 +102,15 @@ const {
             <template #actions>
                 <AppButton variant="secondary" size="sm" v-on:click="openRemoteVersion">
                     <Eye class="w-3.5 h-3.5" :stroke-width="2" />
-                    {{ t("backend.posts.conflictCompare") }}
+                    {{ t("backend.posts.conflict_compare") }}
                 </AppButton>
                 <AppButton variant="primary" size="sm" :loading="remoteLoading" v-on:click="openMerge">
                     <Merge class="w-3.5 h-3.5" :stroke-width="2" />
-                    {{ t("backend.posts.conflictMerge") }}
+                    {{ t("backend.posts.conflict_merge") }}
                 </AppButton>
                 <AppButton variant="danger" size="sm" :loading="loading" v-on:click="forceSave">
                     <Save class="w-3.5 h-3.5" :stroke-width="2" />
-                    {{ t("backend.posts.conflictForce") }}
+                    {{ t("backend.posts.conflict_force") }}
                 </AppButton>
             </template>
         </AppMessage>
@@ -146,7 +146,7 @@ const {
                     variant="secondary"
                     size="md"
                     class="w-full sm:w-auto"
-                    :title="isDirty ? t('backend.posts.previewSavedHint') : null"
+                    :title="isDirty ? t('backend.posts.preview_saved_hint') : null"
                     v-on:click="openPreview"
                 >
                     <Eye class="w-4 h-4" :stroke-width="2" />
@@ -192,14 +192,14 @@ const {
                     <AppInput
                         v-model="form.translations[activeLocale].title"
                         :label="t('backend.posts.title')"
-                        :placeholder="t('backend.posts.titlePlaceholder')"
+                        :placeholder="t('backend.posts.title_placeholder')"
                     />
                     <div class="flex items-end gap-2">
                         <div class="flex-1">
                             <AppInput
                                 v-model="form.translations[activeLocale].slug"
                                 :label="t('backend.posts.slug')"
-                                :placeholder="t('backend.posts.slugPlaceholder')"
+                                :placeholder="t('backend.posts.slug_placeholder')"
                                 :readonly="slugLocked"
                             />
                         </div>
@@ -207,7 +207,7 @@ const {
                             variant="secondary"
                             size="none"
                             class="p-2 mb-0.5 shrink-0"
-                            :title="slugLocked ? t('backend.posts.slugUnlock') : t('backend.posts.slugLock')"
+                            :title="slugLocked ? t('backend.posts.slug_unlock') : t('backend.posts.slug_lock')"
                             v-on:click="toggleSlugLock"
                         >
                             <Lock v-if="slugLocked" class="w-4 h-4" :stroke-width="2" />
@@ -223,7 +223,7 @@ const {
 
                 <!-- Per-PostType custom fields. -->
                 <div v-if="customFieldsDefs.length" class="border-t border-line pt-4 space-y-3">
-                    <p class="text-xs font-semibold text-secondary uppercase tracking-wide">{{ t("backend.posts.customFields") }}</p>
+                    <p class="text-xs font-semibold text-secondary uppercase tracking-wide">{{ t("backend.posts.custom_fields") }}</p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <PostCustomField
                             v-for="field in customFieldsDefs"
@@ -269,14 +269,14 @@ const {
                         :enable-time="true"
                     />
                     <p v-if="publishedAt" class="text-xs text-muted">
-                        {{ t("backend.posts.publishedAt") }} {{ formatDateTime(publishedAt) }}
+                        {{ t("backend.posts.published_at") }} {{ formatDateTime(publishedAt) }}
                     </p>
                     <p v-if="postId" class="text-xs text-muted font-mono">ID : {{ postId }}</p>
                 </section>
 
                 <!-- Post type. -->
                 <section v-if="postTypes.length" class="rounded-xl border border-line bg-surface p-4 space-y-3">
-                    <h3 class="text-xs font-semibold text-secondary uppercase tracking-wide">{{ t("backend.posts.postType") }}</h3>
+                    <h3 class="text-xs font-semibold text-secondary uppercase tracking-wide">{{ t("backend.posts.post_type") }}</h3>
                     <AppMultiselect
                         v-model="form.postTypeId"
                         :options="postTypeOptions"
@@ -300,14 +300,14 @@ const {
                 <section class="rounded-xl border border-line bg-surface p-4">
                     <AppToggle
                         :model-value="form.commentsEnabled"
-                        :label="t('backend.posts.commentsEnabled')"
+                        :label="t('backend.posts.comments_enabled')"
                         v-on:update:model-value="form.commentsEnabled = $event"
                     />
                 </section>
 
                 <!-- Featured image. -->
                 <section class="rounded-xl border border-line bg-surface p-4 space-y-3">
-                    <h3 class="text-xs font-semibold text-secondary uppercase tracking-wide">{{ t("backend.posts.featuredImage") }}</h3>
+                    <h3 class="text-xs font-semibold text-secondary uppercase tracking-wide">{{ t("backend.posts.featured_image") }}</h3>
                     <PostFeaturedImagePanel
                         v-model:media-id="form.featuredMediaId"
                         v-model:media-url="featuredMediaUrl"
@@ -317,7 +317,7 @@ const {
 
                 <!-- Related posts. -->
                 <section class="rounded-xl border border-line bg-surface p-4 space-y-3">
-                    <h3 class="text-xs font-semibold text-secondary uppercase tracking-wide">{{ t("backend.posts.relatedPosts.title") }}</h3>
+                    <h3 class="text-xs font-semibold text-secondary uppercase tracking-wide">{{ t("backend.posts.related_posts.title") }}</h3>
 
                     <div v-if="relatedPosts.length" class="flex flex-col gap-1.5">
                         <div
@@ -326,7 +326,7 @@ const {
                             class="flex items-center gap-2 px-3 py-2 rounded-md bg-surface-2 border border-line/60"
                         >
                             <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium" :class="statusBadge(related.status)">
-                                {{ t("backend.stats.postStatus." + related.status) }}
+                                {{ t("backend.stats.post_status." + related.status) }}
                             </span>
                             <div class="flex-1 min-w-0">
                                 <div class="text-sm text-primary truncate">{{ related.title ?? "(—)" }}</div>
@@ -341,7 +341,7 @@ const {
                     <div class="relative">
                         <AppInput
                             v-model="relatedSearchQuery"
-                            :placeholder="t('backend.posts.relatedPosts.searchPlaceholder')"
+                            :placeholder="t('backend.posts.relatedPosts.search_placeholder')"
                             v-on:focus="relatedSearchOpen = true"
                             v-on:blur="setTimeout(() => { relatedSearchOpen = false; }, 150)"
                         />
@@ -356,7 +356,7 @@ const {
                                 v-on:mousedown.prevent="addRelatedPost(result)"
                             >
                                 <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium" :class="statusBadge(result.status)">
-                                    {{ t("backend.stats.postStatus." + result.status) }}
+                                    {{ t("backend.stats.post_status." + result.status) }}
                                 </span>
                                 <div class="flex-1 min-w-0">
                                     <div class="text-sm text-primary truncate">{{ result.title ?? "(—)" }}</div>

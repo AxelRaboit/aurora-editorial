@@ -95,7 +95,7 @@ const visibleEntries = computed(() => {
 
 function apply() {
     if (totalUnresolved.value > 0) {
-        toast.error(t("backend.posts.merge.unresolvedError"));
+        toast.error(t("backend.posts.merge.unresolved_error"));
         return;
     }
     const resolved = {};
@@ -124,7 +124,7 @@ function apply() {
                         <p class="text-xs text-muted">{{ t("backend.posts.merge.subtitle") }}</p>
                     </div>
                     <span v-if="totalUnresolved" class="px-2.5 py-1 rounded-full text-xs font-medium bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200">
-                        {{ t("backend.posts.merge.unresolvedCount", { count: totalUnresolved }) }}
+                        {{ t("backend.posts.merge.unresolved_count", { count: totalUnresolved }) }}
                     </span>
                     <AppButton variant="ghost" size="md" v-on:click="$emit('close')">
                         <X class="w-4 h-4" :stroke-width="2" />
@@ -167,27 +167,27 @@ function apply() {
                     </span>
                     <div class="flex-1" />
                     <AppTextLinkButton class="font-medium" v-on:click="showUnchanged = !showUnchanged">
-                        {{ showUnchanged ? t("backend.posts.merge.hideUnchanged") : t("backend.posts.merge.showUnchanged") }}
+                        {{ showUnchanged ? t("backend.posts.merge.hide_unchanged") : t("backend.posts.merge.show_unchanged") }}
                     </AppTextLinkButton>
                     <AppTextLinkButton
                         class="font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                         :disabled="summaryFor(activeLocale).conflicts === 0"
                         v-on:click="acceptAll(activeLocale, 'local')"
                     >
-                        {{ t("backend.posts.merge.acceptAllMine") }}
+                        {{ t("backend.posts.merge.accept_all_mine") }}
                     </AppTextLinkButton>
                     <AppTextLinkButton
                         class="font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                         :disabled="summaryFor(activeLocale).conflicts === 0"
                         v-on:click="acceptAll(activeLocale, 'remote')"
                     >
-                        {{ t("backend.posts.merge.acceptAllTheirs") }}
+                        {{ t("backend.posts.merge.accept_all_theirs") }}
                     </AppTextLinkButton>
                 </div>
 
                 <div class="flex-1 overflow-y-auto scrollbar-thin px-6 py-4">
                     <div v-if="visibleEntries.length === 0" class="text-center py-12 text-muted text-sm">
-                        {{ t("backend.posts.merge.nothingToShow") }}
+                        {{ t("backend.posts.merge.nothing_to_show") }}
                     </div>
 
                     <MergeBlockEntry

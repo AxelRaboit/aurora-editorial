@@ -157,7 +157,7 @@ const { termMap, postTermLabels } = usePostTermLabels({ parsedTaxonomies, defaul
 
             <template v-if="!trashed">
                 <div v-if="visibleTaxonomies.length" class="flex flex-col gap-3">
-                    <p class="text-xs font-medium text-muted uppercase tracking-wide px-2">{{ t('backend.posts.filterByTerm') }}</p>
+                    <p class="text-xs font-medium text-muted uppercase tracking-wide px-2">{{ t('backend.posts.filter_by_term') }}</p>
                     <PostTaxonomiesPanel
                         :taxonomies="visibleTaxonomies"
                         :selected-term-ids="selectedTermIds"
@@ -176,7 +176,7 @@ const { termMap, postTermLabels } = usePostTermLabels({ parsedTaxonomies, defaul
                     v-on:click="clearFilters"
                 >
                     <X class="w-3 h-3" :stroke-width="2" />
-                    {{ t('backend.posts.clearFilters') }}
+                    {{ t('backend.posts.clear_filters') }}
                 </AppButton>
             </template>
         </nav>
@@ -201,7 +201,7 @@ const { termMap, postTermLabels } = usePostTermLabels({ parsedTaxonomies, defaul
             <AppListToolbar>
                 <AppSearchInput
                     v-model="searchInput"
-                    :placeholder="t('backend.posts.searchPlaceholder')"
+                    :placeholder="t('backend.posts.search_placeholder')"
                     v-on:search="onSearch"
                 />
                 <template #actions>
@@ -212,7 +212,7 @@ const { termMap, postTermLabels } = usePostTermLabels({ parsedTaxonomies, defaul
                                 size="none"
                                 class="flex items-center justify-center w-8 h-8 transition-colors"
                                 :class="viewMode === 'compact' ? 'bg-surface-2 text-primary' : 'text-muted hover:text-secondary'"
-                                :title="t('backend.posts.viewCompact')"
+                                :title="t('backend.posts.view_compact')"
                                 v-on:click="setViewMode('compact')"
                             >
                                 <List class="w-4 h-4" :stroke-width="2" />
@@ -222,7 +222,7 @@ const { termMap, postTermLabels } = usePostTermLabels({ parsedTaxonomies, defaul
                                 size="none"
                                 class="flex items-center justify-center w-8 h-8 border-l border-line transition-colors"
                                 :class="viewMode === 'detailed' ? 'bg-surface-2 text-primary' : 'text-muted hover:text-secondary'"
-                                :title="t('backend.posts.viewDetailed')"
+                                :title="t('backend.posts.view_detailed')"
                                 v-on:click="setViewMode('detailed')"
                             >
                                 <LayoutList class="w-4 h-4" :stroke-width="2" />
@@ -247,7 +247,7 @@ const { termMap, postTermLabels } = usePostTermLabels({ parsedTaxonomies, defaul
                             v-on:click="confirmEmptyTrash = true"
                         >
                             <Trash2 class="w-4 h-4" :stroke-width="2" />
-                            {{ t("backend.posts.emptyTrash") }}
+                            {{ t("backend.posts.empty_trash") }}
                         </AppButton>
                     </div>
                 </template>
@@ -261,7 +261,7 @@ const { termMap, postTermLabels } = usePostTermLabels({ parsedTaxonomies, defaul
                     :multiple="true"
                     :allow-empty="true"
                     :searchable="false"
-                    :placeholder="t('backend.posts.filterByType')"
+                    :placeholder="t('backend.posts.filter_by_type')"
                     class="min-w-40 flex-1 sm:flex-none"
                     v-on:update:model-value="onPostTypeFilterChange"
                 />
@@ -271,7 +271,7 @@ const { termMap, postTermLabels } = usePostTermLabels({ parsedTaxonomies, defaul
                     :multiple="true"
                     :allow-empty="true"
                     :searchable="false"
-                    :placeholder="t('backend.posts.filterByStatus')"
+                    :placeholder="t('backend.posts.filter_by_status')"
                     class="min-w-40 flex-1 sm:flex-none"
                     v-on:update:model-value="onStatusFilterChange"
                 />
@@ -283,7 +283,7 @@ const { termMap, postTermLabels } = usePostTermLabels({ parsedTaxonomies, defaul
                     v-on:click="clearFilters"
                 >
                     <X class="w-3 h-3" :stroke-width="2" />
-                    {{ t('backend.posts.clearFilters') }}
+                    {{ t('backend.posts.clear_filters') }}
                 </AppButton>
             </div>
 
@@ -305,7 +305,7 @@ const { termMap, postTermLabels } = usePostTermLabels({ parsedTaxonomies, defaul
                                 </div>
                             </div>
                             <AppBadge :color="post.trashed ? 'rose' : statusBadgeColor(post.status)" class="shrink-0">
-                                {{ post.trashed ? t("backend.posts.statusTrashed") : t("backend.stats.postStatus." + post.status) }}
+                                {{ post.trashed ? t("backend.posts.status_trashed") : t("backend.stats.post_status." + post.status) }}
                             </AppBadge>
                         </div>
                         <div class="flex items-center justify-between pt-2 border-t border-line/40">
@@ -334,9 +334,9 @@ const { termMap, postTermLabels } = usePostTermLabels({ parsedTaxonomies, defaul
                             <tr class="bg-surface-2/50 border-b border-line/40">
                                 <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted hidden lg:table-cell">ID</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">{{ t("backend.posts.title") }}</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted hidden md:table-cell">{{ t("backend.posts.postType") }}</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted hidden md:table-cell">{{ t("backend.posts.post_type") }}</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">{{ t("backend.posts.status") }}</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted hidden lg:table-cell">{{ t("backend.tags.createdAt") }}</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted hidden lg:table-cell">{{ t("backend.tags.created_at") }}</th>
                                 <slot name="extra-headers" />
                                 <th class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-muted">{{ t("backend.tags.actions") }}</th>
                             </tr>
@@ -366,7 +366,7 @@ const { termMap, postTermLabels } = usePostTermLabels({ parsedTaxonomies, defaul
                                 <td class="px-6 py-3 text-sm text-secondary hidden md:table-cell">{{ post.postType?.label ?? "-" }}</td>
                                 <td class="px-6 py-3">
                                     <AppBadge :color="post.trashed ? 'rose' : statusBadgeColor(post.status)">
-                                        {{ post.trashed ? t("backend.posts.statusTrashed") : t("backend.stats.postStatus." + post.status) }}
+                                        {{ post.trashed ? t("backend.posts.status_trashed") : t("backend.stats.post_status." + post.status) }}
                                     </AppBadge>
                                 </td>
                                 <td class="px-6 py-3 text-sm text-secondary hidden lg:table-cell">{{ formatDateShort(post.createdAt) }}</td>
@@ -428,14 +428,14 @@ const { termMap, postTermLabels } = usePostTermLabels({ parsedTaxonomies, defaul
                 :icon="Trash2"
                 v-on:close="confirmEmptyTrash = false"
             >
-                <p class="text-sm text-primary">{{ t("backend.posts.emptyTrashConfirm") }}</p>
+                <p class="text-sm text-primary">{{ t("backend.posts.empty_trash_confirm") }}</p>
                 <template #footer>
                     <AppModalFooter>
                         <AppButton variant="secondary" size="md" v-on:click="confirmEmptyTrash = false">
                             <X class="w-3.5 h-3.5" :stroke-width="2" /> {{ t("shared.common.cancel") }}
                         </AppButton>
                         <AppButton variant="danger" size="md" :loading="emptyingTrash" v-on:click="emptyTrash">
-                            <Trash2 class="w-3.5 h-3.5" :stroke-width="2" /> {{ t("backend.posts.emptyTrash") }}
+                            <Trash2 class="w-3.5 h-3.5" :stroke-width="2" /> {{ t("backend.posts.empty_trash") }}
                         </AppButton>
                     </AppModalFooter>
                 </template>

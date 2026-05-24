@@ -104,7 +104,7 @@ function apply(template) {
                                     leave-to-class="opacity-0"
                                 >
                                     <div v-if="confirmingTemplate?.id === template.id" class="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-surface/95 backdrop-blur-sm rounded-xl p-4">
-                                        <p class="text-sm font-medium text-primary text-center">{{ t("backend.editor.templates.confirmReplace") }}</p>
+                                        <p class="text-sm font-medium text-primary text-center">{{ t("backend.editor.templates.confirm_replace") }}</p>
                                         <div class="flex gap-2">
                                             <AppButton variant="primary" size="md" v-on:click.stop="apply(template)"><Check class="w-3.5 h-3.5" :stroke-width="2" /> {{ t("backend.editor.templates.apply") }}</AppButton>
                                             <AppButton variant="ghost" size="md" v-on:click.stop="confirmingTemplate = null"><X class="w-3.5 h-3.5" :stroke-width="2" /> {{ t("shared.common.cancel") }}</AppButton>
@@ -203,7 +203,7 @@ function apply(template) {
                                             <div v-else class="h-2 rounded-sm bg-surface-3 w-2/3" />
                                         </template>
                                     </div>
-                                    <p v-else class="text-xs text-muted italic">{{ t("backend.editor.templates.emptyContent") }}</p>
+                                    <p v-else class="text-xs text-muted italic">{{ t("backend.editor.templates.empty_content") }}</p>
                                     <p class="text-xs text-muted mt-auto pt-2 border-t border-line">
                                         {{ hoveredTemplate.blocks.length }}
                                         {{ hoveredTemplate.blocks.length > 1 ? t("backend.editor.templates.blocks") : t("backend.editor.templates.block") }}

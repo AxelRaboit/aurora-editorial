@@ -2,35 +2,35 @@ backend:
   menus:
     title: Menus
     empty: No menus yet.
-    createMenu: Create menu
-    editMenu: Edit menu
+    create_menu: Create menu
+    edit_menu: Edit menu
     name: Name
     location: Location
-    locationPlaceholder: 'header, footer, sidemenu…'
+    location_placeholder: 'header, footer, sidemenu…'
     description: Description
     items: Items
-    addItem: Add item
-    itemsEmpty: No items in this menu.
-    selectHint: Select a menu on the left or create a new one.
-    deleteConfirm: 'Delete menu "{name}"? All its items will be removed.'
-    deleteItemConfirm: Delete this menu item?
-    editItem: Edit item
-    targetType: Target type
+    add_item: Add item
+    items_empty: No items in this menu.
+    select_hint: Select a menu on the left or create a new one.
+    delete_confirm: 'Delete menu "{name}"? All its items will be removed.'
+    delete_item_confirm: Delete this menu item?
+    edit_item: Edit item
+    target_type: Target type
     target: Target
-    customUrl: Custom URL
+    custom_url: Custom URL
     translations: Per-language labels
-    translationsHint: Default label is taken from the target. Override per language if needed.
-    translationPlaceholder: Custom label (optional)
+    translations_hint: Default label is taken from the target. Override per language if needed.
+    translation_placeholder: Custom label (optional)
     visibility: Visibility
-    cssClass: CSS classes
-    openInNewTab: Open in a new tab
-    allTypes: All types
-    allTaxonomies: All taxonomies
-    searchPostsPlaceholder: Search a post or page…
-    searchTermsPlaceholder: Search a term…
+    css_class: CSS classes
+    open_in_new_tab: Open in a new tab
+    all_types: All types
+    all_taxonomies: All taxonomies
+    search_posts_placeholder: Search a post or page…
+    search_terms_placeholder: Search a term…
     protected: System
-    protectedHint: Essential menu — cannot be deleted.
-    locationLockedHint: Location is locked for system menus.
+    protected_hint: Essential menu — cannot be deleted.
+    location_locked_hint: Location is locked for system menus.
     errors:
       cycle: Cannot move an item under one of its own descendants.
       translation_required_for_custom_url: At least one language label is required for a custom URL.
@@ -69,13 +69,13 @@ backend:
     themes_description: 'Visual customization (colors, logo, favicon)'
     users: Users
     users_description: 'Manage user accounts, roles and privileges'
-    resizeHint: Drag to resize — double-click to reset
-    filterNav: Filter menu…
-    filterNavEmpty: No items found
-    viewSite: View site
+    resize_hint: Drag to resize — double-click to reset
+    filter_nav: Filter menu…
+    filter_nav_empty: No items found
+    view_site: View site
     logout: Log out
-    lightMode: Light mode
-    darkMode: Dark mode
+    light_mode: Light mode
+    dark_mode: Dark mode
 frontend:
   menu:
     home: Home

@@ -95,7 +95,7 @@ export function useMenuItemForm(props) {
                 );
                 if (data?.success)
                     postTypeOptions.value = [
-                        { id: 0, label: t("backend.menus.allTypes") },
+                        { id: 0, label: t("backend.menus.all_types") },
                         ...data.items,
                     ];
             }
@@ -110,7 +110,7 @@ export function useMenuItemForm(props) {
                 );
                 if (data?.success)
                     taxonomyOptions.value = [
-                        { id: 0, label: t("backend.menus.allTaxonomies") },
+                        { id: 0, label: t("backend.menus.all_taxonomies") },
                         ...data.items,
                     ];
             }

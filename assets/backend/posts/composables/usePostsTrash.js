@@ -22,7 +22,7 @@ export function usePostsTrash(props, removePost, setTrashedFilter) {
             if (!data) return;
             if (data.success) {
                 toast.success(
-                    t("backend.posts.emptyTrashDone", { count: data.count }),
+                    t("backend.posts.empty_trash_done", { count: data.count }),
                 );
                 setTrashedFilter(true);
             } else toast.error(t("shared.common.error"));

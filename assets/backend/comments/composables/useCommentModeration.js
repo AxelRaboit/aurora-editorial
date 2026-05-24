@@ -135,8 +135,8 @@ export function useCommentModeration(paths, initialStats, onRefresh) {
             isModerationEnabled.value = data.moderationEnabled;
             toast.success(
                 data.moderationEnabled
-                    ? t("backend.comments.moderationEnabled")
-                    : t("backend.comments.moderationDisabled"),
+                    ? t("backend.comments.moderation_enabled")
+                    : t("backend.comments.moderation_disabled"),
             );
             pendingToggleModeration.value = false;
         } else {

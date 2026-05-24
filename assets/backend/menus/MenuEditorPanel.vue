@@ -41,7 +41,7 @@ const {
 
 <template>
     <main class="flex-1 min-w-0 space-y-4">
-        <AppNoData v-if="!menu" :message="t('backend.menus.selectHint')" :icon="ListTree" />
+        <AppNoData v-if="!menu" :message="t('backend.menus.select_hint')" :icon="ListTree" />
 
         <div v-else class="space-y-4">
             <!-- Header card — menu meta + edit/delete actions (matches TaxonomiesApp pattern) -->
@@ -87,7 +87,7 @@ const {
                     </AppButton>
                 </div>
 
-                <AppNoData v-if="!menu.items?.length" :message="t('backend.menus.itemsEmpty')" />
+                <AppNoData v-if="!menu.items?.length" :message="t('backend.menus.items_empty')" />
 
                 <div
                     v-else

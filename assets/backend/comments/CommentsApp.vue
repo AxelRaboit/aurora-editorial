@@ -88,7 +88,7 @@ const { statusFilter, viewingComment, tabs, selectTab, statusBadgeColor } = useC
                 v-on:click="pendingToggleModeration = true"
             >
                 <span class="w-2 h-2 rounded-full" :class="isModerationEnabled ? 'bg-white' : 'bg-muted'" />
-                {{ isModerationEnabled ? t("backend.comments.moderationOn") : t("backend.comments.moderationOff") }}
+                {{ isModerationEnabled ? t("backend.comments.moderation_on") : t("backend.comments.moderation_off") }}
             </AppButton>
         </div>
 
@@ -116,7 +116,7 @@ const { statusFilter, viewingComment, tabs, selectTab, statusBadgeColor } = useC
                             <AppIconButton v-if="comment.status !== 'approved' && can('editorial.comments.moderate')" color="emerald" :title="t('backend.comments.approve')" v-on:click="approveComment(comment)">
                                 <Check class="w-4 h-4" :stroke-width="2" />
                             </AppIconButton>
-                            <AppIconButton v-if="comment.status !== 'spam' && can('editorial.comments.moderate')" color="amber" :title="t('backend.comments.markSpam')" v-on:click="confirmSpam(comment)">
+                            <AppIconButton v-if="comment.status !== 'spam' && can('editorial.comments.moderate')" color="amber" :title="t('backend.comments.mark_spam')" v-on:click="confirmSpam(comment)">
                                 <Ban class="w-4 h-4" :stroke-width="2" />
                             </AppIconButton>
                             <AppIconButton v-if="can('editorial.comments.delete')" color="rose" :title="t('shared.common.delete')" v-on:click="confirmDelete(comment)">
@@ -162,7 +162,7 @@ const { statusFilter, viewingComment, tabs, selectTab, statusBadgeColor } = useC
                                     <AppIconButton v-if="comment.status !== 'approved' && can('editorial.comments.moderate')" color="emerald" :title="t('backend.comments.approve')" v-on:click="approveComment(comment)">
                                         <Check class="w-4 h-4" :stroke-width="2" />
                                     </AppIconButton>
-                                    <AppIconButton v-if="comment.status !== 'spam' && can('editorial.comments.moderate')" color="amber" :title="t('backend.comments.markSpam')" v-on:click="confirmSpam(comment)">
+                                    <AppIconButton v-if="comment.status !== 'spam' && can('editorial.comments.moderate')" color="amber" :title="t('backend.comments.mark_spam')" v-on:click="confirmSpam(comment)">
                                         <Ban class="w-4 h-4" :stroke-width="2" />
                                     </AppIconButton>
                                     <AppIconButton v-if="can('editorial.comments.delete')" color="rose" :title="t('shared.common.delete')" v-on:click="confirmDelete(comment)">
@@ -205,7 +205,7 @@ const { statusFilter, viewingComment, tabs, selectTab, statusBadgeColor } = useC
                     <p class="text-sm text-muted">{{ viewingComment ? formatDateTime(viewingComment.createdAt) : '' }}</p>
                 </div>
                 <div v-if="viewingComment?.parentId" class="flex flex-col gap-1.5">
-                    <label class="block text-xs text-secondary uppercase tracking-wide">{{ t('backend.comments.replyTo') }}</label>
+                    <label class="block text-xs text-secondary uppercase tracking-wide">{{ t('backend.comments.reply_to') }}</label>
                     <p class="text-sm text-secondary">{{ viewingComment?.parentAuthorName }}</p>
                 </div>
                 <div class="flex flex-col gap-1.5">
@@ -222,7 +222,7 @@ const { statusFilter, viewingComment, tabs, selectTab, statusBadgeColor } = useC
                     <AppIconButton v-if="viewingComment?.status !== 'approved' && can('editorial.comments.moderate')" color="emerald" :title="t('backend.comments.approve')" v-on:click="approveComment(viewingComment); viewingComment = null">
                         <Check class="w-4 h-4" :stroke-width="2" />
                     </AppIconButton>
-                    <AppIconButton v-if="viewingComment?.status !== 'spam' && can('editorial.comments.moderate')" color="amber" :title="t('backend.comments.markSpam')" v-on:click="confirmSpam(viewingComment); viewingComment = null">
+                    <AppIconButton v-if="viewingComment?.status !== 'spam' && can('editorial.comments.moderate')" color="amber" :title="t('backend.comments.mark_spam')" v-on:click="confirmSpam(viewingComment); viewingComment = null">
                         <Ban class="w-4 h-4" :stroke-width="2" />
                     </AppIconButton>
                     <AppIconButton v-if="can('editorial.comments.delete')" color="rose" :title="t('shared.common.delete')" v-on:click="confirmDelete(viewingComment); viewingComment = null">
@@ -238,18 +238,18 @@ const { statusFilter, viewingComment, tabs, selectTab, statusBadgeColor } = useC
         <AppModal
             :show="pendingToggleModeration"
             max-width="sm"
-            :title="isModerationEnabled ? t('backend.comments.moderationDisableConfirm') : t('backend.comments.moderationEnableConfirm')"
+            :title="isModerationEnabled ? t('backend.comments.moderation_disable_confirm') : t('backend.comments.moderation_enable_confirm')"
             :closeable="false"
             v-on:close="pendingToggleModeration = false"
         >
             <p class="text-sm text-secondary">
-                {{ isModerationEnabled ? t('backend.comments.moderationDisableConfirmDesc') : t('backend.comments.moderationEnableConfirmDesc') }}
+                {{ isModerationEnabled ? t('backend.comments.moderation_disable_confirm_desc') : t('backend.comments.moderation_enable_confirm_desc') }}
             </p>
             <template #footer>
                 <AppModalFooter>
                     <AppButton variant="ghost" size="md" v-on:click="pendingToggleModeration = false"><X class="w-3.5 h-3.5" :stroke-width="2" /> {{ t('shared.common.cancel') }}</AppButton>
                     <AppButton :variant="isModerationEnabled ? 'danger' : 'primary'" size="md" :loading="toggleModerationLoading" v-on:click="doToggleModeration">
-                        {{ isModerationEnabled ? t('backend.comments.moderationOff') : t('backend.comments.moderationOn') }}
+                        {{ isModerationEnabled ? t('backend.comments.moderation_off') : t('backend.comments.moderation_on') }}
                     </AppButton>
                 </AppModalFooter>
             </template>
@@ -258,15 +258,15 @@ const { statusFilter, viewingComment, tabs, selectTab, statusBadgeColor } = useC
         <AppModal
             :show="!!pendingSpam"
             max-width="sm"
-            :title="t('backend.comments.spamConfirm')"
+            :title="t('backend.comments.spam_confirm')"
             :closeable="false"
             v-on:close="pendingSpam = null"
         >
-            <p class="text-sm text-secondary">{{ t('backend.comments.spamConfirmDesc') }}</p>
+            <p class="text-sm text-secondary">{{ t('backend.comments.spam_confirm_desc') }}</p>
             <template #footer>
                 <AppModalFooter>
                     <AppButton variant="ghost" size="md" v-on:click="pendingSpam = null"><X class="w-3.5 h-3.5" :stroke-width="2" /> {{ t('shared.common.cancel') }}</AppButton>
-                    <AppButton variant="danger" size="md" :loading="spamLoading" v-on:click="doSpam"><Ban class="w-3.5 h-3.5" :stroke-width="2" /> {{ t('backend.comments.markSpam') }}</AppButton>
+                    <AppButton variant="danger" size="md" :loading="spamLoading" v-on:click="doSpam"><Ban class="w-3.5 h-3.5" :stroke-width="2" /> {{ t('backend.comments.mark_spam') }}</AppButton>
                 </AppModalFooter>
             </template>
         </AppModal>
@@ -279,8 +279,8 @@ const { statusFilter, viewingComment, tabs, selectTab, statusBadgeColor } = useC
             :icon="Trash2"
             v-on:close="pendingDelete = null"
         >
-            <p class="text-sm text-primary">{{ t('backend.comments.deleteConfirm') }}</p>
-            <p class="text-sm text-secondary">{{ t('backend.comments.deleteWarning') }}</p>
+            <p class="text-sm text-primary">{{ t('backend.comments.delete_confirm') }}</p>
+            <p class="text-sm text-secondary">{{ t('backend.comments.delete_warning') }}</p>
             <template #footer>
                 <AppModalFooter>
                     <AppButton variant="ghost" size="md" v-on:click="pendingDelete = null"><X class="w-3.5 h-3.5" :stroke-width="2" /> {{ t('shared.common.cancel') }}</AppButton>

@@ -33,7 +33,7 @@ class PostTypeManager implements PostTypeManagerInterface
     public function create(PostTypeInputInterface $input): PostTypeInterface
     {
         if (null !== $this->postTypeRepository->findOneBy(['slug' => $input->getSlug()])) {
-            throw new InvalidArgumentException($this->translator->trans('backend.postTypes.errors.slug_taken', ['{slug}' => $input->getSlug()]));
+            throw new InvalidArgumentException($this->translator->trans('backend.post_types.errors.slug_taken', ['{slug}' => $input->getSlug()]));
         }
 
         $postType = $this->createPostType();
@@ -51,7 +51,7 @@ class PostTypeManager implements PostTypeManagerInterface
     public function update(PostTypeInterface $postType, PostTypeInputInterface $input): void
     {
         if (!$postType->isBuiltIn() && $input->getSlug() !== $postType->getSlug() && null !== $this->postTypeRepository->findOneBy(['slug' => $input->getSlug()])) {
-            throw new InvalidArgumentException($this->translator->trans('backend.postTypes.errors.slug_taken', ['{slug}' => $input->getSlug()]));
+            throw new InvalidArgumentException($this->translator->trans('backend.post_types.errors.slug_taken', ['{slug}' => $input->getSlug()]));
         }
 
         $this->applyInput($postType, $input);
@@ -64,11 +64,11 @@ class PostTypeManager implements PostTypeManagerInterface
     public function delete(PostTypeInterface $postType): void
     {
         if ($postType->isBuiltIn()) {
-            throw new RuntimeException($this->translator->trans('backend.postTypes.errors.builtin_protected'));
+            throw new RuntimeException($this->translator->trans('backend.post_types.errors.builtin_protected'));
         }
 
         if ($postType->getPosts()->count() > 0) {
-            throw new RuntimeException($this->translator->trans('backend.postTypes.errors.has_posts'));
+            throw new RuntimeException($this->translator->trans('backend.post_types.errors.has_posts'));
         }
 
         $this->auditDeleted($postType);
@@ -215,7 +215,7 @@ class PostTypeManager implements PostTypeManagerInterface
             }
 
             if ($field->getName() === $name) {
-                throw new InvalidArgumentException($this->translator->trans('backend.postTypes.errors.field_name_taken', ['{name}' => $name]));
+                throw new InvalidArgumentException($this->translator->trans('backend.post_types.errors.field_name_taken', ['{name}' => $name]));
             }
         }
     }

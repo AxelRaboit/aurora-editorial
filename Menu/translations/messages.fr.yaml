@@ -2,35 +2,35 @@ backend:
   menus:
     title: Menus
     empty: Aucun menu pour le moment.
-    createMenu: Créer un menu
-    editMenu: Modifier le menu
+    create_menu: Créer un menu
+    edit_menu: Modifier le menu
     name: Nom
     location: Emplacement
-    locationPlaceholder: 'header, footer, sidemenu…'
+    location_placeholder: 'header, footer, sidemenu…'
     description: Description
     items: Items
-    addItem: Ajouter un item
-    itemsEmpty: Aucun item dans ce menu.
-    selectHint: Sélectionnez un menu à gauche ou créez-en un nouveau.
-    deleteConfirm: 'Supprimer le menu « {name} » ? Tous ses items seront supprimés.'
-    deleteItemConfirm: Supprimer cet item du menu ?
-    editItem: Modifier l'item
-    targetType: Type de cible
+    add_item: Ajouter un item
+    items_empty: Aucun item dans ce menu.
+    select_hint: Sélectionnez un menu à gauche ou créez-en un nouveau.
+    delete_confirm: 'Supprimer le menu « {name} » ? Tous ses items seront supprimés.'
+    delete_item_confirm: Supprimer cet item du menu ?
+    edit_item: Modifier l'item
+    target_type: Type de cible
     target: Cible
-    customUrl: URL personnalisée
+    custom_url: URL personnalisée
     translations: Libellés par langue
-    translationsHint: Le libellé par défaut est tiré de la cible. Surcharge-le ici par langue si besoin.
-    translationPlaceholder: Libellé personnalisé
+    translations_hint: Le libellé par défaut est tiré de la cible. Surcharge-le ici par langue si besoin.
+    translation_placeholder: Libellé personnalisé
     visibility: Visibilité
-    cssClass: Classes CSS
-    openInNewTab: Ouvrir dans un nouvel onglet
-    allTypes: Tous les types
-    allTaxonomies: Toutes les taxonomies
-    searchPostsPlaceholder: Rechercher un article ou une page…
-    searchTermsPlaceholder: Rechercher un terme…
+    css_class: Classes CSS
+    open_in_new_tab: Ouvrir dans un nouvel onglet
+    all_types: Tous les types
+    all_taxonomies: Toutes les taxonomies
+    search_posts_placeholder: Rechercher un article ou une page…
+    search_terms_placeholder: Rechercher un terme…
     protected: Système
-    protectedHint: Menu essentiel — non supprimable.
-    locationLockedHint: L'emplacement est verrouillé pour les menus système.
+    protected_hint: Menu essentiel — non supprimable.
+    location_locked_hint: L'emplacement est verrouillé pour les menus système.
     errors:
       cycle: Impossible de déplacer un item sous l'un de ses descendants.
       translation_required_for_custom_url: Au moins un libellé de langue est requis pour une URL personnalisée.
@@ -69,13 +69,13 @@ backend:
     themes_description: 'Personnalisation visuelle (couleurs, logo, favicon)'
     users: Utilisateurs
     users_description: 'Gérer les comptes, rôles et privilèges'
-    resizeHint: Glisser pour redimensionner — double-clic pour réinitialiser
-    filterNav: Filtrer le menu…
-    filterNavEmpty: Aucun élément trouvé
-    viewSite: Voir le site
+    resize_hint: Glisser pour redimensionner — double-clic pour réinitialiser
+    filter_nav: Filtrer le menu…
+    filter_nav_empty: Aucun élément trouvé
+    view_site: Voir le site
     logout: Déconnexion
-    lightMode: Mode clair
-    darkMode: Mode sombre
+    light_mode: Mode clair
+    dark_mode: Mode sombre
 frontend:
   menu:
     home: Accueil

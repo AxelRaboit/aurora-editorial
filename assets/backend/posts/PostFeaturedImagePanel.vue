@@ -53,13 +53,13 @@ async function selectFromLibrary() {
 
 <template>
     <div class="flex flex-col gap-2 px-1">
-        <span class="text-xs text-muted uppercase tracking-wide">{{ t("backend.posts.featuredImage") }}</span>
+        <span class="text-xs text-muted uppercase tracking-wide">{{ t("backend.posts.featured_image") }}</span>
         <div v-if="mediaUrl" class="relative group w-full h-48">
             <img
                 :src="mediaUrl"
                 class="w-full h-full object-cover rounded-lg border border-line cursor-zoom-in"
                 :style="{ objectPosition: focalPosition }"
-                :alt="t('backend.posts.featuredImage')"
+                :alt="t('backend.posts.featured_image')"
                 v-on:click="previewOpen = true"
             >
             <AppOverlayIconButton
@@ -76,7 +76,7 @@ async function selectFromLibrary() {
             :class="uploading ? 'opacity-50 pointer-events-none' : ''"
         >
             <ImagePlus class="w-6 h-6 text-muted mb-1.5" :stroke-width="1.5" />
-            <span class="text-sm text-muted">{{ uploading ? t("shared.common.loading") : t("backend.posts.addImage") }}</span>
+            <span class="text-sm text-muted">{{ uploading ? t("shared.common.loading") : t("backend.posts.add_image") }}</span>
             <input
                 ref="inputRef"
                 type="file"
@@ -86,7 +86,7 @@ async function selectFromLibrary() {
             >
         </label>
         <AppTextLinkButton size="xs" class="mt-1 w-full justify-center" v-on:click="selectFromLibrary">
-            {{ t("backend.posts.selectFromLibrary") }}
+            {{ t("backend.posts.select_from_library") }}
         </AppTextLinkButton>
 
         <Teleport to="body">
@@ -99,7 +99,7 @@ async function selectFromLibrary() {
                 leave-to-class="opacity-0"
             >
                 <div v-if="previewOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm" v-on:click="previewOpen = false">
-                    <img :src="mediaUrl" class="max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl" :alt="t('backend.posts.featuredImage')">
+                    <img :src="mediaUrl" class="max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl" :alt="t('backend.posts.featured_image')">
                 </div>
             </Transition>
         </Teleport>

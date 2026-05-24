@@ -68,7 +68,7 @@ watch(jsonLdText, (raw) => {
         return;
     }
     if (error === "not-object") {
-        jsonLdError.value = t("backend.posts.seo.jsonLdMustBeObject");
+        jsonLdError.value = t("backend.posts.seo.json_ld_must_be_object");
         return;
     }
     if (error) {
@@ -135,7 +135,7 @@ async function selectOgFromLibrary() {
                 <div>
                     <AppInput
                         v-model="translation.metaTitle"
-                        :label="t('backend.posts.metaTitle')"
+                        :label="t('backend.posts.meta_title')"
                     />
                     <p class="text-right text-xs mt-1" :class="seoCounterClass(metaTitleLength, 60)">
                         {{ metaTitleLength }}/60
@@ -144,7 +144,7 @@ async function selectOgFromLibrary() {
                 <div>
                     <AppTextarea
                         v-model="translation.metaDescription"
-                        :label="t('backend.posts.metaDescription')"
+                        :label="t('backend.posts.meta_description')"
                         :rows="3"
                     />
                     <p class="text-right text-xs mt-1" :class="seoCounterClass(metaDescLength, 160)">
@@ -153,12 +153,12 @@ async function selectOgFromLibrary() {
                 </div>
                 <AppInput
                     v-model="translation.focusKeyword"
-                    :label="t('backend.posts.seo.focusKeyword')"
-                    :placeholder="t('backend.posts.seo.focusKeywordPlaceholder')"
+                    :label="t('backend.posts.seo.focus_keyword')"
+                    :placeholder="t('backend.posts.seo.focus_keyword_placeholder')"
                 />
                 <AppInput
                     v-model="translation.canonicalUrl"
-                    :label="t('backend.posts.seo.canonicalUrl')"
+                    :label="t('backend.posts.seo.canonical_url')"
                     placeholder="https://example.com/..."
                 />
                 <AppCheckbox
@@ -168,7 +168,7 @@ async function selectOgFromLibrary() {
 
                 <div>
                     <label class="block text-xs text-secondary uppercase tracking-wide mb-1.5">
-                        {{ t("backend.posts.seo.ogImage") }}
+                        {{ t("backend.posts.seo.og_image") }}
                     </label>
                     <div class="flex flex-col sm:flex-row sm:items-center gap-3">
                         <div class="w-full h-40 sm:w-24 sm:h-16 rounded-md border border-line bg-surface-2 overflow-hidden shrink-0 flex items-center justify-center">
@@ -191,10 +191,10 @@ async function selectOgFromLibrary() {
                                 class="w-full sm:w-auto"
                                 v-on:change="uploadOgImage"
                             >
-                                <Upload class="w-3.5 h-3.5" :stroke-width="2" /> {{ t("backend.posts.seo.ogImageUpload") }}
+                                <Upload class="w-3.5 h-3.5" :stroke-width="2" /> {{ t("backend.posts.seo.og_image_upload") }}
                             </AppFilePickerButton>
                             <AppButton variant="ghost" size="sm" class="w-full sm:w-auto" v-on:click="selectOgFromLibrary">
-                                <ImagePlus class="w-3.5 h-3.5" :stroke-width="2" /> {{ t("backend.posts.selectFromLibrary") }}
+                                <ImagePlus class="w-3.5 h-3.5" :stroke-width="2" /> {{ t("backend.posts.select_from_library") }}
                             </AppButton>
                             <AppButton
                                 v-if="translation.ogImageUrl"
@@ -212,7 +212,7 @@ async function selectOgFromLibrary() {
 
             <div class="space-y-4">
                 <div>
-                    <p class="text-xs text-secondary uppercase tracking-wide mb-2">{{ t("backend.posts.seo.serpPreview") }}</p>
+                    <p class="text-xs text-secondary uppercase tracking-wide mb-2">{{ t("backend.posts.seo.serp_preview") }}</p>
                     <GoogleSerpPreview
                         :title="translation.metaTitle || translation.title"
                         :description="translation.metaDescription"
@@ -223,7 +223,7 @@ async function selectOgFromLibrary() {
                 </div>
 
                 <AppMessage v-if="focusChecks.length" variant="info">
-                    <p class="font-medium mb-1">{{ t("backend.posts.seo.focusChecksTitle") }}</p>
+                    <p class="font-medium mb-1">{{ t("backend.posts.seo.focus_checks_title") }}</p>
                     <ul class="space-y-0.5 text-xs">
                         <li v-for="check in focusChecks" :key="check.key" class="flex items-center gap-1.5">
                             <span v-if="check.ok" class="text-emerald-500">✓</span>
@@ -238,15 +238,15 @@ async function selectOgFromLibrary() {
         <div class="border-t border-line pt-4 space-y-2">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                 <label class="text-xs text-secondary uppercase tracking-wide">
-                    {{ t("backend.posts.seo.jsonLd") }}
+                    {{ t("backend.posts.seo.json_ld") }}
                 </label>
                 <AppButton variant="secondary" size="sm" class="w-full sm:w-auto" v-on:click="generateArticleJsonLd">
-                    <Sparkles class="w-3.5 h-3.5" :stroke-width="2" /> {{ t("backend.posts.seo.generateArticle") }}
+                    <Sparkles class="w-3.5 h-3.5" :stroke-width="2" /> {{ t("backend.posts.seo.generate_article") }}
                 </AppButton>
             </div>
             <AppTextarea
                 v-model="jsonLdText"
-                :placeholder="t('backend.posts.seo.jsonLdPlaceholder')"
+                :placeholder="t('backend.posts.seo.json_ld_placeholder')"
                 :rows="8"
                 :error="jsonLdError ?? ''"
                 mono

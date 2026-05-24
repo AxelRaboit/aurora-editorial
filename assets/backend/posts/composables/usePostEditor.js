@@ -111,19 +111,21 @@ export function usePostEditor({ props, emit, t }) {
             class: PostsListBlock,
             config: {
                 postTypes: props.postTypes,
-                titleLabel: t("backend.editor.postsList.titleLabel"),
-                postTypeLabel: t("backend.editor.postsList.postTypeLabel"),
-                columnsLabel: t("backend.editor.postsList.columnsLabel"),
-                modeLabel: t("backend.editor.postsList.modeLabel"),
-                modeAutoLabel: t("backend.editor.postsList.modeAutoLabel"),
-                modeManualLabel: t("backend.editor.postsList.modeManualLabel"),
-                perPageLabel: t("backend.editor.postsList.perPageLabel"),
-                searchPlaceholderLabel: t(
-                    "backend.editor.postsList.searchPlaceholderLabel",
+                titleLabel: t("backend.editor.postsList.title_label"),
+                postTypeLabel: t("backend.editor.postsList.post_type_label"),
+                columnsLabel: t("backend.editor.postsList.columns_label"),
+                modeLabel: t("backend.editor.postsList.mode_label"),
+                modeAutoLabel: t("backend.editor.postsList.mode_auto_label"),
+                modeManualLabel: t(
+                    "backend.editor.postsList.mode_manual_label",
                 ),
-                selectedLabel: t("backend.editor.postsList.selectedLabel"),
-                emptyLabel: t("backend.editor.postsList.emptyLabel"),
-                noResultsLabel: t("backend.editor.postsList.noResultsLabel"),
+                perPageLabel: t("backend.editor.postsList.per_page_label"),
+                searchPlaceholderLabel: t(
+                    "backend.editor.postsList.search_placeholder_label",
+                ),
+                selectedLabel: t("backend.editor.postsList.selected_label"),
+                emptyLabel: t("backend.editor.postsList.empty_label"),
+                noResultsLabel: t("backend.editor.postsList.no_results_label"),
             },
         },
         ...props.extraEditorTools,
@@ -350,7 +352,7 @@ export function usePostEditor({ props, emit, t }) {
     }
 
     function openPreview() {
-        if (isDirty.value) toast.info(t("backend.posts.previewSavedHint"));
+        if (isDirty.value) toast.info(t("backend.posts.preview_saved_hint"));
         showPreview.value = true;
     }
 

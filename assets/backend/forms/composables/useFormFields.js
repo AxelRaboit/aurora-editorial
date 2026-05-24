@@ -16,15 +16,15 @@ export function useFormFields(props, selectedForm, editingForm, jsonRequest) {
     const fieldActiveLocale = ref(props.locales[0] ?? "fr");
 
     const FIELD_TYPES = computed(() => [
-        { value: "text", label: t("backend.forms.fieldTypes.text") },
-        { value: "email", label: t("backend.forms.fieldTypes.email") },
-        { value: "textarea", label: t("backend.forms.fieldTypes.textarea") },
-        { value: "number", label: t("backend.forms.fieldTypes.number") },
-        { value: "tel", label: t("backend.forms.fieldTypes.tel") },
-        { value: "date", label: t("backend.forms.fieldTypes.date") },
-        { value: "select", label: t("backend.forms.fieldTypes.select") },
-        { value: "radio", label: t("backend.forms.fieldTypes.radio") },
-        { value: "checkbox", label: t("backend.forms.fieldTypes.checkbox") },
+        { value: "text", label: t("backend.forms.field_types.text") },
+        { value: "email", label: t("backend.forms.field_types.email") },
+        { value: "textarea", label: t("backend.forms.field_types.textarea") },
+        { value: "number", label: t("backend.forms.field_types.number") },
+        { value: "tel", label: t("backend.forms.field_types.tel") },
+        { value: "date", label: t("backend.forms.field_types.date") },
+        { value: "select", label: t("backend.forms.field_types.select") },
+        { value: "radio", label: t("backend.forms.field_types.radio") },
+        { value: "checkbox", label: t("backend.forms.field_types.checkbox") },
     ]);
 
     function emptyFieldTranslations() {

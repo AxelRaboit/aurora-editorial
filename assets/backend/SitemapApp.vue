@@ -88,12 +88,12 @@ async function regenerate() {
         <div class="bg-surface border border-line rounded-xl p-6">
             <div class="flex items-start justify-between gap-4 flex-wrap">
                 <div>
-                    <p class="text-sm text-muted">{{ t("backend.sitemap.totalUrls") }}</p>
+                    <p class="text-sm text-muted">{{ t("backend.sitemap.total_urls") }}</p>
                     <p class="text-3xl font-bold text-primary mt-1">{{ stats.total }}</p>
                     <div class="text-xs text-muted mt-2 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-0">
                         <span>{{ t("backend.sitemap.size") }} : <span class="text-primary font-medium">{{ formatBytes(stats.sizeBytes) }}</span></span>
                         <span class="hidden sm:inline mx-2 text-line">·</span>
-                        <span>{{ t("backend.sitemap.generatedAt") }} : <span class="text-primary font-medium">{{ formatDateTime(stats.generatedAt) }}</span></span>
+                        <span>{{ t("backend.sitemap.generated_at") }} : <span class="text-primary font-medium">{{ formatDateTime(stats.generatedAt) }}</span></span>
                     </div>
                 </div>
                 <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
@@ -106,7 +106,7 @@ async function regenerate() {
                         class="w-full sm:w-auto"
                     >
                         <ExternalLink class="w-4 h-4" :stroke-width="2" />
-                        {{ t("backend.sitemap.viewXml") }}
+                        {{ t("backend.sitemap.view_xml") }}
                     </AppButton>
                     <AppButton
                         type="button"
@@ -141,8 +141,8 @@ async function regenerate() {
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div class="bg-surface border border-line rounded-xl p-5 lg:col-span-2">
-                <p class="text-sm font-medium text-primary">{{ t("backend.sitemap.charts.byPostType") }}</p>
-                <p class="text-xs text-muted mb-4">{{ t("backend.sitemap.charts.byPostTypeHint") }}</p>
+                <p class="text-sm font-medium text-primary">{{ t("backend.sitemap.charts.by_post_type") }}</p>
+                <p class="text-xs text-muted mb-4">{{ t("backend.sitemap.charts.by_post_type_hint") }}</p>
                 <div v-if="stats.byPostType.length === 0" class="h-48 flex items-center justify-center text-sm text-muted italic">
                     {{ t("backend.sitemap.charts.empty") }}
                 </div>
@@ -152,8 +152,8 @@ async function regenerate() {
             </div>
 
             <div class="bg-surface border border-line rounded-xl p-5">
-                <p class="text-sm font-medium text-primary">{{ t("backend.sitemap.charts.byLocale") }}</p>
-                <p class="text-xs text-muted mb-4">{{ t("backend.sitemap.charts.byLocaleHint") }}</p>
+                <p class="text-sm font-medium text-primary">{{ t("backend.sitemap.charts.by_locale") }}</p>
+                <p class="text-xs text-muted mb-4">{{ t("backend.sitemap.charts.by_locale_hint") }}</p>
                 <div v-if="stats.byLocale.length === 0" class="h-48 flex items-center justify-center text-sm text-muted italic">
                     {{ t("backend.sitemap.charts.empty") }}
                 </div>
@@ -175,7 +175,7 @@ async function regenerate() {
         </div>
 
         <div class="bg-surface border border-line rounded-xl p-4 text-xs text-muted leading-relaxed">
-            {{ t("backend.sitemap.cacheHint") }}
+            {{ t("backend.sitemap.cache_hint") }}
         </div>
     </div>
 </template>

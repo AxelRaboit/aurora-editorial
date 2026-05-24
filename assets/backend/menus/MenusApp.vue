@@ -78,7 +78,7 @@ const { itemModal, openCreateItem, openEditItem, submitItem } = useMenuItemModal
         <AppModal
             :show="menuModal.open"
             max-width="md"
-            :title="t('backend.menus.editMenu')"
+            :title="t('backend.menus.edit_menu')"
             :icon="Menu"
             :closeable="false"
             v-on:close="menuModal.open = false"
@@ -88,11 +88,11 @@ const { itemModal, openCreateItem, openEditItem, submitItem } = useMenuItemModal
                 <AppInput
                     v-model="menuForm.location"
                     :label="t('backend.menus.location')"
-                    :placeholder="t('backend.menus.locationPlaceholder')"
+                    :placeholder="t('backend.menus.location_placeholder')"
                     :readonly="menuModal.editing?.protected"
                     required
                 />
-                <p v-if="menuModal.editing?.protected" class="text-xs text-amber-500 -mt-2">{{ t('backend.menus.locationLockedHint') }}</p>
+                <p v-if="menuModal.editing?.protected" class="text-xs text-amber-500 -mt-2">{{ t('backend.menus.location_locked_hint') }}</p>
                 <AppInput v-model="menuForm.description" :label="t('backend.menus.description')" />
             </form>
             <template #footer>
@@ -111,7 +111,7 @@ const { itemModal, openCreateItem, openEditItem, submitItem } = useMenuItemModal
             :icon="Trash2"
             v-on:close="confirmDeleteMenu = null"
         >
-            <p class="text-sm text-primary">{{ t("backend.menus.deleteConfirm", { name: confirmDeleteMenu?.name ?? "" }) }}</p>
+            <p class="text-sm text-primary">{{ t("backend.menus.delete_confirm", { name: confirmDeleteMenu?.name ?? "" }) }}</p>
             <template #footer>
                 <AppModalFooter>
                     <AppButton variant="ghost" size="md" v-on:click="confirmDeleteMenu = null"><X class="w-3.5 h-3.5" :stroke-width="2" /> {{ t("shared.common.cancel") }}</AppButton>
@@ -128,7 +128,7 @@ const { itemModal, openCreateItem, openEditItem, submitItem } = useMenuItemModal
             :icon="Trash2"
             v-on:close="confirmDeleteItem = null"
         >
-            <p class="text-sm text-primary">{{ t("backend.menus.deleteItemConfirm") }}</p>
+            <p class="text-sm text-primary">{{ t("backend.menus.delete_item_confirm") }}</p>
             <template #footer>
                 <AppModalFooter>
                     <AppButton variant="ghost" size="md" v-on:click="confirmDeleteItem = null"><X class="w-3.5 h-3.5" :stroke-width="2" /> {{ t("shared.common.cancel") }}</AppButton>

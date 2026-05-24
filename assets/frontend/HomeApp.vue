@@ -38,7 +38,7 @@ function postUrl(post) {
             </div>
         </div>
 
-        <div v-if="loading" class="text-muted text-sm">{{ t('shared.common.loadMore') }}…</div>
+        <div v-if="loading" class="text-muted text-sm">{{ t('shared.common.load_more') }}…</div>
 
         <AppNoData
             v-else-if="!posts.length"

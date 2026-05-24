@@ -35,7 +35,7 @@ export function useFormSteps(steps, visibleFields, formData, errors) {
                       ? value.length === 0
                       : String(value ?? "").trim() === "";
             if (field.required && isEmpty) {
-                errors[field.id] = t("shared.form.fieldRequired");
+                errors[field.id] = t("shared.form.field_required");
                 valid = false;
             }
         }

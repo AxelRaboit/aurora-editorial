@@ -60,7 +60,7 @@ backend:
       post_deleted: ⚠ Article supprimé
       term_deleted: ⚠ Terme supprimé
       post_type_deleted: ⚠ Type supprimé
-    targetTypes:
+    target_types:
       post: Article / Page
       term: Terme de taxonomie
       post_type_archive: Archive de type
@@ -75,7 +75,7 @@ backend:
       always: Toujours visible
       guests_only: Invités uniquement
       authenticated_only: Connectés uniquement
-  postTypes:
+  post_types:
     errors:
       slug_taken: 'Un type de contenu avec le slug "{slug}" existe déjà.'
       builtin_protected: Les types de contenu intégrés ne peuvent pas être supprimés.
@@ -83,48 +83,48 @@ backend:
       field_name_taken: 'Un champ nommé "{name}" existe déjà sur ce type de contenu.'
     title: Types de contenu
     create: Nouveau type de contenu
-    editPostType: Modifier le type de contenu
-    deleteConfirm: 'Supprimer « {label} » ?'
-    deleteHasPosts: Impossible de supprimer un type de contenu qui contient encore des contenus.
+    edit_post_type: Modifier le type de contenu
+    delete_confirm: 'Supprimer « {label} » ?'
+    delete_has_posts: Impossible de supprimer un type de contenu qui contient encore des contenus.
     empty: Sélectionne un type de contenu à gauche.
-    builtIn: Intégré
+    built_in: Intégré
     slug: Slug
-    slugPlaceholder: 'ex : article'
+    slug_placeholder: 'ex : article'
     label: Libellé
-    labelPlaceholder: 'ex : Article'
+    label_placeholder: 'ex : Article'
     icon: Icône
-    iconPlaceholder: 'file-text, layers, …'
-    hasArchive: Page d'archive
+    icon_placeholder: 'file-text, layers, …'
+    has_archive: Page d'archive
     supports: Fonctionnalités supportées
     fields:
       title: Champs personnalisés
       empty: Aucun champ.
       add: Ajouter un champ
       edit: Modifier le champ
-      noContacts: Aucun contact lié à cette entreprise.
-      contactLinked: 'Sera lié à {name}'
-      deleteConfirm: 'Supprimer « {label} » ? Les valeurs existantes seront perdues.'
+      no_contacts: Aucun contact lié à cette entreprise.
+      contact_linked: 'Sera lié à {name}'
+      delete_confirm: 'Supprimer « {label} » ? Les valeurs existantes seront perdues.'
       name: Nom technique
-      listView: Vue liste
-      kanbanView: Vue Kanban
-      namePlaceholder: 'ex : temps_lecture'
+      list_view: Vue liste
+      kanban_view: Vue Kanban
+      name_placeholder: 'ex : temps_lecture'
       label: Libellé
-      labelPlaceholder: 'ex : Temps de lecture'
+      label_placeholder: 'ex : Temps de lecture'
       type: Type
       required: Requis
       translatable: Traduisible
-      dndHint: Glisse-dépose pour réordonner les champs.
-      selectChoices: Choix (une option par ligne)
-      selectChoicesHint: 'Format : valeur|libellé (si le libellé est omis, la valeur est utilisée)'
-      selectChoicesPlaceholder: "low|Basse\nhigh|Haute"
-      referenceTargetType: Type de contenu cible
-      referenceAnyType: — Tous
-      referenceMultiple: Sélection multiple
+      dnd_hint: Glisse-dépose pour réordonner les champs.
+      select_choices: Choix (une option par ligne)
+      select_choices_hint: 'Format : valeur|libellé (si le libellé est omis, la valeur est utilisée)'
+      select_choices_placeholder: "low|Basse\nhigh|Haute"
+      reference_target_type: Type de contenu cible
+      reference_any_type: — Tous
+      reference_multiple: Sélection multiple
   posts:
-    selectFromLibrary: Sélectionner depuis la médiathèque
+    select_from_library: Sélectionner depuis la médiathèque
     status: Statut
-    statusTrashed: Corbeille
-    statusOptions:
+    status_trashed: Corbeille
+    status_options:
       draft: Brouillon
       pending_review: En relecture
       scheduled: Planifié
@@ -135,97 +135,97 @@ backend:
     add: Ajouter un contenu
     create: Nouveau contenu
     edit: Modifier le contenu
-    searchPlaceholder: Rechercher un contenu…
+    search_placeholder: Rechercher un contenu…
     empty: Aucun contenu trouvé.
-    deleteConfirm: 'Déplacer « {title} » vers la corbeille ?'
-    forceDeleteConfirm: 'Supprimer définitivement « {title} » ? Cette action est irréversible.'
-    forceDelete: Supprimer définitivement
+    delete_confirm: 'Déplacer « {title} » vers la corbeille ?'
+    force_delete_confirm: 'Supprimer définitivement « {title} » ? Cette action est irréversible.'
+    force_delete: Supprimer définitivement
     created: Contenu créé.
     updated: Contenu mis à jour.
     deleted: Contenu déplacé vers la corbeille.
-    deletedForever: Contenu supprimé définitivement.
+    deleted_forever: Contenu supprimé définitivement.
     restored: Contenu restauré.
-    trashedBanner: Cet article est dans la corbeille.
-    emptyTrash: Vider la corbeille
-    emptyTrashConfirm: Supprimer définitivement tous les contenus de la corbeille ? Cette action est irréversible.
-    emptyTrashDone: '{count} contenu(s) supprimé(s) définitivement.'
-    filterByType: Type de contenu
-    filterByStatus: Statut
-    filterByTerm: Par terme
-    searchTerms: Rechercher…
-    clearFilters: Effacer les filtres
-    viewCompact: Vue compacte
-    viewDetailed: Vue détaillée
+    trashed_banner: Cet article est dans la corbeille.
+    empty_trash: Vider la corbeille
+    empty_trash_confirm: Supprimer définitivement tous les contenus de la corbeille ? Cette action est irréversible.
+    empty_trash_done: '{count} contenu(s) supprimé(s) définitivement.'
+    filter_by_type: Type de contenu
+    filter_by_status: Statut
+    filter_by_term: Par terme
+    search_terms: Rechercher…
+    clear_filters: Effacer les filtres
+    view_compact: Vue compacte
+    view_detailed: Vue détaillée
     tabs:
       active: Actifs
       active_description: 'Tous les contenus publiés, brouillons et planifiés.'
       trash: Corbeille
       trash_description: Contenus supprimés. Restaurables ou à purger définitivement.
     title: Titre
-    titlePlaceholder: Mon titre…
+    title_placeholder: Mon titre…
     slug: Slug
-    slugPlaceholder: mon-titre
-    postType: Type de contenu
+    slug_placeholder: mon-titre
+    post_type: Type de contenu
     terms: Termes
-    termsPickerEmpty: Aucun terme dans cette taxonomie pour l'instant.
-    commentsEnabled: Commentaires
-    relatedPosts:
+    terms_picker_empty: Aucun terme dans cette taxonomie pour l'instant.
+    comments_enabled: Commentaires
+    related_posts:
       title: Articles liés
-      searchPlaceholder: Rechercher un article à lier…
-    customFields: Champs personnalisés
-    customField:
+      search_placeholder: Rechercher un article à lier…
+    custom_fields: Champs personnalisés
+    custom_field:
       upload: Téléverser
     blocks: Contenu
-    metaTitle: Méta-titre
-    metaDescription: Méta-description
+    meta_title: Méta-titre
+    meta_description: Méta-description
     seo:
-      focusKeyword: Mot-clé principal
-      focusKeywordPlaceholder: 'ex: cms open source'
-      canonicalUrl: URL canonique
+      focus_keyword: Mot-clé principal
+      focus_keyword_placeholder: 'ex: cms open source'
+      canonical_url: URL canonique
       noindex: Empêcher l'indexation (noindex)
-      ogImage: Image Open Graph
-      ogImageUpload: Téléverser une image
-      serpPreview: Aperçu Google
-      focusChecksTitle: Contrôles du mot-clé
-      focusChecks:
+      og_image: Image Open Graph
+      og_image_upload: Téléverser une image
+      serp_preview: Aperçu Google
+      focus_checks_title: Contrôles du mot-clé
+      focus_checks:
         title: Présent dans le titre
-        metaTitle: Présent dans le méta-titre
-        metaDescription: Présent dans la méta-description
+        meta_title: Présent dans le méta-titre
+        meta_description: Présent dans la méta-description
         slug: Présent dans le slug
-      jsonLd: JSON-LD (schema.org)
-      jsonLdPlaceholder: Objet JSON-LD injecté dans une balise script application/ld+json
-      jsonLdMustBeObject: Le JSON-LD doit être un objet.
-      generateArticle: Générer Article
-    featuredImage: Image à la une
+      json_ld: JSON-LD (schema.org)
+      json_ld_placeholder: Objet JSON-LD injecté dans une balise script application/ld+json
+      json_ld_must_be_object: Le JSON-LD doit être un objet.
+      generate_article: Générer Article
+    featured_image: Image à la une
     publish: Publication
-    addImage: Ajouter
-    slugLock: Verrouiller le slug
-    slugUnlock: Modifier le slug
+    add_image: Ajouter
+    slug_lock: Verrouiller le slug
+    slug_unlock: Modifier le slug
     preview: Prévisualiser
-    previewEmpty: Aucun contenu à prévisualiser.
-    previewSavedHint: L'aperçu affiche la dernière version sauvegardée.
-    scheduledAt: Date de planification
-    publishedAt: Publié le
+    preview_empty: Aucun contenu à prévisualiser.
+    preview_saved_hint: L'aperçu affiche la dernière version sauvegardée.
+    scheduled_at: Date de planification
+    published_at: Publié le
     revisions:
       title: Historique
       empty: Aucune révision pour l'instant.
-      selectHint: Sélectionne une révision pour comparer.
+      select_hint: Sélectionne une révision pour comparer.
       restore: Restaurer cette version
       restored: Version restaurée.
-      revisionSide: Révision
-      currentSide: Actuel
+      revision_side: Révision
+      current_side: Actuel
       unchanged: inchangés
-      showUnchanged: Afficher les blocs inchangés
-      noChange: Aucune différence sur cette langue.
+      show_unchanged: Afficher les blocs inchangés
+      no_change: Aucune différence sur cette langue.
       kind:
         unchanged: Inchangé
         added: Ajouté
         removed: Supprimé
         modified: Modifié
     conflict: Ce contenu a été modifié par un autre utilisateur depuis votre dernière sauvegarde. Vos modifications n'ont pas été enregistrées.
-    conflictCompare: Voir la version actuelle
-    conflictMerge: Fusionner
-    conflictForce: Forcer ma sauvegarde
+    conflict_compare: Voir la version actuelle
+    conflict_merge: Fusionner
+    conflict_force: Forcer ma sauvegarde
     merge:
       title: Résoudre les conflits
       subtitle: Choisissez quelle version garder pour chaque bloc.
@@ -234,13 +234,13 @@ backend:
       theirs: La leur
       use: 'Utiliser :'
       deleted: (bloc supprimé)
-      showUnchanged: Afficher les blocs inchangés
-      hideUnchanged: Masquer les blocs inchangés
-      acceptAllMine: Tout accepter à gauche
-      acceptAllTheirs: Tout accepter à droite
-      nothingToShow: Aucun changement à afficher.
-      unresolvedCount: '{count} conflit(s) non résolu(s)'
-      unresolvedError: Il reste des conflits non résolus.
+      show_unchanged: Afficher les blocs inchangés
+      hide_unchanged: Masquer les blocs inchangés
+      accept_all_mine: Tout accepter à gauche
+      accept_all_theirs: Tout accepter à droite
+      nothing_to_show: Aucun changement à afficher.
+      unresolved_count: '{count} conflit(s) non résolu(s)'
+      unresolved_error: Il reste des conflits non résolus.
       summary: '{unchanged} inchangé(s) · {auto} fusion auto · {conflicts} conflit(s)'
       kind:
         unchanged: Inchangé
@@ -252,7 +252,7 @@ backend:
         remote-removed: Supprimé à distance
         conflict: CONFLIT
   stats:
-    postStatus:
+    post_status:
       draft: Brouillon
       pending_review: En relecture
       scheduled: Planifié
@@ -265,7 +265,7 @@ backend:
         approved: Approuvé
         spam: Spam
     forms:
-      fieldType:
+      field_type:
         text: Texte court
         email: Email
         textarea: Texte long
@@ -285,39 +285,39 @@ backend:
       reorder_cycle: 'La réorganisation créerait un cycle impliquant le terme #{id}.'
       parent_wrong_taxonomy: "Le terme parent #{parentId} n'appartient pas à la taxonomie \"{taxonomy}\"."
     title: Taxonomies
-    addTaxonomy: Ajouter une taxonomie
-    editTaxonomy: Modifier la taxonomie
-    deleteTaxonomyConfirm: 'Supprimer « {label} » ? Tous les termes associés seront supprimés.'
+    add_taxonomy: Ajouter une taxonomie
+    edit_taxonomy: Modifier la taxonomie
+    delete_taxonomy_confirm: 'Supprimer « {label} » ? Tous les termes associés seront supprimés.'
     empty: Sélectionne une taxonomie à gauche.
     hierarchical: Hiérarchique
-    builtIn: Intégrée
+    built_in: Intégrée
     slug: Slug
-    slugPlaceholder: 'ex: category'
+    slug_placeholder: 'ex: category'
     translations: Traductions
     label: Libellé
-    labelPlaceholder: 'ex : Catégorie'
+    label_placeholder: 'ex : Catégorie'
     description: Description
-    descriptionPlaceholder: Courte description de la taxonomie…
-    postTypes: Types de contenu
+    description_placeholder: Courte description de la taxonomie…
+    post_types: Types de contenu
     terms:
       title: Termes
       empty: Aucun terme pour l'instant.
       errors:
         name_required: Le nom est requis.
-      addTerm: Ajouter un terme
-      editTerm: Modifier le terme
-      deleteTermConfirm: 'Supprimer « {name} » ? Les enfants directs seront rattachés au parent.'
+      add_term: Ajouter un terme
+      edit_term: Modifier le terme
+      delete_term_confirm: 'Supprimer « {name} » ? Les enfants directs seront rattachés au parent.'
       name: Nom
-      listView: Vue liste
-      kanbanView: Vue Kanban
-      namePlaceholder: 'ex : Technologie'
+      list_view: Vue liste
+      kanban_view: Vue Kanban
+      name_placeholder: 'ex : Technologie'
       slug: Slug
-      slugPlaceholder: 'ex : technologie'
+      slug_placeholder: 'ex : technologie'
       description: Description
-      descriptionPlaceholder: Courte description du terme…
+      description_placeholder: Courte description du terme…
       parent: Parent
-      noParent: — (racine)
-      dndHint: Glisse-dépose les termes pour réorganiser l'arbre.
+      no_parent: — (racine)
+      dnd_hint: Glisse-dépose les termes pour réorganiser l'arbre.
   modules:
     editorial: Editorial
     editorial_backend: Editorial
@@ -336,7 +336,7 @@ backend:
     forms_description: Créer et gérer les formulaires de contact et leurs soumissions
     menus: Menus
     menus_description: Construire les menus de navigation du site public
-    postTypes: Types de contenu
+    post_types: Types de contenu
     postTypes_description: 'Définir les types de contenu personnalisés (articles, pages, etc.)'
     posts: Contenus
     posts_description: 'Rédiger et publier articles, pages et autres contenus éditoriaux'
@@ -346,13 +346,13 @@ backend:
     taxonomies: Taxonomies
     taxonomies_description: Catégoriser les contenus via taxonomies et termes
   sitemap:
-    totalUrls: Nombre total d'URLs
+    total_urls: Nombre total d'URLs
     size: Taille
-    generatedAt: Généré le
-    viewXml: Voir le XML
+    generated_at: Généré le
+    view_xml: Voir le XML
     regenerate: Régénérer
     regenerated: Sitemap régénéré.
-    cacheHint: 'Le sitemap est mis en cache 1 heure pour soulager la base de données. Cliquez sur « Régénérer » après une publication importante pour forcer la mise à jour immédiate. Sinon, le cache se rafraîchit automatiquement.'
+    cache_hint: 'Le sitemap est mis en cache 1 heure pour soulager la base de données. Cliquez sur « Régénérer » après une publication importante pour forcer la mise à jour immédiate. Sinon, le cache se rafraîchit automatiquement.'
     sections:
       home: Pages d'accueil
       archives: Archives
@@ -361,10 +361,10 @@ backend:
     charts:
       urls: URLs
       empty: Aucune donnée à afficher.
-      byPostType: URLs par type de contenu
-      byPostTypeHint: Répartition des contenus indexés par type (toutes locales confondues).
-      byLocale: URLs par langue
-      byLocaleHint: Couverture du sitemap par langue active.
+      by_post_type: URLs par type de contenu
+      by_post_type_hint: Répartition des contenus indexés par type (toutes locales confondues).
+      by_locale: URLs par langue
+      by_locale_hint: Couverture du sitemap par langue active.
     noindex:
       label: Traductions exclues (noindex)
       hint: Traductions de contenus marquées « noindex » et donc absentes du sitemap.
@@ -375,20 +375,20 @@ backend:
   # `postsList` et les templates de la PostTemplatesOverlay.
   # `productGrid` est passé à Ecommerce/translations/messages.fr.yaml.
   editor:
-    toolNames:
-      postsList: Liste d'articles
-    postsList:
-      titleLabel: Titre
-      postTypeLabel: Type de contenu
-      columnsLabel: Colonnes
-      modeLabel: Mode
-      modeAutoLabel: Liste complète paginée
-      modeManualLabel: Sélection manuelle
-      perPageLabel: Articles par page
-      searchPlaceholderLabel: Rechercher un article…
-      selectedLabel: Articles sélectionnés
-      emptyLabel: Aucun article sélectionné
-      noResultsLabel: Aucun résultat
+    tool_names:
+      posts_list: Liste d'articles
+    posts_list:
+      title_label: Titre
+      post_type_label: Type de contenu
+      columns_label: Colonnes
+      mode_label: Mode
+      mode_auto_label: Liste complète paginée
+      mode_manual_label: Sélection manuelle
+      per_page_label: Articles par page
+      search_placeholder_label: Rechercher un article…
+      selected_label: Articles sélectionnés
+      empty_label: Aucun article sélectionné
+      no_results_label: Aucun résultat
     templates:
       title: Choisir un template
       subtitle: Le contenu actuel sera remplacé par le template sélectionné.
@@ -400,7 +400,7 @@ backend:
       journal:
         label: Double mise en page
         description: Alternance image-texte façon journal
-      twoColumn:
+      two_column:
         label: Deux colonnes
         description: Contenu réparti en deux colonnes égales
       landing:
@@ -430,9 +430,9 @@ backend:
       recap:
         label: Compte-rendu
         description: 'Résumé, décisions et prochaines étapes'
-      confirmReplace: Remplacer le contenu actuel ?
+      confirm_replace: Remplacer le contenu actuel ?
       apply: Appliquer
-      emptyContent: Contenu vide
+      empty_content: Contenu vide
       structure: Structure
       categories:
         all: Tous
@@ -444,12 +444,12 @@ backend:
     add: Ajouter un tag
     name: Nom
     slug: Slug
-    createdAt: Créé le
+    created_at: Créé le
     actions: Actions
-    searchPlaceholder: Rechercher un tag…
+    search_placeholder: Rechercher un tag…
     empty: Aucun tag trouvé.
     edit: Modifier le tag
-    deleteConfirm: 'Supprimer le tag "{name}" ? Cette action est irréversible.'
+    delete_confirm: 'Supprimer le tag "{name}" ? Cette action est irréversible.'
     created: Tag créé.
     updated: Tag mis à jour.
     deleted: Tag supprimé.
@@ -464,16 +464,16 @@ backend:
     approved: Approuvés
     spam: Spam
     view: Voir le commentaire
-    moderationOn: Modération activée
-    moderationOff: Modération désactivée
-    moderationEnableConfirm: Activer la modération ?
-    moderationEnableConfirmDesc: Les nouveaux commentaires seront mis en attente avant publication.
-    moderationDisableConfirm: Désactiver la modération ?
-    moderationDisableConfirmDesc: Les nouveaux commentaires seront approuvés automatiquement sans validation.
-    moderationEnabled: Modération activée — les commentaires seront en attente.
-    moderationDisabled: Modération désactivée — les commentaires seront approuvés automatiquement.
+    moderation_on: Modération activée
+    moderation_off: Modération désactivée
+    moderation_enable_confirm: Activer la modération ?
+    moderation_enable_confirm_desc: Les nouveaux commentaires seront mis en attente avant publication.
+    moderation_disable_confirm: Désactiver la modération ?
+    moderation_disable_confirm_desc: Les nouveaux commentaires seront approuvés automatiquement sans validation.
+    moderation_enabled: Modération activée — les commentaires seront en attente.
+    moderation_disabled: Modération désactivée — les commentaires seront approuvés automatiquement.
     approve: Approuver
-    markSpam: Marquer comme spam
+    mark_spam: Marquer comme spam
     name: Nom
     email: Email
     post: Article
@@ -481,19 +481,19 @@ backend:
     date: Date
     status: Statut
     reactions: Réactions
-    deleteConfirm: Supprimer ce commentaire ?
-    deleteWarning: Cette action est irréversible.
-    replyTo: En réponse à
-    approveSuccess: Commentaire approuvé.
-    spamSuccess: Commentaire marqué comme spam.
-    spamConfirm: Marquer comme spam ?
-    spamConfirmDesc: Ce commentaire sera masqué et classé comme indésirable.
+    delete_confirm: Supprimer ce commentaire ?
+    delete_warning: Cette action est irréversible.
+    reply_to: En réponse à
+    approve_success: Commentaire approuvé.
+    spam_success: Commentaire marqué comme spam.
+    spam_confirm: Marquer comme spam ?
+    spam_confirm_desc: Ce commentaire sera masqué et classé comme indésirable.
   forms:
     add: Ajouter un formulaire
     create: Nouveau formulaire
-    newForm: Nouveau formulaire
+    new_form: Nouveau formulaire
     empty: Aucun formulaire.
-    selectOrCreate: Sélectionne un formulaire ou crée-en un nouveau.
+    select_or_create: Sélectionne un formulaire ou crée-en un nouveau.
     inactive: Inactif
     submissions_count: soumission(s)
     tabs:
@@ -501,44 +501,44 @@ backend:
       fields: Champs
       submissions: Soumissions
     title: Titre
-    titlePlaceholder: 'ex : Formulaire de contact'
+    title_placeholder: 'ex : Formulaire de contact'
     slug: Slug
-    slugPlaceholder: contact
-    sharedSlug: Même slug pour toutes les langues
-    localeFilled: Langue renseignée
-    localeEmpty: Langue vide
-    localesOptional: Toutes les langues sont optionnelles
+    slug_placeholder: contact
+    shared_slug: Même slug pour toutes les langues
+    locale_filled: Langue renseignée
+    locale_empty: Langue vide
+    locales_optional: Toutes les langues sont optionnelles
     description: Description
-    descriptionPlaceholder: Courte description visible par l'utilisateur…
-    notifyEmail: Email de notification
-    notifyEmailPlaceholder: "admin@monsite.com"
-    notifyEmailHint: 'Si renseigné, un e-mail est envoyé à chaque nouvelle soumission.'
+    description_placeholder: Courte description visible par l'utilisateur…
+    notify_email: Email de notification
+    notify_email_placeholder: "admin@monsite.com"
+    notify_email_hint: 'Si renseigné, un e-mail est envoyé à chaque nouvelle soumission.'
     preview: Prévisualiser
-    previewTitle: Simulation du formulaire
-    previewHint: Simulation interactive — les soumissions ne sont pas enregistrées.
-    previewNoFields: Aucun champ à afficher pour cette étape.
-    previewSubmitSuccess: 'Simulation réussie ! En production, la soumission serait enregistrée.'
-    previewReset: Recommencer la simulation
-    webhookUrl: URL Webhook
-    webhookUrlPlaceholder: "https://hooks.exemple.com/aurora"
-    webhookUrlHint: 'Payload JSON envoyé en POST à chaque soumission (compatible Zapier, n8n, Make…)'
-    crmSync: Synchroniser avec le CRM
-    crmSyncHint: 'Crée automatiquement un contact CRM à partir du champ email de chaque soumission.'
+    preview_title: Simulation du formulaire
+    preview_hint: Simulation interactive — les soumissions ne sont pas enregistrées.
+    preview_no_fields: Aucun champ à afficher pour cette étape.
+    preview_submit_success: 'Simulation réussie ! En production, la soumission serait enregistrée.'
+    preview_reset: Recommencer la simulation
+    webhook_url: URL Webhook
+    webhook_url_placeholder: "https://hooks.exemple.com/aurora"
+    webhook_url_hint: 'Payload JSON envoyé en POST à chaque soumission (compatible Zapier, n8n, Make…)'
+    crm_sync: Synchroniser avec le CRM
+    crm_sync_hint: 'Crée automatiquement un contact CRM à partir du champ email de chaque soumission.'
     steps: Étapes (multi-étapes)
-    addStep: Ajouter une étape
-    stepLabel: Étape
-    stepsEmpty: Aucune étape — le formulaire s'affiche en une seule page.
-    stepsHint: 'Les champs peuvent être assignés à une étape depuis l''éditeur de champ.'
-    fieldStep: Étape
-    fieldStepNone: Sans étape (toutes)
+    add_step: Ajouter une étape
+    step_label: Étape
+    steps_empty: Aucune étape — le formulaire s'affiche en une seule page.
+    steps_hint: 'Les champs peuvent être assignés à une étape depuis l''éditeur de champ.'
+    field_step: Étape
+    field_step_none: Sans étape (toutes)
     conditions: Conditions d''affichage
-    addCondition: Ajouter une condition
-    conditionsEmpty: Aucune condition — le champ est toujours visible.
-    conditionsLogicLabel: Logique
-    conditionsLogic:
+    add_condition: Ajouter une condition
+    conditions_empty: Aucune condition — le champ est toujours visible.
+    conditions_logic_label: Logique
+    conditions_logic:
       and: ET
       or: OU
-    conditionValue: Valeur
+    condition_value: Valeur
     operators:
       eq: égal à
       neq: différent de
@@ -546,31 +546,30 @@ backend:
       not_empty: non vide
       empty: vide
     active: Formulaire actif
-    addField: Ajouter un champ
-    addFieldTitle: Ajouter un champ
-    editField: Modifier le champ
-    fieldsHint: Glisse-dépose pour réordonner les champs.
-    fieldsEmpty: Aucun champ. Cliquez sur « Ajouter un champ » pour commencer.
+    add_field: Ajouter un champ
+    add_field_title: Ajouter un champ
+    edit_field: Modifier le champ
+    fields_hint: Glisse-dépose pour réordonner les champs.
+    fields_empty: Aucun champ. Cliquez sur « Ajouter un champ » pour commencer.
     required: Requis
-    fieldType: Type de champ
-    fieldLabel: Libellé
-    fieldLabelPlaceholder: 'ex : Votre nom'
-    fieldPlaceholder: Placeholder
-    fieldPlaceholderPlaceholder: 'ex : Jean Dupont'
-    fieldOptions: Options (une par ligne)
-    fieldOptionsPlaceholder: "Option 1\nOption 2\nOption 3"
-    fieldOptionsHint: Une option par ligne.
-    fieldRequired: Champ requis
-    deleteFieldConfirm: 'Supprimer le champ « {label} » ?'
-    deleteConfirmTitle: Supprimer le formulaire ?
-    deleteConfirmBody: 'Supprimer « {title} » ? Toutes les soumissions seront perdues.'
-    submissionsCount: soumission(s)
-    submissionsEmpty: Aucune soumission.
-    submittedAt: Date
+    field_type: Type de champ
+    field_label: Libellé
+    field_label_placeholder: 'ex : Votre nom'
+    field_placeholder: Placeholder
+    field_placeholder_placeholder: 'ex : Jean Dupont'
+    field_options: Options (une par ligne)
+    field_options_placeholder: "Option 1\nOption 2\nOption 3"
+    field_options_hint: Une option par ligne.
+    field_required: Champ requis
+    delete_field_confirm: 'Supprimer le champ « {label} » ?'
+    delete_confirm_title: Supprimer le formulaire ?
+    delete_confirm_body: 'Supprimer « {title} » ? Toutes les soumissions seront perdues.'
+    submissions_empty: Aucune soumission.
+    submitted_at: Date
     locale: Langue
-    exportCsv: Exporter CSV
-    viewSubmission: Voir la soumission
-    fieldTypes:
+    export_csv: Exporter CSV
+    view_submission: Voir la soumission
+    field_types:
       text: Texte court
       email: Email
       textarea: Texte long
@@ -581,7 +580,7 @@ backend:
       date: Date
       tel: Téléphone
     errors:
-      labelRequired: Le libellé est requis.
+      label_required: Le libellé est requis.
 editorial:
   mail:
     comment:

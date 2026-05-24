@@ -88,20 +88,23 @@ export function usePostFilters({
     );
 
     const statusOptions = computed(() => [
-        { value: "draft", label: t("backend.posts.statusOptions.draft") },
+        { value: "draft", label: t("backend.posts.status_options.draft") },
         {
             value: "pending_review",
-            label: t("backend.posts.statusOptions.pending_review"),
+            label: t("backend.posts.status_options.pending_review"),
         },
         {
             value: "scheduled",
-            label: t("backend.posts.statusOptions.scheduled"),
+            label: t("backend.posts.status_options.scheduled"),
         },
         {
             value: "published",
-            label: t("backend.posts.statusOptions.published"),
+            label: t("backend.posts.status_options.published"),
         },
-        { value: "archived", label: t("backend.posts.statusOptions.archived") },
+        {
+            value: "archived",
+            label: t("backend.posts.status_options.archived"),
+        },
     ]);
 
     /**

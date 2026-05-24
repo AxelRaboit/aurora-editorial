@@ -134,7 +134,7 @@ function validateStep(fields) {
                 ? value.length === 0
                 : String(value ?? "").trim() === "";
         if (field.required && isEmpty) {
-            errors[field.id] = t("shared.form.fieldRequired");
+            errors[field.id] = t("shared.form.field_required");
             valid = false;
         }
     }
@@ -176,16 +176,16 @@ function toggleCheckbox(fieldId, option) {
     <AppModal
         :show="show"
         max-width="lg"
-        :title="t('backend.forms.previewTitle')"
+        :title="t('backend.forms.preview_title')"
         :icon="Eye"
         :closeable="false"
         v-on:close="onClose"
     >
         <div class="space-y-5 min-h-64">
             <div v-if="submitted" class="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-4 text-emerald-400 text-sm font-medium text-center">
-                <p>{{ t('backend.forms.previewSubmitSuccess') }}</p>
+                <p>{{ t('backend.forms.preview_submit_success') }}</p>
                 <button class="mt-3 text-xs underline opacity-70 hover:opacity-100" v-on:click="resetPreview">
-                    {{ t('backend.forms.previewReset') }}
+                    {{ t('backend.forms.preview_reset') }}
                 </button>
             </div>
 
@@ -210,7 +210,7 @@ function toggleCheckbox(fieldId, option) {
                 </div>
 
                 <div v-if="currentStepFields.length === 0" class="py-8 text-center text-sm text-muted">
-                    {{ t('backend.forms.previewNoFields') }}
+                    {{ t('backend.forms.preview_no_fields') }}
                 </div>
 
                 <form v-else class="space-y-4" v-on:submit.prevent="isLastStep() ? handleSubmit() : nextStep()">
@@ -229,7 +229,7 @@ function toggleCheckbox(fieldId, option) {
                             v-else-if="field.type === 'select'"
                             v-model="formData[field.id]"
                             :label="field.label || '—'"
-                            :placeholder="t('shared.form.selectPlaceholder')"
+                            :placeholder="t('shared.form.select_placeholder')"
                             :required="field.required"
                             :error="errors[field.id] ?? ''"
                         >
@@ -313,7 +313,7 @@ function toggleCheckbox(fieldId, option) {
 
         <template #footer>
             <AppModalFooter>
-                <p class="text-xs text-muted mr-auto">{{ t('backend.forms.previewHint') }}</p>
+                <p class="text-xs text-muted mr-auto">{{ t('backend.forms.preview_hint') }}</p>
                 <AppButton variant="ghost" size="md" v-on:click="onClose">
                     <X class="w-3.5 h-3.5" :stroke-width="2" /> {{ t('shared.common.close') }}
                 </AppButton>

@@ -155,7 +155,7 @@ const visibleEntries = computed(() =>
                             >
                                 <div class="flex items-center gap-2 text-xs">
                                     <AppBadge :color="statusBadgeColor(revision.status)">
-                                        {{ t("backend.stats.postStatus." + revision.status) }}
+                                        {{ t("backend.stats.post_status." + revision.status) }}
                                     </AppBadge>
                                     <span class="text-muted font-mono">v{{ revision.postVersion }}</span>
                                 </div>
@@ -169,7 +169,7 @@ const visibleEntries = computed(() =>
 
                     <section class="flex-1 overflow-y-auto scrollbar-thin">
                         <div v-if="!selectedRevision && !loadingSelected" class="p-8 text-sm text-muted text-center">
-                            {{ t("backend.posts.revisions.selectHint") }}
+                            {{ t("backend.posts.revisions.select_hint") }}
                         </div>
                         <div v-else-if="loadingSelected" class="p-8 text-sm text-muted text-center">
                             {{ t("shared.common.loading") }}
@@ -196,7 +196,7 @@ const visibleEntries = computed(() =>
                                 </div>
                                 <AppCheckbox
                                     v-model="showUnchanged"
-                                    :label="t('backend.posts.revisions.showUnchanged')"
+                                    :label="t('backend.posts.revisions.show_unchanged')"
                                     class="text-xs ml-auto"
                                 />
                                 <AppButton variant="primary" size="sm" :loading="restoring" v-on:click="restore">
@@ -207,7 +207,7 @@ const visibleEntries = computed(() =>
 
                             <div class="space-y-3">
                                 <div v-if="visibleEntries.length === 0" class="p-4 text-sm text-muted text-center border border-line rounded-lg">
-                                    {{ t("backend.posts.revisions.noChange") }}
+                                    {{ t("backend.posts.revisions.no_change") }}
                                 </div>
                                 <div
                                     v-for="entry in visibleEntries"
@@ -221,11 +221,11 @@ const visibleEntries = computed(() =>
 
                                     <div v-if="entry.kind === RevisionDiffKind.Modified" class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-line">
                                         <div class="p-3">
-                                            <div class="text-xs text-rose-600 dark:text-rose-400 mb-1.5">{{ t("backend.posts.revisions.revisionSide") }}</div>
+                                            <div class="text-xs text-rose-600 dark:text-rose-400 mb-1.5">{{ t("backend.posts.revisions.revision_side") }}</div>
                                             <div class="prose-preview text-sm" v-html="renderBlock(entry.revision)" />
                                         </div>
                                         <div class="p-3">
-                                            <div class="text-xs text-emerald-600 dark:text-emerald-400 mb-1.5">{{ t("backend.posts.revisions.currentSide") }}</div>
+                                            <div class="text-xs text-emerald-600 dark:text-emerald-400 mb-1.5">{{ t("backend.posts.revisions.current_side") }}</div>
                                             <div class="prose-preview text-sm" v-html="renderBlock(entry.current)" />
                                         </div>
                                     </div>
