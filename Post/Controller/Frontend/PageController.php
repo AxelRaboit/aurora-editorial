@@ -6,10 +6,10 @@ namespace Aurora\Module\Editorial\Post\Controller\Frontend;
 
 use Aurora\Core\Enum\HttpMethodEnum;
 use Aurora\Core\Enum\HttpStatusEnum;
-use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Frontend\Controller\LocaleTrait;
 use Aurora\Core\Frontend\Service\Context;
 use Aurora\Core\Frontend\Service\HttpCacheService;
+use Aurora\Core\Http\JsonResponseTrait;
 use Aurora\Module\Configuration\Setting\Enum\ApplicationParameterEnum;
 use Aurora\Module\Configuration\Theme\Service\ThemeResolver;
 use Aurora\Module\Editorial\Post\Entity\Post;

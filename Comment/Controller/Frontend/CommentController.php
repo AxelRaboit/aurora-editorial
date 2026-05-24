@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Comment\Controller\Frontend;
 
 use Aurora\Core\Enum\HttpMethodEnum;
-use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Frontend\Controller\LocaleTrait;
 use Aurora\Core\Frontend\Service\Context;
+use Aurora\Core\Http\JsonResponseTrait;
 use Aurora\Module\Editorial\Comment\Dto\CommentInputFactoryInterface;
 use Aurora\Module\Editorial\Comment\Entity\CommentInterface;
 use Aurora\Module\Editorial\Comment\Enum\ReactionTypeEnum;

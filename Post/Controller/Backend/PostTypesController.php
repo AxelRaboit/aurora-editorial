@@ -6,8 +6,8 @@ namespace Aurora\Module\Editorial\Post\Controller\Backend;
 
 use Aurora\Core\Enum\HttpMethodEnum;
 use Aurora\Core\Enum\HttpStatusEnum;
-use Aurora\Core\Frontend\Controller\JsonRequestTrait;
-use Aurora\Core\Frontend\Controller\JsonResponseTrait;
+use Aurora\Core\Http\JsonRequestTrait;
+use Aurora\Core\Http\JsonResponseTrait;
 use Aurora\Core\Support\Arr;
 use Aurora\Core\Validation\Service\PayloadValidator;
 use Aurora\Module\Editorial\Post\Dto\PostTypeFieldInputFactoryInterface;

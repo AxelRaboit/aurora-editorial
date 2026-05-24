@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Comment\Controller\Backend;
 
 use Aurora\Core\Enum\HttpMethodEnum;
-use Aurora\Core\Frontend\Controller\JsonResponseTrait;
+use Aurora\Core\Http\JsonResponseTrait;
 use Aurora\Core\Validation\Dto\PaginationRequest;
 use Aurora\Module\Configuration\Setting\Enum\ApplicationParameterEnum;
 use Aurora\Module\Configuration\Setting\Repository\SettingRepository;

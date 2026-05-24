@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Seo\Controller\Backend;
 
 use Aurora\Core\Enum\HttpMethodEnum;
-use Aurora\Core\Frontend\Controller\JsonResponseTrait;
+use Aurora\Core\Http\JsonResponseTrait;
 use Aurora\Module\Editorial\Seo\Service\SitemapService;
 use Aurora\Module\Editorial\Seo\View\SitemapViewBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

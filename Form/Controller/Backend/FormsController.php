@@ -6,8 +6,8 @@ namespace Aurora\Module\Editorial\Form\Controller\Backend;
 
 use Aurora\Core\Enum\HttpMethodEnum;
 use Aurora\Core\Enum\HttpStatusEnum;
-use Aurora\Core\Frontend\Controller\JsonRequestTrait;
-use Aurora\Core\Frontend\Controller\JsonResponseTrait;
+use Aurora\Core\Http\JsonRequestTrait;
+use Aurora\Core\Http\JsonResponseTrait;
 use Aurora\Core\Validation\Dto\PaginationRequest;
 use Aurora\Core\Validation\Service\PayloadValidator;
 use Aurora\Module\Editorial\Form\Dto\FormInputFactoryInterface;

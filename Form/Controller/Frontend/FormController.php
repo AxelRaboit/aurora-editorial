@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Form\Controller\Frontend;
 
 use Aurora\Core\Enum\HttpMethodEnum;
-use Aurora\Core\Frontend\Controller\JsonResponseTrait;
 use Aurora\Core\Frontend\Controller\LocaleTrait;
 use Aurora\Core\Frontend\Service\Context;
+use Aurora\Core\Http\JsonResponseTrait;
 use Aurora\Module\Configuration\Theme\Service\ThemeResolver;
 use Aurora\Module\Editorial\Form\Entity\FormTranslationInterface;
 use Aurora\Module\Editorial\Form\Manager\FormManagerInterface;
