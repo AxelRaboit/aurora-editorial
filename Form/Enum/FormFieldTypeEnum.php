@@ -18,7 +18,7 @@ enum FormFieldTypeEnum: string
 
     public function getLabelKey(): string
     {
-        return 'backend.editorial.forms.fieldType.'.$this->value;
+        return 'backend.editorial.forms.field_type.'.$this->value;
     }
 
     public function hasOptions(): bool

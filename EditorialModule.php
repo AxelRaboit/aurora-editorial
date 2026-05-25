@@ -68,7 +68,7 @@ final readonly class EditorialModule implements ModuleInterface, ModuleTogglePro
         }
 
         if ($this->editorialContext->isPostTypesEnabled()) {
-            $items[] = new NavItem('backend_post_types', 'backend.nav.postTypes', 'layers', requiredPrivilege: 'editorial.post_types.view', descriptionKey: 'backend.nav.postTypes_description');
+            $items[] = new NavItem('backend_post_types', 'backend.nav.post_types', 'layers', requiredPrivilege: 'editorial.post_types.view', descriptionKey: 'backend.nav.post_types_description');
         }
 
         if ($this->editorialContext->isTaxonomiesEnabled()) {
@@ -100,7 +100,7 @@ final readonly class EditorialModule implements ModuleInterface, ModuleTogglePro
             new NavSection('editorial', [
                 new NavItem('backend_posts', 'backend.nav.posts', 'file-text', requiredPrivilege: 'editorial.posts.view', descriptionKey: 'backend.nav.posts_description'),
                 new NavItem('backend_menus', 'backend.nav.menus', 'menu', requiredPrivilege: 'editorial.menus.view', descriptionKey: 'backend.nav.menus_description'),
-                new NavItem('backend_post_types', 'backend.nav.postTypes', 'layers', requiredPrivilege: 'editorial.post_types.view', descriptionKey: 'backend.nav.postTypes_description'),
+                new NavItem('backend_post_types', 'backend.nav.post_types', 'layers', requiredPrivilege: 'editorial.post_types.view', descriptionKey: 'backend.nav.post_types_description'),
                 new NavItem('backend_taxonomies', 'backend.nav.taxonomies', 'tags', requiredPrivilege: 'editorial.taxonomies.view', descriptionKey: 'backend.nav.taxonomies_description'),
                 new NavItem('backend_comments', 'backend.nav.comments', 'message-square', requiredPrivilege: 'editorial.comments.view', descriptionKey: 'backend.nav.comments_description'),
                 new NavItem('backend_forms', 'backend.nav.forms', 'clipboard-list', requiredPrivilege: 'editorial.forms.view', descriptionKey: 'backend.nav.forms_description'),

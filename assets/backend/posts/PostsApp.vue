@@ -125,7 +125,7 @@ function onSearch(value) {
 const deletePost = usePostDelete(
     () => (trashed.value ? props.forceDeletePath : props.deletePath),
     (id) => removePost(id),
-    () => (trashed.value ? "backend.posts.deletedForever" : "backend.posts.deleted"),
+    () => (trashed.value ? "backend.posts.deleted_forever" : "backend.posts.deleted"),
 );
 
 const { previewPost, previewLoading, frontUrl, openPreview } = usePostsPreview(props.showPath, props.locales);
@@ -406,7 +406,7 @@ const { termMap, postTermLabels } = usePostTermLabels({ parsedTaxonomies, defaul
                 v-on:close="deletePost.pendingDelete.value = null"
             >
                 <p class="text-sm text-primary">
-                    {{ t(trashed ? "backend.posts.forceDeleteConfirm" : "backend.posts.deleteConfirm", { title: deletePost.pendingDelete.value?.title ?? "?" }) }}
+                    {{ t(trashed ? "backend.posts.force_delete_confirm" : "backend.posts.delete_confirm", { title: deletePost.pendingDelete.value?.title ?? "?" }) }}
                 </p>
                 <template #footer>
                     <AppModalFooter>
@@ -414,7 +414,7 @@ const { termMap, postTermLabels } = usePostTermLabels({ parsedTaxonomies, defaul
                             <X class="w-3.5 h-3.5" :stroke-width="2" /> {{ t("shared.common.cancel") }}
                         </AppButton>
                         <AppButton variant="danger" size="md" :loading="deletePost.loading.value" v-on:click="deletePost.submit()">
-                            <Trash2 class="w-3.5 h-3.5" :stroke-width="2" /> {{ t(trashed ? "backend.posts.forceDelete" : "common.delete") }}
+                            <Trash2 class="w-3.5 h-3.5" :stroke-width="2" /> {{ t(trashed ? "backend.posts.force_delete" : "common.delete") }}
                         </AppButton>
                     </AppModalFooter>
                 </template>

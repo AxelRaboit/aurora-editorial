@@ -36,7 +36,7 @@ export function useCommentModeration(paths, initialStats, onRefresh) {
         return moderateComment(
             comment,
             paths.approve,
-            "backend.comments.approveSuccess",
+            "backend.comments.approve_success",
             (status) => {
                 if (status === CommentStatus.Pending) {
                     localStats.value.pending = Math.max(
@@ -59,7 +59,7 @@ export function useCommentModeration(paths, initialStats, onRefresh) {
         return moderateComment(
             comment,
             paths.spam,
-            "backend.comments.spamSuccess",
+            "backend.comments.spam_success",
             (status) => {
                 if (status === CommentStatus.Pending) {
                     localStats.value.pending = Math.max(

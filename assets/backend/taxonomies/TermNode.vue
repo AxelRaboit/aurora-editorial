@@ -91,7 +91,7 @@ const indentStyle = computed(() => ({ marginLeft: `${props.depth * 1}rem` }));
             <span v-if="slug" class="text-xs text-muted font-mono shrink-0 hidden sm:inline">{{ slug }}</span>
 
             <div class="opacity-0 group-hover:opacity-100 flex gap-0.5 transition-opacity shrink-0">
-                <AppIconButton v-if="hierarchical" color="sky" :title="$t('backend.taxonomies.terms.addChild')" v-on:click.stop="emit('add-child', node.id)">
+                <AppIconButton v-if="hierarchical" color="sky" :title="$t('backend.taxonomies.terms.add_child')" v-on:click.stop="emit('add-child', node.id)">
                     <Plus class="w-4 h-4" :stroke-width="2" />
                 </AppIconButton>
                 <AppIconButton color="accent" v-on:click.stop="emit('edit', node)">

@@ -34,7 +34,7 @@ final readonly class EditorialMediaUsageProvider implements MediaUsageProviderIn
             $usages[] = [
                 'type' => 'post.featured',
                 'label' => $row['title'] ?: '#'.$row['id'],
-                'detail' => $this->translator->trans('backend.media.usage.postFeatured'),
+                'detail' => $this->translator->trans('backend.media.usage.post_featured'),
                 'href' => $this->safeUrl('backend_posts_show', ['id' => (int) $row['id']]),
             ];
         }
@@ -50,7 +50,7 @@ final readonly class EditorialMediaUsageProvider implements MediaUsageProviderIn
             $usages[] = [
                 'type' => 'post.content',
                 'label' => $row['title'] ?: '#'.$row['id'],
-                'detail' => $this->translator->trans('backend.media.usage.postContent'),
+                'detail' => $this->translator->trans('backend.media.usage.post_content'),
                 'href' => $this->safeUrl('backend_posts_show', ['id' => (int) $row['id']]),
             ];
         }

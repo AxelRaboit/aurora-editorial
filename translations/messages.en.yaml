@@ -311,6 +311,7 @@ backend:
       errors:
         name_required: Name is required.
       add_term: Add a term
+      add_child: Add child term
       edit_term: Edit term
       delete_term_confirm: 'Delete "{name}"? Direct children will be re-parented.'
       name: Name
@@ -337,7 +338,7 @@ backend:
     menus: Menus
     menus_description: Build the public site's navigation menus
     post_types: Post types
-    postTypes_description: 'Define custom content types (articles, pages, etc.)'
+    post_types_description: 'Define custom content types (articles, pages, etc.)'
     posts: Content
     posts_description: 'Write and publish articles, pages and other editorial content'
     sitemap: Sitemap

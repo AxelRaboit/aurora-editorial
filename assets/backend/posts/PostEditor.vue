@@ -341,7 +341,7 @@ const {
                     <div class="relative">
                         <AppInput
                             v-model="relatedSearchQuery"
-                            :placeholder="t('backend.posts.relatedPosts.search_placeholder')"
+                            :placeholder="t('backend.posts.related_posts.search_placeholder')"
                             v-on:focus="relatedSearchOpen = true"
                             v-on:blur="setTimeout(() => { relatedSearchOpen = false; }, 150)"
                         />
