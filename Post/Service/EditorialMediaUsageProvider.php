@@ -24,10 +24,10 @@ final readonly class EditorialMediaUsageProvider implements MediaUsageProviderIn
 
         // Featured image references.
         $featured = $this->connection->fetchAllAssociative(
-            'SELECT p.id, COALESCE(t.title, p.slug) AS title FROM core_posts p
-             LEFT JOIN post_translations t ON t.post_id = p.id
+            'SELECT p.id, COALESCE(t.title, t.slug) AS title FROM core_posts p
+             LEFT JOIN core_post_translations t ON t.post_id = p.id
              WHERE p.featured_media_id = :id
-             GROUP BY p.id, t.title, p.slug',
+             GROUP BY p.id, t.title, t.slug',
             ['id' => $mediaId],
         );
         foreach ($featured as $row) {
@@ -41,8 +41,8 @@ final readonly class EditorialMediaUsageProvider implements MediaUsageProviderIn
 
         // EditorJS image blocks: blocks JSONB stores `{"type":"image","data":{"mediaId":N}}`.
         $blocks = $this->connection->fetchAllAssociative(
-            'SELECT DISTINCT p.id, COALESCE(t.title, p.slug) AS title FROM core_posts p
-             LEFT JOIN post_translations t ON t.post_id = p.id
+            'SELECT DISTINCT p.id, COALESCE(t.title, t.slug) AS title FROM core_posts p
+             LEFT JOIN core_post_translations t ON t.post_id = p.id
              WHERE t.blocks::text LIKE :pattern',
             ['pattern' => '%"mediaId":'.$mediaId.'%'],
         );
