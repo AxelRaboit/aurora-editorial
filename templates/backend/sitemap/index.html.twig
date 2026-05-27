@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block body %}
-<div {{ vue_component('editorial/backend/SitemapApp', {
+<div {{ vue_component('editorial/backend/sitemap/SitemapApp', {
     stats: stats,
     invalidatePath: path('backend_editorial_sitemap_invalidate'),
     sitemapUrl: path('frontend_sitemap'),
