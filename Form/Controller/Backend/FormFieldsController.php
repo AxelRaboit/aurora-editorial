@@ -24,9 +24,9 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 /**
  * Form fields sub-domain — add / update / delete / reorder fields inside
  * a form. Split from `FormsController`. Route names preserved
- * (`backend_forms_field_*`).
+ * (`backend_editorial_forms_field_*`).
  */
-#[Route('/backend/forms', name: 'backend_forms')]
+#[Route('/backend/editorial/forms', name: 'backend_editorial_forms')]
 #[IsGranted('editorial.forms.view')]
 final class FormFieldsController extends AbstractController
 {

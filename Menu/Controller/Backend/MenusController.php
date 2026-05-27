@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/backend/menus', name: 'backend_menus')]
+#[Route('/backend/editorial/menus', name: 'backend_editorial_menus')]
 #[IsGranted('editorial.menus.view')]
 class MenusController extends AbstractController
 {

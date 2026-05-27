@@ -35,7 +35,7 @@ final readonly class EditorialMediaUsageProvider implements MediaUsageProviderIn
                 'type' => 'post.featured',
                 'label' => $row['title'] ?: '#'.$row['id'],
                 'detail' => $this->translator->trans('backend.media.usage.post_featured'),
-                'href' => $this->safeUrl('backend_posts_show', ['id' => (int) $row['id']]),
+                'href' => $this->safeUrl('backend_editorial_posts_show', ['id' => (int) $row['id']]),
             ];
         }
 
@@ -51,7 +51,7 @@ final readonly class EditorialMediaUsageProvider implements MediaUsageProviderIn
                 'type' => 'post.content',
                 'label' => $row['title'] ?: '#'.$row['id'],
                 'detail' => $this->translator->trans('backend.media.usage.post_content'),
-                'href' => $this->safeUrl('backend_posts_show', ['id' => (int) $row['id']]),
+                'href' => $this->safeUrl('backend_editorial_posts_show', ['id' => (int) $row['id']]),
             ];
         }
 

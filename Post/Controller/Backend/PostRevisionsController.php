@@ -20,9 +20,9 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 /**
  * Post revisions sub-domain — list revisions, view a revision, restore a
  * revision into the live post. Split from `PostsController`. Route names
- * preserved (`backend_posts_revisions`, `_revision_show`, `_revision_restore`).
+ * preserved (`backend_editorial_posts_revisions`, `_revision_show`, `_revision_restore`).
  */
-#[Route('/backend/posts', name: 'backend_posts')]
+#[Route('/backend/editorial/posts', name: 'backend_editorial_posts')]
 #[IsGranted('editorial.posts.view')]
 final class PostRevisionsController extends AbstractController
 {

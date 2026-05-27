@@ -49,7 +49,7 @@ watch(
 
 async function fetchRevisions() {
     loadingList.value = true;
-    const data = await request(`/backend/posts/${props.postId}/revisions`, null, { method: HttpMethod.Get, noGuard: true });
+    const data = await request(`/backend/editorial/posts/${props.postId}/revisions`, null, { method: HttpMethod.Get, noGuard: true });
     loadingList.value = false;
     if (!data) return;
     revisions.value = data.revisions ?? [];
@@ -58,7 +58,7 @@ async function fetchRevisions() {
 async function selectRevision(revision) {
     selectedRevision.value = null;
     loadingSelected.value = true;
-    const data = await request(`/backend/posts/${props.postId}/revisions/${revision.id}`, null, { method: HttpMethod.Get, noGuard: true });
+    const data = await request(`/backend/editorial/posts/${props.postId}/revisions/${revision.id}`, null, { method: HttpMethod.Get, noGuard: true });
     loadingSelected.value = false;
     if (!data) return;
     selectedRevision.value = data.revision ?? null;
@@ -67,7 +67,7 @@ async function selectRevision(revision) {
 async function restore() {
     if (!selectedRevision.value) return;
     restoring.value = true;
-    const data = await request(`/backend/posts/${props.postId}/revisions/${selectedRevision.value.id}/restore`);
+    const data = await request(`/backend/editorial/posts/${props.postId}/revisions/${selectedRevision.value.id}/restore`);
     restoring.value = false;
     if (!data) return;
     if (data.success) {

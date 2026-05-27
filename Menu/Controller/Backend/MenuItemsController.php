@@ -23,9 +23,9 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 /**
  * Menu items sub-domain — create / update / delete / reorder items inside
  * a menu. Split from `MenusController`. Route names preserved
- * (`backend_menus_items_*`).
+ * (`backend_editorial_menus_items_*`).
  */
-#[Route('/backend/menus', name: 'backend_menus')]
+#[Route('/backend/editorial/menus', name: 'backend_editorial_menus')]
 #[IsGranted('editorial.menus.view')]
 final class MenuItemsController extends AbstractController
 {

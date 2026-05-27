@@ -16,10 +16,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
  * Post trash sub-domain — restore / force-delete / empty-trash. Split
- * from `PostsController`. Route names preserved (`backend_posts_restore`,
+ * from `PostsController`. Route names preserved (`backend_editorial_posts_restore`,
  * `_force_delete`, `_empty_trash`).
  */
-#[Route('/backend/posts', name: 'backend_posts')]
+#[Route('/backend/editorial/posts', name: 'backend_editorial_posts')]
 #[IsGranted('editorial.posts.view')]
 final class PostsTrashController extends AbstractController
 {

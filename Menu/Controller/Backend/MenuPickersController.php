@@ -17,9 +17,9 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
  * Menu pickers sub-domain — autocomplete search endpoints powering the
  * "pick a post / term / post type / taxonomy" UI in the menu editor.
  * Split from `MenusController`. Route names preserved
- * (`backend_menus_picker_*`).
+ * (`backend_editorial_menus_picker_*`).
  */
-#[Route('/backend/menus/picker', name: 'backend_menus_picker')]
+#[Route('/backend/editorial/menus/picker', name: 'backend_editorial_menus_picker')]
 #[IsGranted('editorial.menus.view')]
 final class MenuPickersController extends AbstractController
 {

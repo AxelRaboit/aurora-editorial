@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/backend/forms', name: 'backend_forms')]
+#[Route('/backend/editorial/forms', name: 'backend_editorial_forms')]
 #[IsGranted('editorial.forms.view')]
 final class FormsController extends AbstractController
 {

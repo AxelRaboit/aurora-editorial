@@ -9,7 +9,7 @@ import { HttpMethod } from "@/shared/utils/http/httpMethod.js";
  * add/remove selections. The selection is owned by the caller (form state).
  */
 export function useRelatedSearch({
-    searchPath = "/backend/posts/search",
+    searchPath = "/backend/editorial/posts/search",
     excludeId = null,
     getSelectedIds,
     addId,

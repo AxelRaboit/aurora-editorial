@@ -60,31 +60,31 @@ final readonly class EditorialModule implements ModuleInterface, ModuleTogglePro
         $items = [];
 
         if ($this->editorialContext->isPostsEnabled()) {
-            $items[] = new NavItem('backend_posts', 'backend.nav.posts', 'file-text', requiredPrivilege: 'editorial.posts.view', descriptionKey: 'backend.nav.posts_description');
+            $items[] = new NavItem('backend_editorial_posts', 'backend.nav.posts', 'file-text', requiredPrivilege: 'editorial.posts.view', descriptionKey: 'backend.nav.posts_description');
         }
 
         if ($this->editorialContext->isMenusEnabled()) {
-            $items[] = new NavItem('backend_menus', 'backend.nav.menus', 'menu', requiredPrivilege: 'editorial.menus.view', descriptionKey: 'backend.nav.menus_description');
+            $items[] = new NavItem('backend_editorial_menus', 'backend.nav.menus', 'menu', requiredPrivilege: 'editorial.menus.view', descriptionKey: 'backend.nav.menus_description');
         }
 
         if ($this->editorialContext->isPostTypesEnabled()) {
-            $items[] = new NavItem('backend_post_types', 'backend.nav.post_types', 'layers', requiredPrivilege: 'editorial.post_types.view', descriptionKey: 'backend.nav.post_types_description');
+            $items[] = new NavItem('backend_editorial_post_types', 'backend.nav.post_types', 'layers', requiredPrivilege: 'editorial.post_types.view', descriptionKey: 'backend.nav.post_types_description');
         }
 
         if ($this->editorialContext->isTaxonomiesEnabled()) {
-            $items[] = new NavItem('backend_taxonomies', 'backend.nav.taxonomies', 'tags', requiredPrivilege: 'editorial.taxonomies.view', descriptionKey: 'backend.nav.taxonomies_description');
+            $items[] = new NavItem('backend_editorial_taxonomies', 'backend.nav.taxonomies', 'tags', requiredPrivilege: 'editorial.taxonomies.view', descriptionKey: 'backend.nav.taxonomies_description');
         }
 
         if ($this->editorialContext->isCommentsEnabled()) {
-            $items[] = new NavItem('backend_comments', 'backend.nav.comments', 'message-square', requiredPrivilege: 'editorial.comments.view', descriptionKey: 'backend.nav.comments_description');
+            $items[] = new NavItem('backend_editorial_comments', 'backend.nav.comments', 'message-square', requiredPrivilege: 'editorial.comments.view', descriptionKey: 'backend.nav.comments_description');
         }
 
         if ($this->editorialContext->isFormsEnabled()) {
-            $items[] = new NavItem('backend_forms', 'backend.nav.forms', 'clipboard-list', requiredPrivilege: 'editorial.forms.view', descriptionKey: 'backend.nav.forms_description');
+            $items[] = new NavItem('backend_editorial_forms', 'backend.nav.forms', 'clipboard-list', requiredPrivilege: 'editorial.forms.view', descriptionKey: 'backend.nav.forms_description');
         }
 
         if ($this->editorialContext->isSitemapEnabled()) {
-            $items[] = new NavItem('backend_sitemap', 'backend.nav.sitemap', 'map', requiredPrivilege: 'editorial.sitemap.view', descriptionKey: 'backend.nav.sitemap_description');
+            $items[] = new NavItem('backend_editorial_sitemap', 'backend.nav.sitemap', 'map', requiredPrivilege: 'editorial.sitemap.view', descriptionKey: 'backend.nav.sitemap_description');
         }
 
         if ([] === $items) {
@@ -98,13 +98,13 @@ final readonly class EditorialModule implements ModuleInterface, ModuleTogglePro
     {
         return [
             new NavSection('editorial', [
-                new NavItem('backend_posts', 'backend.nav.posts', 'file-text', requiredPrivilege: 'editorial.posts.view', descriptionKey: 'backend.nav.posts_description'),
-                new NavItem('backend_menus', 'backend.nav.menus', 'menu', requiredPrivilege: 'editorial.menus.view', descriptionKey: 'backend.nav.menus_description'),
-                new NavItem('backend_post_types', 'backend.nav.post_types', 'layers', requiredPrivilege: 'editorial.post_types.view', descriptionKey: 'backend.nav.post_types_description'),
-                new NavItem('backend_taxonomies', 'backend.nav.taxonomies', 'tags', requiredPrivilege: 'editorial.taxonomies.view', descriptionKey: 'backend.nav.taxonomies_description'),
-                new NavItem('backend_comments', 'backend.nav.comments', 'message-square', requiredPrivilege: 'editorial.comments.view', descriptionKey: 'backend.nav.comments_description'),
-                new NavItem('backend_forms', 'backend.nav.forms', 'clipboard-list', requiredPrivilege: 'editorial.forms.view', descriptionKey: 'backend.nav.forms_description'),
-                new NavItem('backend_sitemap', 'backend.nav.sitemap', 'map', requiredPrivilege: 'editorial.sitemap.view', descriptionKey: 'backend.nav.sitemap_description'),
+                new NavItem('backend_editorial_posts', 'backend.nav.posts', 'file-text', requiredPrivilege: 'editorial.posts.view', descriptionKey: 'backend.nav.posts_description'),
+                new NavItem('backend_editorial_menus', 'backend.nav.menus', 'menu', requiredPrivilege: 'editorial.menus.view', descriptionKey: 'backend.nav.menus_description'),
+                new NavItem('backend_editorial_post_types', 'backend.nav.post_types', 'layers', requiredPrivilege: 'editorial.post_types.view', descriptionKey: 'backend.nav.post_types_description'),
+                new NavItem('backend_editorial_taxonomies', 'backend.nav.taxonomies', 'tags', requiredPrivilege: 'editorial.taxonomies.view', descriptionKey: 'backend.nav.taxonomies_description'),
+                new NavItem('backend_editorial_comments', 'backend.nav.comments', 'message-square', requiredPrivilege: 'editorial.comments.view', descriptionKey: 'backend.nav.comments_description'),
+                new NavItem('backend_editorial_forms', 'backend.nav.forms', 'clipboard-list', requiredPrivilege: 'editorial.forms.view', descriptionKey: 'backend.nav.forms_description'),
+                new NavItem('backend_editorial_sitemap', 'backend.nav.sitemap', 'map', requiredPrivilege: 'editorial.sitemap.view', descriptionKey: 'backend.nav.sitemap_description'),
             ], priority: 30),
         ];
     }

@@ -14,7 +14,7 @@
 {% block body %}
 <div {{ vue_component('editorial/backend/SitemapApp', {
     stats: stats,
-    invalidatePath: path('backend_sitemap_invalidate'),
+    invalidatePath: path('backend_editorial_sitemap_invalidate'),
     sitemapUrl: path('frontend_sitemap'),
 }) }} class="flex-1 min-w-0"></div>
 {% endblock %}

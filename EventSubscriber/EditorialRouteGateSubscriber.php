@@ -11,21 +11,21 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * 404s every Editorial admin route (`backend_editorial_*`, `backend_comments_*`,
- * `backend_forms_*`, `backend_post_types_*`, `backend_posts_*`, `backend_taxonomies_*`,
- * `backend_sitemap_*`, `backend_menus_*`) when EditorialEnabled is off.
+ * 404s every Editorial admin route (`backend_editorial_*`, `backend_editorial_comments_*`,
+ * `backend_editorial_forms_*`, `backend_editorial_post_types_*`, `backend_editorial_posts_*`, `backend_editorial_taxonomies_*`,
+ * `backend_editorial_sitemap_*`, `backend_editorial_menus_*`) when EditorialEnabled is off.
  */
 final readonly class EditorialRouteGateSubscriber implements EventSubscriberInterface
 {
     private const array ADMIN_PREFIXES = [
         'backend_editorial_',
-        'backend_comments',
-        'backend_forms',
-        'backend_post_types',
-        'backend_posts',
-        'backend_taxonomies',
-        'backend_sitemap',
-        'backend_menus',
+        'backend_editorial_comments',
+        'backend_editorial_forms',
+        'backend_editorial_post_types',
+        'backend_editorial_posts',
+        'backend_editorial_taxonomies',
+        'backend_editorial_sitemap',
+        'backend_editorial_menus',
     ];
 
     public function __construct(private EditorialContext $editorialContext) {}

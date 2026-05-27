@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/backend/taxonomies', name: 'backend_taxonomies')]
+#[Route('/backend/editorial/taxonomies', name: 'backend_editorial_taxonomies')]
 #[IsGranted('editorial.taxonomies.view')]
 class TaxonomiesController extends AbstractController
 {

@@ -13,7 +13,7 @@ export function usePostReferenceField({
     field,
     modelValue,
     update,
-    searchPath = "/backend/posts/search",
+    searchPath = "/backend/editorial/posts/search",
 }) {
     const isReference = computed(
         () => field.value.type === PostFieldType.Reference,

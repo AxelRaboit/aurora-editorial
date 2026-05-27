@@ -391,8 +391,8 @@ export function usePostEditor({ props, emit, t }) {
         );
         version.value = post.version ?? null;
         snapshotBase(form.translations);
-        // After a create the URL still says `/backend/posts/new`; swap
-        // it for `/backend/posts/{id}/edit` without reloading so the
+        // After a create the URL still says `/backend/editorial/posts/new`; swap
+        // it for `/backend/editorial/posts/{id}/edit` without reloading so the
         // browser back/refresh land on the right page.
         if (wasNew && post.id) {
             postId.value = post.id;

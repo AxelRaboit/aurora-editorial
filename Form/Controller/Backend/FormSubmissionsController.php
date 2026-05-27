@@ -21,9 +21,9 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 /**
  * Form submissions sub-domain — paginated list of submissions for a form
  * and CSV export. Split from `FormsController`. Route names preserved
- * (`backend_forms_submissions`, `_submissions_export`).
+ * (`backend_editorial_forms_submissions`, `_submissions_export`).
  */
-#[Route('/backend/forms', name: 'backend_forms')]
+#[Route('/backend/editorial/forms', name: 'backend_editorial_forms')]
 #[IsGranted('editorial.forms.view')]
 final class FormSubmissionsController extends AbstractController
 {
