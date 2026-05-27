@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Taxonomy\View;
 
 use Aurora\Core\Locale\Service\LocaleContextInterface;
-use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
-use Aurora\Module\Editorial\Post\Serializer\PostTypeSerializerInterface;
+use Aurora\Module\Editorial\PostType\Repository\PostTypeRepository;
+use Aurora\Module\Editorial\PostType\Serializer\PostTypeSerializerInterface;
 use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
 use Aurora\Module\Editorial\Taxonomy\Serializer\TaxonomySerializerInterface;
 

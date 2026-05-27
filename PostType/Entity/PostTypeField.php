@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Aurora\Module\Editorial\Post\Entity;
+namespace Aurora\Module\Editorial\PostType\Entity;
 
-use Aurora\Module\Editorial\Post\Repository\PostTypeFieldRepository;
+use Aurora\Module\Editorial\PostType\Repository\PostTypeFieldRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PostTypeFieldRepository::class)]

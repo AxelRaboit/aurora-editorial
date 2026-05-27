@@ -7,7 +7,7 @@ namespace Aurora\Module\Editorial\Taxonomy\Manager;
 use Aurora\Core\Sequence\SequenceGenerator;
 use Aurora\Module\Configuration\Setting\Repository\SettingRepository;
 use Aurora\Module\Dev\Audit\Service\AuditLogger;
-use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
+use Aurora\Module\Editorial\PostType\Repository\PostTypeRepository;
 use Aurora\Module\Editorial\Setting\EditorialSettingEnum;
 use Aurora\Module\Editorial\Taxonomy\Dto\TaxonomyInputInterface;
 use Aurora\Module\Editorial\Taxonomy\Dto\TaxonomyTermInputInterface;

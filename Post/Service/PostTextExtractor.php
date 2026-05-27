@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Post\Service;
 
 use Aurora\Module\Editorial\Post\Entity\PostTranslationInterface;
-use Aurora\Module\Editorial\Post\Entity\PostTypeFieldInterface;
+use Aurora\Module\Editorial\PostType\Entity\PostTypeFieldInterface;
 
 final readonly class PostTextExtractor
 {

@@ -6,7 +6,7 @@ namespace Aurora\Module\Editorial\Seo\Service;
 
 use Aurora\Core\Frontend\Service\Context;
 use Aurora\Module\Editorial\Post\Repository\PostRepository;
-use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
+use Aurora\Module\Editorial\PostType\Repository\PostTypeRepository;
 use DateTimeInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 

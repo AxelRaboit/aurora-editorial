@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aurora\Module\Editorial\Post\Controller\Backend;
+namespace Aurora\Module\Editorial\PostType\Controller\Backend;
 
 use Aurora\Core\Enum\HttpMethodEnum;
 use Aurora\Core\Enum\HttpStatusEnum;
@@ -10,13 +10,13 @@ use Aurora\Core\Http\JsonRequestTrait;
 use Aurora\Core\Http\JsonResponseTrait;
 use Aurora\Core\Support\Arr;
 use Aurora\Core\Validation\Service\PayloadValidator;
-use Aurora\Module\Editorial\Post\Dto\PostTypeFieldInputFactoryInterface;
-use Aurora\Module\Editorial\Post\Dto\PostTypeInputFactoryInterface;
-use Aurora\Module\Editorial\Post\Entity\PostType;
-use Aurora\Module\Editorial\Post\Entity\PostTypeField;
-use Aurora\Module\Editorial\Post\Manager\PostTypeManagerInterface;
-use Aurora\Module\Editorial\Post\Serializer\PostTypeSerializerInterface;
-use Aurora\Module\Editorial\Post\View\PostTypesViewBuilder;
+use Aurora\Module\Editorial\PostType\Dto\PostTypeFieldInputFactoryInterface;
+use Aurora\Module\Editorial\PostType\Dto\PostTypeInputFactoryInterface;
+use Aurora\Module\Editorial\PostType\Entity\PostType;
+use Aurora\Module\Editorial\PostType\Entity\PostTypeField;
+use Aurora\Module\Editorial\PostType\Manager\PostTypeManagerInterface;
+use Aurora\Module\Editorial\PostType\Serializer\PostTypeSerializerInterface;
+use Aurora\Module\Editorial\PostType\View\PostTypesViewBuilder;
 use InvalidArgumentException;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aurora\Module\Editorial\Post\Dto;
+namespace Aurora\Module\Editorial\PostType\Dto;
 
 use Aurora\Core\Support\Str;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Aurora\Module\Editorial\Post\Repository;
+namespace Aurora\Module\Editorial\PostType\Repository;
 
 use Aurora\Core\Repository\ResolveTargetEntityRepository;
-use Aurora\Module\Editorial\Post\Entity\PostTypeField;
-use Aurora\Module\Editorial\Post\Entity\PostTypeFieldInterface;
+use Aurora\Module\Editorial\PostType\Entity\PostTypeField;
+use Aurora\Module\Editorial\PostType\Entity\PostTypeFieldInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**

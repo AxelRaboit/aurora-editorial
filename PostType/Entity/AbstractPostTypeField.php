@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Aurora\Module\Editorial\Post\Entity;
+namespace Aurora\Module\Editorial\PostType\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 

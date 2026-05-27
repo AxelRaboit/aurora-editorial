@@ -12,7 +12,7 @@ use Aurora\Module\Editorial\Post\Entity\Post;
 use Aurora\Module\Editorial\Post\Entity\PostTranslation;
 use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
 use Aurora\Module\Editorial\Post\Repository\PostRepository;
-use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
+use Aurora\Module\Editorial\PostType\Repository\PostTypeRepository;
 use Aurora\Module\Media\Library\Entity\Media;
 use Aurora\Module\Media\Library\Service\MediaUrlGenerator;
 use DateTimeImmutable;

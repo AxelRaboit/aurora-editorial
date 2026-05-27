@@ -6,6 +6,7 @@ namespace Aurora\Module\Editorial\Post\Entity;
 
 use Aurora\Core\Timestampable\TimestampableTrait;
 use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
+use Aurora\Module\Editorial\PostType\Entity\PostTypeInterface;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTermInterface;
 use Aurora\Module\Media\Library\Entity\MediaInterface;
 use Aurora\Module\Platform\User\Entity\User;

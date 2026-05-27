@@ -9,7 +9,7 @@ use Aurora\Module\Configuration\Setting\Entity\SettingInterface;
 use Aurora\Module\Configuration\Setting\Enum\ApplicationParameterEnum;
 use Aurora\Module\Editorial\Post\Entity\Post;
 use Aurora\Module\Editorial\Post\Entity\PostTranslation;
-use Aurora\Module\Editorial\Post\Entity\PostType;
+use Aurora\Module\Editorial\PostType\Entity\PostType;
 use Aurora\Module\Editorial\Seo\Service\RssFeedService;
 use Aurora\Module\Editorial\Seo\Service\SitemapService;
 use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;

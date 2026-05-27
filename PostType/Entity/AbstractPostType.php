@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Aurora\Module\Editorial\Post\Entity;
+namespace Aurora\Module\Editorial\PostType\Entity;
 
+use Aurora\Module\Editorial\Post\Entity\PostInterface;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

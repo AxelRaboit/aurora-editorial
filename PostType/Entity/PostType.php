@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Aurora\Module\Editorial\Post\Entity;
+namespace Aurora\Module\Editorial\PostType\Entity;
 
-use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
+use Aurora\Module\Editorial\PostType\Repository\PostTypeRepository;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyInterface;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;

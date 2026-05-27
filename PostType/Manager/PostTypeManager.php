@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Aurora\Module\Editorial\Post\Manager;
+namespace Aurora\Module\Editorial\PostType\Manager;
 
 use Aurora\Module\Dev\Audit\Service\AuditLogger;
-use Aurora\Module\Editorial\Post\Dto\PostTypeFieldInputInterface;
-use Aurora\Module\Editorial\Post\Dto\PostTypeInputInterface;
-use Aurora\Module\Editorial\Post\Entity\PostType;
-use Aurora\Module\Editorial\Post\Entity\PostTypeField;
-use Aurora\Module\Editorial\Post\Entity\PostTypeFieldInterface;
-use Aurora\Module\Editorial\Post\Entity\PostTypeInterface;
-use Aurora\Module\Editorial\Post\Repository\PostTypeRepository;
+use Aurora\Module\Editorial\PostType\Dto\PostTypeFieldInputInterface;
+use Aurora\Module\Editorial\PostType\Dto\PostTypeInputInterface;
+use Aurora\Module\Editorial\PostType\Entity\PostType;
+use Aurora\Module\Editorial\PostType\Entity\PostTypeField;
+use Aurora\Module\Editorial\PostType\Entity\PostTypeFieldInterface;
+use Aurora\Module\Editorial\PostType\Entity\PostTypeInterface;
+use Aurora\Module\Editorial\PostType\Repository\PostTypeRepository;
 use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;

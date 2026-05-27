@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Taxonomy\Entity;
 
-use Aurora\Module\Editorial\Post\Entity\PostTypeInterface;
+use Aurora\Module\Editorial\PostType\Entity\PostTypeInterface;
 use Doctrine\Common\Collections\Collection;
 
 interface TaxonomyInterface
