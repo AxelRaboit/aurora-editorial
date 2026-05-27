@@ -55,7 +55,7 @@ final class FormFieldsController extends AbstractController
         return $this->jsonSuccess(['field' => $this->formSerializer->serializeField($field)], HttpStatusEnum::Created->value);
     }
 
-    #[Route('/{id}/fields/{fieldId}/edit', name: '_field_update', requirements: ['id' => '\d+|__id__', 'fieldId' => '\d+|__id__'], methods: [HttpMethodEnum::Post->value])]
+    #[Route('/{id}/fields/{fieldId}/edit', name: '_field_update', requirements: ['id' => '\d+|__id__', 'fieldId' => '\d+|__fieldId__'], methods: [HttpMethodEnum::Post->value])]
     #[IsGranted('editorial.forms.edit')]
     public function update(Request $request, FormInterface $form, int $fieldId): JsonResponse
     {
@@ -75,7 +75,7 @@ final class FormFieldsController extends AbstractController
         return $this->jsonSuccess(['field' => $this->formSerializer->serializeField($field)]);
     }
 
-    #[Route('/{id}/fields/{fieldId}/delete', name: '_field_delete', requirements: ['id' => '\d+|__id__', 'fieldId' => '\d+|__id__'], methods: [HttpMethodEnum::Post->value])]
+    #[Route('/{id}/fields/{fieldId}/delete', name: '_field_delete', requirements: ['id' => '\d+|__id__', 'fieldId' => '\d+|__fieldId__'], methods: [HttpMethodEnum::Post->value])]
     #[IsGranted('editorial.forms.edit')]
     public function delete(FormInterface $form, int $fieldId): JsonResponse
     {
