@@ -44,38 +44,6 @@ backend:
       target_type_invalid: Type de cible invalide.
       parent_invalid: Parent invalide.
       parent_cycle: 'Impossible : cela créerait une boucle dans la hiérarchie.'
-  nav:
-    sections:
-      general: Général
-      platform: Plateforme
-      media: Médiathèque
-      configuration: Configuration
-      dev: Administration
-    administration: Accès développeur
-    administration_description: "Outils techniques, audit, requêtes d'accès et configuration avancée"
-    agencies: Agences
-    agencies_description: Gérer les agences et leurs services internes
-    dashboard: Tableau de bord
-    dashboard_description: Vue d'ensemble de l'activité et indicateurs clés
-    galleries: Galeries
-    media: Médias
-    media_description: 'Bibliothèque centralisée des images, vidéos et fichiers'
-    profile: Mon profil
-    services: Services
-    services_description: Définir les services proposés par les agences
-    settings: Réglages
-    settings_description: Paramètres globaux de l'application et préférences
-    themes: Thèmes
-    themes_description: 'Personnalisation visuelle (couleurs, logo, favicon)'
-    users: Utilisateurs
-    users_description: 'Gérer les comptes, rôles et privilèges'
-    resize_hint: Glisser pour redimensionner — double-clic pour réinitialiser
-    filter_nav: Filtrer le menu…
-    filter_nav_empty: Aucun élément trouvé
-    view_site: Voir le site
-    logout: Déconnexion
-    light_mode: Mode clair
-    dark_mode: Mode sombre
 frontend:
   menu:
     home: Accueil

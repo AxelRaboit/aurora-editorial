@@ -44,38 +44,6 @@ backend:
       target_type_invalid: Invalid target type.
       parent_invalid: Invalid parent.
       parent_cycle: 'Cannot: this would create a cycle in the hierarchy.'
-  nav:
-    sections:
-      general: General
-      platform: Platform
-      media: Media library
-      configuration: Configuration
-      dev: Administration
-    administration: Developer access
-    administration_description: 'Technical tools, audit log, access requests and advanced configuration'
-    agencies: Agencies
-    agencies_description: Manage agencies and their internal services
-    dashboard: Dashboard
-    dashboard_description: Overview of activity and key metrics
-    galleries: Galleries
-    media: Media
-    media_description: 'Centralized library of images, videos and files'
-    profile: My profile
-    services: Services
-    services_description: Define the services offered by your agencies
-    settings: Settings
-    settings_description: Global application parameters and preferences
-    themes: Themes
-    themes_description: 'Visual customization (colors, logo, favicon)'
-    users: Users
-    users_description: 'Manage user accounts, roles and privileges'
-    resize_hint: Drag to resize — double-click to reset
-    filter_nav: Filter menu…
-    filter_nav_empty: No items found
-    view_site: View site
-    logout: Log out
-    light_mode: Light mode
-    dark_mode: Dark mode
 frontend:
   menu:
     home: Home
