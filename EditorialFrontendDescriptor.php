@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial;
 
 use Aurora\Core\Frontend\Contract\FrontendInterface;
-use Aurora\Module\Configuration\Setting\Enum\ModuleParameterEnum;
 use Aurora\Module\Editorial\Menu\Contract\MenuLocationProviderInterface;
 use Aurora\Module\Editorial\Menu\Enum\MenuItemTargetTypeEnum;
 use Aurora\Module\Editorial\Menu\Enum\MenuItemVisibilityEnum;
+use Aurora\Module\Editorial\Setting\EditorialModuleParameterEnum;
 
 final class EditorialFrontendDescriptor implements FrontendInterface, MenuLocationProviderInterface
 {
@@ -34,7 +34,7 @@ final class EditorialFrontendDescriptor implements FrontendInterface, MenuLocati
 
     public function getModuleSettingKey(): string
     {
-        return ModuleParameterEnum::EditorialFrontend->value;
+        return EditorialModuleParameterEnum::Frontend->value;
     }
 
     public function getRoutePrefixes(): array

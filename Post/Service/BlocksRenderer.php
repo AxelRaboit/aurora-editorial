@@ -28,8 +28,8 @@ final readonly class BlocksRenderer
 {
     /**
      * @param iterable<BlockRendererInterface> $blockRenderers module-contributed
-     *        renderers for block types this core renderer doesn't handle itself
-     *        (e.g. Ecommerce's 'productGrid')
+     *                                                         renderers for block types this core renderer doesn't handle itself
+     *                                                         (e.g. Ecommerce's 'productGrid')
      */
     public function __construct(
         private PostRepository $postRepository,

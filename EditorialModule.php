@@ -9,7 +9,7 @@ use Aurora\Core\Module\Contract\ModuleToggleProviderInterface;
 use Aurora\Core\Module\Nav\NavItem;
 use Aurora\Core\Module\Nav\NavPermission;
 use Aurora\Core\Module\Nav\NavSection;
-use Aurora\Module\Configuration\Setting\Enum\ModuleParameterEnum;
+use Aurora\Module\Editorial\Setting\EditorialModuleParameterEnum;
 
 final readonly class EditorialModule implements ModuleInterface, ModuleToggleProviderInterface
 {
@@ -112,14 +112,14 @@ final readonly class EditorialModule implements ModuleInterface, ModuleTogglePro
     public function getToggles(): array
     {
         return [
-            ModuleParameterEnum::EditorialBackend->toToggle(),
-            ModuleParameterEnum::EditorialPosts->toToggle(),
-            ModuleParameterEnum::EditorialMenus->toToggle(),
-            ModuleParameterEnum::EditorialPostTypes->toToggle(),
-            ModuleParameterEnum::EditorialTaxonomies->toToggle(),
-            ModuleParameterEnum::EditorialComments->toToggle(),
-            ModuleParameterEnum::EditorialForms->toToggle(),
-            ModuleParameterEnum::EditorialSitemap->toToggle(),
+            EditorialModuleParameterEnum::Backend->toToggle(),
+            EditorialModuleParameterEnum::Posts->toToggle(),
+            EditorialModuleParameterEnum::Menus->toToggle(),
+            EditorialModuleParameterEnum::PostTypes->toToggle(),
+            EditorialModuleParameterEnum::Taxonomies->toToggle(),
+            EditorialModuleParameterEnum::Comments->toToggle(),
+            EditorialModuleParameterEnum::Forms->toToggle(),
+            EditorialModuleParameterEnum::Sitemap->toToggle(),
         ];
     }
 }

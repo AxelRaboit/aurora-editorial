@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Menu\Service;
 
-use Aurora\Module\Configuration\Setting\Enum\ModuleParameterEnum;
 use Aurora\Module\Configuration\Setting\Repository\SettingRepository;
 use Aurora\Module\Editorial\Menu\Entity\MenuInterface;
 use Aurora\Module\Editorial\Menu\Entity\MenuItemInterface;
@@ -144,7 +143,7 @@ final class MenuRenderer
             // Public front menu rendered without an authenticated user: only the
             // GLOBAL toggle is consulted here, deliberately bypassing the per-user
             // ModuleAccessChecker layer (no user context to apply overrides to).
-            MenuItemTargetTypeEnum::FrontShop => $this->settingRepository->getBoolean(ModuleParameterEnum::EcommerceFrontend->value, true)
+            MenuItemTargetTypeEnum::FrontShop => $this->settingRepository->getBoolean('modules_ecommerce_frontend', true)
                 ? $this->urlGenerator->generate('frontend_shop_index', ['locale' => $locale])
                 : null,
             MenuItemTargetTypeEnum::CustomUrl => $item->getCustomUrl() ?: null,

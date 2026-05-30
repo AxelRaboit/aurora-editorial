@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Post\Search;
 
 use Aurora\Core\Locale\Service\LocaleContextInterface;
-use Aurora\Module\Editorial\Post\Repository\PostRepository;
 use Aurora\Core\Search\SearchProviderInterface;
+use Aurora\Module\Editorial\Post\Repository\PostRepository;
 use Aurora\Module\Platform\User\Entity\CoreUserInterface;
 
 use function sprintf;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial;
 
 use Aurora\Core\Module\Service\ModuleAccessChecker;
-use Aurora\Module\Configuration\Setting\Enum\ModuleParameterEnum;
+use Aurora\Module\Editorial\Setting\EditorialModuleParameterEnum;
 
 final readonly class EditorialContext
 {
@@ -13,41 +13,41 @@ final readonly class EditorialContext
 
     public function isBackendEnabled(): bool
     {
-        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialBackend);
+        return $this->moduleAccessChecker->isEnabled(EditorialModuleParameterEnum::Backend->value);
     }
 
     public function isPostsEnabled(): bool
     {
-        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialPosts);
+        return $this->moduleAccessChecker->isEnabled(EditorialModuleParameterEnum::Posts->value);
     }
 
     public function isMenusEnabled(): bool
     {
-        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialMenus);
+        return $this->moduleAccessChecker->isEnabled(EditorialModuleParameterEnum::Menus->value);
     }
 
     public function isPostTypesEnabled(): bool
     {
-        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialPostTypes);
+        return $this->moduleAccessChecker->isEnabled(EditorialModuleParameterEnum::PostTypes->value);
     }
 
     public function isTaxonomiesEnabled(): bool
     {
-        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialTaxonomies);
+        return $this->moduleAccessChecker->isEnabled(EditorialModuleParameterEnum::Taxonomies->value);
     }
 
     public function isCommentsEnabled(): bool
     {
-        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialComments);
+        return $this->moduleAccessChecker->isEnabled(EditorialModuleParameterEnum::Comments->value);
     }
 
     public function isFormsEnabled(): bool
     {
-        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialForms);
+        return $this->moduleAccessChecker->isEnabled(EditorialModuleParameterEnum::Forms->value);
     }
 
     public function isSitemapEnabled(): bool
     {
-        return $this->moduleAccessChecker->isEnabled(ModuleParameterEnum::EditorialSitemap);
+        return $this->moduleAccessChecker->isEnabled(EditorialModuleParameterEnum::Sitemap->value);
     }
 }
