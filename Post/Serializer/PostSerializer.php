@@ -6,7 +6,7 @@ namespace Aurora\Module\Editorial\Post\Serializer;
 
 use Aurora\Core\Locale\Service\LocaleContextInterface;
 use Aurora\Module\Editorial\Post\Entity\PostInterface;
-use Aurora\Module\Media\Library\Service\MediaUrlGenerator;
+use Aurora\Module\Ged\Document\Service\DocumentUrlGenerator;
 use DateTimeInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 
@@ -15,7 +15,7 @@ class PostSerializer implements PostSerializerInterface
 {
     public function __construct(
         protected readonly LocaleContextInterface $localeContext,
-        protected readonly MediaUrlGenerator $mediaUrlGenerator,
+        protected readonly DocumentUrlGenerator $documentUrlGenerator,
     ) {}
 
     /**
@@ -79,8 +79,8 @@ class PostSerializer implements PostSerializerInterface
                 'metaDescription' => $translation->getMetaDescription(),
                 'customFields' => $translation->getCustomFields(),
                 'ogImageMediaId' => $translation->getOgImage()?->getId(),
-                'ogImageUrl' => $this->mediaUrlGenerator->publicUrl($translation->getOgImage()),
-                'ogImageFocalPosition' => $translation->getOgImage()?->getFocalPositionCss(),
+                'ogImageUrl' => $this->documentUrlGenerator->publicUrl($translation->getOgImage()),
+                'ogImageFocalPosition' => $this->documentUrlGenerator->focalPositionCss($translation->getOgImage()),
                 'canonicalUrl' => $translation->getCanonicalUrl(),
                 'noindex' => $translation->isNoindex(),
                 'focusKeyword' => $translation->getFocusKeyword(),
@@ -101,8 +101,8 @@ class PostSerializer implements PostSerializerInterface
         return [
             ...$this->serialize($post),
             'featuredMediaId' => $post->getFeaturedMedia()?->getId(),
-            'featuredMediaUrl' => $this->mediaUrlGenerator->publicUrl($post->getFeaturedMedia()),
-            'featuredMediaFocalPosition' => $post->getFeaturedMedia()?->getFocalPositionCss(),
+            'featuredMediaUrl' => $this->documentUrlGenerator->publicUrl($post->getFeaturedMedia()),
+            'featuredMediaFocalPosition' => $this->documentUrlGenerator->focalPositionCss($post->getFeaturedMedia()),
             'translations' => $translations,
             'relatedPosts' => $relatedPosts,
         ];
@@ -120,8 +120,8 @@ class PostSerializer implements PostSerializerInterface
             'metaDescription' => $translation?->getMetaDescription(),
             'publishedAt' => $post->getPublishedAt()?->format(DateTimeInterface::ATOM),
             'postTypeSlug' => $post->getPostType()->getSlug(),
-            'featuredMediaUrl' => $this->mediaUrlGenerator->variantUrl($featured, 'medium') ?? $this->mediaUrlGenerator->publicUrl($featured),
-            'featuredMediaFocalPosition' => $featured?->getFocalPositionCss(),
+            'featuredMediaUrl' => $this->documentUrlGenerator->variantUrl($featured, 'medium') ?? $this->documentUrlGenerator->publicUrl($featured),
+            'featuredMediaFocalPosition' => $this->documentUrlGenerator->focalPositionCss($featured),
         ];
     }
 }

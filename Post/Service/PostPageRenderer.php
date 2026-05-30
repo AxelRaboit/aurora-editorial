@@ -11,8 +11,8 @@ use Aurora\Module\Configuration\Theme\Service\ThemeResolver;
 use Aurora\Module\Editorial\Post\Entity\PostInterface;
 use Aurora\Module\Editorial\Post\Entity\PostTranslationInterface;
 use Aurora\Module\Editorial\Seo\Service\AlternatesBuilder;
-use Aurora\Module\Media\Library\Entity\MediaInterface;
-use Aurora\Module\Media\Library\Service\MediaUrlGenerator;
+use Aurora\Module\Ged\Document\Entity\DocumentInterface;
+use Aurora\Module\Ged\Document\Service\DocumentUrlGenerator;
 use DateTimeInterface;
 use LogicException;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,7 +32,7 @@ final readonly class PostPageRenderer
         private BlocksRenderer $blocksRenderer,
         private AlternatesBuilder $alternatesBuilder,
         private SettingRepository $settingRepository,
-        private MediaUrlGenerator $mediaUrlGenerator,
+        private DocumentUrlGenerator $documentUrlGenerator,
     ) {}
 
     /**
@@ -49,14 +49,15 @@ final readonly class PostPageRenderer
         $featuredMedia = $post->getFeaturedMedia();
 
         $featuredMediaData = null;
-        if ($featuredMedia instanceof MediaInterface) {
+        if ($featuredMedia instanceof DocumentInterface) {
+            $focalPositionCss = $this->documentUrlGenerator->focalPositionCss($featuredMedia);
             $featuredMediaData = [
-                'publicUrl' => $this->mediaUrlGenerator->publicUrl($featuredMedia),
-                'variantLargeUrl' => $this->mediaUrlGenerator->variantUrl($featuredMedia, 'large'),
-                'url' => $this->mediaUrlGenerator->variantUrl($featuredMedia, 'large') ?? $this->mediaUrlGenerator->publicUrl($featuredMedia),
+                'publicUrl' => $this->documentUrlGenerator->publicUrl($featuredMedia),
+                'variantLargeUrl' => $this->documentUrlGenerator->variantUrl($featuredMedia, 'large'),
+                'url' => $this->documentUrlGenerator->variantUrl($featuredMedia, 'large') ?? $this->documentUrlGenerator->publicUrl($featuredMedia),
                 'alt' => $featuredMedia->getAlt(),
-                'focalPositionCss' => $featuredMedia->getFocalPositionCss(),
-                'focalPosition' => $featuredMedia->getFocalPositionCss(),
+                'focalPositionCss' => $focalPositionCss,
+                'focalPosition' => $focalPositionCss,
             ];
         }
 
@@ -71,9 +72,9 @@ final readonly class PostPageRenderer
 
         $ogImageMedia = $translation->getOgImage() ?? $featuredMedia;
         $ogImageData = null;
-        if ($ogImageMedia instanceof MediaInterface) {
+        if ($ogImageMedia instanceof DocumentInterface) {
             $ogImageData = [
-                'publicUrl' => $this->mediaUrlGenerator->publicUrl($ogImageMedia),
+                'publicUrl' => $this->documentUrlGenerator->publicUrl($ogImageMedia),
             ];
         }
 

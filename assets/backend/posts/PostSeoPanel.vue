@@ -13,7 +13,7 @@ import GoogleSerpPreview from "./GoogleSerpPreview.vue";
 import { seoCounterClass } from "@/shared/utils/seo/seoCounter.js";
 import { parseJsonLd, buildArticleJsonLd } from "@/shared/utils/seo/jsonLd.js";
 import { useImageUpload } from "@/shared/composables/http/backend/useImageUpload.js";
-import { openMediaPicker } from "@shared/utils/mediaPicker.js";
+import { openDocumentPicker } from "@shared/utils/documentPicker.js";
 import { toast } from "vue-sonner";
 
 const { t } = useI18n();
@@ -117,12 +117,12 @@ function removeOgImage() {
 }
 
 async function selectOgFromLibrary() {
-    const media = await openMediaPicker({ imagesOnly: true });
+    const doc = await openDocumentPicker({ imagesOnly: true });
     const tr = props.translation;
-    if (!media || !tr) return;
-    tr.ogImageMediaId = media.id;
-    tr.ogImageUrl = media.url;
-    tr.ogImageFocalPosition = media.focalPositionCss ?? "50% 50%";
+    if (!doc || !tr) return;
+    tr.ogImageMediaId = doc.id;
+    tr.ogImageUrl = doc.fileUrl ?? doc.url;
+    tr.ogImageFocalPosition = doc.focalPositionCss ?? "50% 50%";
 }
 </script>
 

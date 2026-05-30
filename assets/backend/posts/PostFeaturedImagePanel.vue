@@ -5,7 +5,7 @@ import { ImagePlus, X } from "lucide-vue-next";
 import AppOverlayIconButton from "@/shared/components/action/AppOverlayIconButton.vue";
 import AppTextLinkButton from "@/shared/components/action/AppTextLinkButton.vue";
 import { useImageUpload } from "@/shared/composables/http/backend/useImageUpload.js";
-import { openMediaPicker } from "@shared/utils/mediaPicker.js";
+import { openDocumentPicker } from "@shared/utils/documentPicker.js";
 import { toast } from "vue-sonner";
 
 const { t } = useI18n();
@@ -43,11 +43,13 @@ function clear() {
 }
 
 async function selectFromLibrary() {
-    const media = await openMediaPicker({ imagesOnly: true });
-    if (!media) return;
-    emit("update:mediaId", media.id);
-    emit("update:mediaUrl", media.url);
-    emit("update:focalPosition", media.focalPositionCss ?? "50% 50%");
+    const doc = await openDocumentPicker({ imagesOnly: true });
+    if (!doc) return;
+    emit("update:mediaId", doc.id);
+    // Documents return fileUrl (mirroring file_path) — fall back to url for
+    // compat with anything that re-serializes documents the Media-shaped way.
+    emit("update:mediaUrl", doc.fileUrl ?? doc.url);
+    emit("update:focalPosition", doc.focalPositionCss ?? "50% 50%");
 }
 </script>
 

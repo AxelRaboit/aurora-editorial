@@ -8,7 +8,7 @@ use Aurora\Core\Timestampable\TimestampableInterface;
 use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
 use Aurora\Module\Editorial\PostType\Entity\PostTypeInterface;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTermInterface;
-use Aurora\Module\Media\Library\Entity\MediaInterface;
+use Aurora\Module\Ged\Document\Entity\DocumentInterface;
 use Aurora\Module\Platform\User\Entity\User;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
@@ -31,9 +31,9 @@ interface PostInterface extends TimestampableInterface
 
     public function setPostType(PostTypeInterface $postType): static;
 
-    public function getFeaturedMedia(): ?MediaInterface;
+    public function getFeaturedMedia(): ?DocumentInterface;
 
-    public function setFeaturedMedia(?MediaInterface $featuredMedia): static;
+    public function setFeaturedMedia(?DocumentInterface $featuredMedia): static;
 
     public function getAuthor(): ?User;
 

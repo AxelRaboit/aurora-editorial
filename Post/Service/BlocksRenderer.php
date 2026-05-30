@@ -13,8 +13,8 @@ use Aurora\Module\Editorial\Post\Entity\PostTranslation;
 use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
 use Aurora\Module\Editorial\Post\Repository\PostRepository;
 use Aurora\Module\Editorial\PostType\Repository\PostTypeRepository;
-use Aurora\Module\Media\Library\Entity\Media;
-use Aurora\Module\Media\Library\Service\MediaUrlGenerator;
+use Aurora\Module\Ged\Document\Entity\DocumentInterface;
+use Aurora\Module\Ged\Document\Service\DocumentUrlGenerator;
 use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -33,7 +33,7 @@ final readonly class BlocksRenderer
         private RequestStack $requestStack,
         private ListingRepository $listingRepository,
         private EcommerceContext $ecommerceContext,
-        private MediaUrlGenerator $mediaUrlGenerator,
+        private DocumentUrlGenerator $documentUrlGenerator,
     ) {}
 
     /**
@@ -154,8 +154,8 @@ final readonly class BlocksRenderer
 
         $imageHtml = '';
         $featured = $listing->getFeaturedImage() ?? $listing->getProduct()->getImage();
-        if ($featured instanceof Media) {
-            $src = htmlspecialchars((string) ($this->mediaUrlGenerator->variantUrl($featured, 'medium') ?? $this->mediaUrlGenerator->publicUrl($featured)), ENT_QUOTES, 'UTF-8');
+        if ($featured instanceof DocumentInterface) {
+            $src = htmlspecialchars((string) ($this->documentUrlGenerator->variantUrl($featured, 'medium') ?? $this->documentUrlGenerator->publicUrl($featured)), ENT_QUOTES, 'UTF-8');
             $alt = htmlspecialchars($featured->getAlt() ?? $listing->getDisplayTitle(), ENT_QUOTES, 'UTF-8');
             $imageHtml = sprintf('<div class="aspect-square bg-surface-2 overflow-hidden"><img src="%s" alt="%s" class="w-full h-full object-cover" loading="lazy"></div>', $src, $alt);
         }
@@ -475,8 +475,8 @@ final readonly class BlocksRenderer
 
         $featured = $post->getFeaturedMedia();
         $imageHtml = '';
-        if ($featured instanceof Media) {
-            $src = htmlspecialchars((string) ($this->mediaUrlGenerator->variantUrl($featured, 'medium') ?? $this->mediaUrlGenerator->publicUrl($featured)), ENT_QUOTES, 'UTF-8');
+        if ($featured instanceof DocumentInterface) {
+            $src = htmlspecialchars((string) ($this->documentUrlGenerator->variantUrl($featured, 'medium') ?? $this->documentUrlGenerator->publicUrl($featured)), ENT_QUOTES, 'UTF-8');
             $alt = htmlspecialchars($featured->getAlt() ?? $title, ENT_QUOTES, 'UTF-8');
             $imageHtml = sprintf(
                 '<div class="aspect-[16/9] bg-surface-2 overflow-hidden"><img src="%s" alt="%s" class="w-full h-full object-cover" loading="lazy"></div>',

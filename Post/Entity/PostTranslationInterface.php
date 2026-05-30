@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Entity;
 
-use Aurora\Module\Media\Library\Entity\MediaInterface;
+use Aurora\Module\Ged\Document\Entity\DocumentInterface;
 
 interface PostTranslationInterface
 {
@@ -42,9 +42,9 @@ interface PostTranslationInterface
     /** @param array<string, mixed> $customFields */
     public function setCustomFields(array $customFields): static;
 
-    public function getOgImage(): ?MediaInterface;
+    public function getOgImage(): ?DocumentInterface;
 
-    public function setOgImage(?MediaInterface $ogImage): static;
+    public function setOgImage(?DocumentInterface $ogImage): static;
 
     public function getCanonicalUrl(): ?string;
 

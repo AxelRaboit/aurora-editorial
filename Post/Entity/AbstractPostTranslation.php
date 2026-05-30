@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Post\Entity;
 
-use Aurora\Module\Media\Library\Entity\MediaInterface;
+use Aurora\Module\Ged\Document\Entity\DocumentInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -41,9 +41,9 @@ abstract class AbstractPostTranslation implements PostTranslationInterface
     #[ORM\Column(type: 'json')]
     protected array $customFields = [];
 
-    #[ORM\ManyToOne(targetEntity: MediaInterface::class)]
+    #[ORM\ManyToOne(targetEntity: DocumentInterface::class)]
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
-    protected ?MediaInterface $ogImage = null;
+    protected ?DocumentInterface $ogImage = null;
 
     #[ORM\Column(length: 500, nullable: true)]
     protected ?string $canonicalUrl = null;
@@ -149,12 +149,12 @@ abstract class AbstractPostTranslation implements PostTranslationInterface
         return $this;
     }
 
-    public function getOgImage(): ?MediaInterface
+    public function getOgImage(): ?DocumentInterface
     {
         return $this->ogImage;
     }
 
-    public function setOgImage(?MediaInterface $ogImage): static
+    public function setOgImage(?DocumentInterface $ogImage): static
     {
         $this->ogImage = $ogImage;
 

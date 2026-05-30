@@ -23,7 +23,7 @@ use Aurora\Module\Editorial\Post\Service\PostTextExtractor;
 use Aurora\Module\Editorial\PostType\Repository\PostTypeRepository;
 use Aurora\Module\Editorial\Setting\EditorialSettingEnum;
 use Aurora\Module\Editorial\Taxonomy\Repository\TaxonomyTermRepository;
-use Aurora\Module\Media\Library\Repository\MediaRepository;
+use Aurora\Module\Ged\Document\Repository\DocumentRepository;
 use Aurora\Module\Platform\User\Entity\User;
 use Aurora\Module\Platform\User\Enum\UserRoleEnum;
 use DateTimeImmutable;
@@ -44,7 +44,7 @@ class PostManager implements PostManagerInterface
         protected readonly EntityManagerInterface $entityManager,
         protected readonly PostTypeRepository $postTypeRepository,
         protected readonly TaxonomyTermRepository $termRepository,
-        protected readonly MediaRepository $mediaRepository,
+        protected readonly DocumentRepository $documentRepository,
         protected readonly PostRevisionRepository $revisionRepository,
         protected readonly PostSlugHistoryRepository $slugHistoryRepository,
         protected readonly SettingRepository $settingRepository,
@@ -238,7 +238,7 @@ class PostManager implements PostManagerInterface
         }
 
         $featuredMedia = null !== $input->getFeaturedMediaId()
-            ? $this->mediaRepository->find($input->getFeaturedMediaId())
+            ? $this->documentRepository->find($input->getFeaturedMediaId())
             : null;
         $post->setFeaturedMedia($featuredMedia);
 
@@ -412,7 +412,7 @@ class PostManager implements PostManagerInterface
             return [];
         }
 
-        $medias = $this->mediaRepository->findBy(['id' => $ids]);
+        $medias = $this->documentRepository->findBy(['id' => $ids]);
 
         return array_combine(array_map(static fn ($m): int => $m->getId(), $medias), $medias);
     }

@@ -8,7 +8,7 @@ use Aurora\Core\Timestampable\TimestampableTrait;
 use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
 use Aurora\Module\Editorial\PostType\Entity\PostTypeInterface;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTermInterface;
-use Aurora\Module\Media\Library\Entity\MediaInterface;
+use Aurora\Module\Ged\Document\Entity\DocumentInterface;
 use Aurora\Module\Platform\User\Entity\User;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -48,9 +48,9 @@ abstract class AbstractPost implements PostInterface
     #[ORM\JoinColumn(nullable: false)]
     protected PostTypeInterface $postType;
 
-    #[ORM\ManyToOne(targetEntity: MediaInterface::class)]
+    #[ORM\ManyToOne(targetEntity: DocumentInterface::class)]
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
-    protected ?MediaInterface $featuredMedia = null;
+    protected ?DocumentInterface $featuredMedia = null;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
@@ -111,12 +111,12 @@ abstract class AbstractPost implements PostInterface
         return $this;
     }
 
-    public function getFeaturedMedia(): ?MediaInterface
+    public function getFeaturedMedia(): ?DocumentInterface
     {
         return $this->featuredMedia;
     }
 
-    public function setFeaturedMedia(?MediaInterface $featuredMedia): static
+    public function setFeaturedMedia(?DocumentInterface $featuredMedia): static
     {
         $this->featuredMedia = $featuredMedia;
 
