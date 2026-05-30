@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\Form\Manager;
 
+use Aurora\Core\Contact\Event\ContactSignalEvent;
 use Aurora\Core\Locale\Service\TranslationLocaleSyncerInterface;
 use Aurora\Core\Sequence\SequenceGenerator;
 use Aurora\Module\Configuration\Setting\Repository\SettingRepository;
@@ -19,6 +20,7 @@ use Aurora\Module\Editorial\Form\Entity\FormSubmission;
 use Aurora\Module\Editorial\Form\Entity\FormSubmissionInterface;
 use Aurora\Module\Editorial\Form\Entity\FormTranslation;
 use Aurora\Module\Editorial\Form\Entity\FormTranslationInterface;
+use Aurora\Module\Editorial\Form\Enum\FormFieldTypeEnum;
 use Aurora\Module\Editorial\Form\Event\FormSubmissionCreatedEvent;
 use Aurora\Module\Editorial\Form\Repository\FormTranslationRepository;
 use Aurora\Module\Editorial\Form\Service\FormNotificationService;
@@ -150,9 +152,46 @@ class FormManager implements FormManagerInterface
         $this->notificationService->notifyAuthorIfPresent($form, $submission, $locale);
 
         $this->eventDispatcher->dispatch(new FormSubmissionCreatedEvent($form, $submission));
+
+        // Cross-module signal: when the form opts into CRM sync, announce the
+        // captured contact details via the core event. A CRM (if installed)
+        // listens — no Editorial→Crm dependency. Extraction lives here because
+        // Editorial owns the form field taxonomy.
+        if ($form->isCrmSync()) {
+            $email = $this->extractFieldValue($form, $submission, FormFieldTypeEnum::Email);
+            if (null !== $email) {
+                $this->eventDispatcher->dispatch(new ContactSignalEvent(
+                    email: $email,
+                    fullName: $this->extractFieldValue($form, $submission, FormFieldTypeEnum::Text) ?? '',
+                    phone: $this->extractFieldValue($form, $submission, FormFieldTypeEnum::Tel),
+                    sourceKey: 'form',
+                ));
+            }
+        }
+
         $this->webhookService->send($form, $submission, $locale);
 
         return $submission;
+    }
+
+    /**
+     * First non-empty submitted value for a field of the given type, or null.
+     */
+    private function extractFieldValue(FormInterface $form, FormSubmissionInterface $submission, FormFieldTypeEnum $type): ?string
+    {
+        $data = $submission->getData();
+        foreach ($form->getFields() as $field) {
+            if ($field->getType() !== $type) {
+                continue;
+            }
+
+            $value = $data[(string) $field->getId()] ?? null;
+            if (is_string($value) && '' !== mb_trim($value)) {
+                return mb_trim($value);
+            }
+        }
+
+        return null;
     }
 
     // ── Hooks: instanciation ──────────────────────────────────────────────────
