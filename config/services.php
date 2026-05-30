@@ -10,6 +10,7 @@ declare(strict_types=1);
 use Aurora\Core\Dashboard\DashboardStatsProviderInterface;
 use Aurora\Core\Frontend\Contract\FrontendInterface;
 use Aurora\Core\Module\Contract\ModuleInterface;
+use Aurora\Core\Scheduler\RecurringMessageProviderInterface;
 use Aurora\Core\Search\BackendSearchProviderInterface;
 use Aurora\Core\Search\SearchProviderInterface;
 use Aurora\Module\Configuration\Setting\Configuration\ConfigurationTabProviderInterface;
@@ -34,6 +35,7 @@ return static function (ContainerConfigurator $container): void {
     $services->instanceof(SearchProviderInterface::class)->tag('aurora.search_provider');
     $services->instanceof(DashboardStatsProviderInterface::class)->tag('aurora.dashboard_stats_provider');
     $services->instanceof(BackendSearchProviderInterface::class)->tag('aurora.backend_search_provider');
+    $services->instanceof(RecurringMessageProviderInterface::class)->tag('aurora.recurring_message_provider');
 
     $services->load('Aurora\\Module\\Editorial\\', $moduleDir.'/')
         ->exclude([
