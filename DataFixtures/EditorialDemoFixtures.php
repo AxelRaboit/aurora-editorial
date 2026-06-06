@@ -6,7 +6,6 @@ namespace Aurora\Module\Editorial\DataFixtures;
 
 use Aurora\Core\DataFixtures\AppFixtures;
 use Aurora\Core\DataFixtures\CoreDemoFixtures;
-use Aurora\Module\Crm\Company\Entity\Company;
 use Aurora\Module\Crm\Contact\Entity\Contact;
 use Aurora\Module\Editorial\Comment\Entity\Comment;
 use Aurora\Module\Editorial\Comment\Enum\CommentStatusEnum;
@@ -20,13 +19,12 @@ use Aurora\Module\Editorial\Menu\Entity\Menu;
 use Aurora\Module\Editorial\Menu\Entity\MenuItem;
 use Aurora\Module\Editorial\Menu\Entity\MenuItemTranslation;
 use Aurora\Module\Editorial\Menu\Enum\MenuItemTargetTypeEnum;
-use Aurora\Module\Editorial\PostType\Entity\PostType;
 use Aurora\Module\Editorial\Post\Entity\Post;
 use Aurora\Module\Editorial\Post\Entity\PostTranslation;
 use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
+use Aurora\Module\Editorial\PostType\Entity\PostType;
 use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
-use Aurora\Module\Erp\Product\Entity\Product;
 use Aurora\Module\Ged\DataFixtures\GedDemoFixtures;
 use Aurora\Module\Ged\Document\Entity\Document;
 use Aurora\Module\Ged\Document\Service\DocumentUrlGenerator;
@@ -49,6 +47,7 @@ class EditorialDemoFixtures extends Fixture implements DependentFixtureInterface
     public function __construct(
         private readonly DocumentUrlGenerator $documentUrlGenerator,
     ) {}
+
     public static function getGroups(): array
     {
         return ['demo'];
