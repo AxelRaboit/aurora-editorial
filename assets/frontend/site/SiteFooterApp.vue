@@ -21,7 +21,14 @@ defineProps({
         >
             <ul v-if="footerMenuItems.length" class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
                 <li v-for="item in footerMenuItems" :key="item.id">
+                    <!-- A heading (column title) comes through with url: null and
+                         only exists to carry its children — render it as plain
+                         text, not a link to nowhere. -->
+                    <span v-if="!item.url" :class="['text-xs font-semibold', item.cssClass]">
+                        {{ item.label }}
+                    </span>
                     <AppLink
+                        v-else
                         :href="item.url"
                         :target="item.openInNewTab ? '_blank' : '_self'"
                         variant="front-nav"
@@ -31,7 +38,11 @@ defineProps({
                     </AppLink>
                     <ul v-if="item.children && item.children.length" class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 ml-2">
                         <li v-for="child in item.children" :key="child.id">
+                            <span v-if="!child.url" :class="['text-xs font-semibold', child.cssClass]">
+                                {{ child.label }}
+                            </span>
                             <AppLink
+                                v-else
                                 :href="child.url"
                                 :target="child.openInNewTab ? '_blank' : '_self'"
                                 variant="front-nav"

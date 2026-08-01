@@ -88,11 +88,6 @@ final class MenuRenderer
             return null;
         }
 
-        $url = $this->resolveUrl($item, $locale);
-        if (null === $url) {
-            return null;
-        }
-
         $label = $this->resolveLabel($item, $locale);
         if (null === $label || '' === $label) {
             return null;
@@ -108,6 +103,18 @@ final class MenuRenderer
 
         usort($children, static fn (array $a, array $b): int => $a['_position'] <=> $b['_position']);
         $this->stripPositions($children);
+
+        // A link that resolves to nothing is dropped — but only once its own
+        // children have been resolved, and only if it has none. An item with a
+        // label, children and no URL is a heading (a footer column title, say),
+        // which had no way to exist before: dropping it here also dropped the
+        // whole branch, since children are only ever reached through their
+        // parent. Consumers get `url: null` and render it unclickable.
+        if (null === $url = $this->resolveUrl($item, $locale)) {
+            if ([] === $children) {
+                return null;
+            }
+        }
 
         return [
             '_position' => $item->getPosition(),

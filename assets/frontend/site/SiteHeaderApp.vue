@@ -74,7 +74,18 @@ onBeforeUnmount(() => {
 
             <nav v-if="primaryMenuItems.length" class="hidden md:flex items-center gap-1">
                 <div v-for="item in primaryMenuItems" :key="item.id" class="relative group">
+                    <!-- url: null marks a heading that only exists to hold its
+                         children — a dropdown trigger here. Rendered as plain
+                         text so it opens the submenu without linking anywhere. -->
+                    <span
+                        v-if="!item.url"
+                        :class="['inline-flex items-center gap-1 px-3 py-2 rounded-md text-sm cursor-default', item.cssClass]"
+                    >
+                        {{ item.label }}
+                        <ChevronDown v-if="item.children && item.children.length" class="w-3.5 h-3.5" :stroke-width="2.5" />
+                    </span>
                     <AppLink
+                        v-else
                         :href="item.url"
                         :target="item.openInNewTab ? '_blank' : '_self'"
                         variant="front-nav"
@@ -124,7 +135,14 @@ onBeforeUnmount(() => {
                 </summary>
                 <ul class="mt-2 space-y-1 border-t pt-2" style="border-color: var(--th-header-border, var(--color-border));">
                     <li v-for="item in primaryMenuItems" :key="item.id">
+                        <span
+                            v-if="!item.url"
+                            :class="['block px-3 py-2 rounded-md text-sm font-semibold', item.cssClass]"
+                        >
+                            {{ item.label }}
+                        </span>
                         <AppLink
+                            v-else
                             :href="item.url"
                             :target="item.openInNewTab ? '_blank' : '_self'"
                             variant="front-nav"
@@ -134,7 +152,14 @@ onBeforeUnmount(() => {
                         </AppLink>
                         <ul v-if="item.children && item.children.length" class="ml-4 mt-1 space-y-1 border-l pl-2" style="border-color: var(--th-header-border, var(--color-border));">
                             <li v-for="child in item.children" :key="child.id">
+                                <span
+                                    v-if="!child.url"
+                                    :class="['block px-3 py-1.5 rounded-md text-sm font-semibold', child.cssClass]"
+                                >
+                                    {{ child.label }}
+                                </span>
                                 <AppLink
+                                    v-else
                                     :href="child.url"
                                     :target="child.openInNewTab ? '_blank' : '_self'"
                                     variant="front-nav"

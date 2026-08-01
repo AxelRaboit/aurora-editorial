@@ -92,7 +92,6 @@ final readonly class PostPageRenderer
         $body = $this->twig->render($this->themeResolver->resolve('editorial/post/index'), [
             'locale' => $locale,
             'context' => $this->context,
-            'showFrontMenus' => true,
             'themeContext' => $this->themeContext,
             'postData' => $postData,
             'translationData' => $translationData,

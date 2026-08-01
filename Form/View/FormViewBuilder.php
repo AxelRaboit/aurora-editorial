@@ -40,7 +40,6 @@ final readonly class FormViewBuilder
         return [
             'locale' => $locale,
             'context' => $this->context,
-            'showFrontMenus' => true,
             'themeContext' => $this->themeContext,
             'form' => $form,
             'translation' => $translation,

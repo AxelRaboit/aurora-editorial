@@ -7,6 +7,7 @@ namespace Aurora\Module\Editorial\Menu\Command;
 use Aurora\Module\Editorial\Menu\Dto\MenuInput;
 use Aurora\Module\Editorial\Menu\Dto\MenuItemInput;
 use Aurora\Module\Editorial\Menu\Entity\Menu;
+use Aurora\Module\Editorial\Menu\Enum\MenuItemTargetTypeEnum;
 use Aurora\Module\Editorial\Menu\Enum\MenuItemVisibilityEnum;
 use Aurora\Module\Editorial\Menu\Manager\MenuManagerInterface;
 use Aurora\Module\Editorial\Menu\Repository\MenuRepository;
@@ -49,11 +50,37 @@ class MenuSyncCommand extends Command
 
         $created = 0;
         $existing = 0;
+        $backfilled = 0;
 
         foreach ($this->registry->all() as $location => $meta) {
-            if ($this->menuRepository->findByLocation($location) instanceof Menu) {
-                $symfonyStyle->writeln(sprintf('  <comment>=</comment> %s (déjà présent)', $location));
-                ++$existing;
+            $menu = $this->menuRepository->findByLocation($location);
+
+            if ($menu instanceof Menu) {
+                // Existing menu: top up the declared default items it's still
+                // missing, rather than skipping the location outright. A menu
+                // created by something other than this command — the demo
+                // fixtures create the `account` menu and add no item to it —
+                // used to stay empty forever, because "menu exists" was read as
+                // "location is done".
+                $missing = $this->missingDefaultItems($menu, $meta['defaultItems']);
+
+                if ([] === $missing) {
+                    $symfonyStyle->writeln(sprintf('  <comment>=</comment> %s (déjà présent)', $location));
+                    ++$existing;
+
+                    continue;
+                }
+
+                $symfonyStyle->writeln(sprintf(
+                    '  <info>~</info> %s (déjà présent) — %d entrée(s) par défaut ajoutée(s)',
+                    $location,
+                    count($missing),
+                ));
+                ++$backfilled;
+
+                if (!$dryRun) {
+                    $this->createDefaultItems($menu, $missing);
+                }
 
                 continue;
             }
@@ -67,23 +94,62 @@ class MenuSyncCommand extends Command
                     location: $location,
                     description: $meta['description'],
                 ));
-                foreach ($meta['defaultItems'] as $itemConfig) {
-                    $this->menuManager->createItem($menu, new MenuItemInput(
-                        targetType: $itemConfig['targetType'],
-                        targetId: null,
-                        customUrl: null,
-                        parentId: null,
-                        openInNewTab: false,
-                        cssClass: null,
-                        visibility: $itemConfig['visibility'] ?? MenuItemVisibilityEnum::Always,
-                        translations: [],
-                    ));
-                }
+                $this->createDefaultItems($menu, $meta['defaultItems']);
             }
         }
 
-        $symfonyStyle->success(sprintf('%d créé(s), %d déjà présent(s).', $created, $existing));
+        $symfonyStyle->success(sprintf(
+            '%d créé(s), %d complété(s), %d déjà présent(s).',
+            $created,
+            $backfilled,
+            $existing,
+        ));
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * Declared default items the menu doesn't already carry.
+     *
+     * Matched on targetType, which is what identifies a default item — they
+     * are declared with no targetId, customUrl or translation of their own.
+     * An item the user has since removed on purpose therefore comes back on
+     * the next sync; that is the same trade-off the command already makes for
+     * a deleted menu, which it recreates.
+     *
+     * @param list<array{targetType: MenuItemTargetTypeEnum, visibility?: MenuItemVisibilityEnum}> $defaultItems
+     *
+     * @return list<array{targetType: MenuItemTargetTypeEnum, visibility?: MenuItemVisibilityEnum}>
+     */
+    private function missingDefaultItems(Menu $menu, array $defaultItems): array
+    {
+        $present = [];
+        foreach ($menu->getItems() as $item) {
+            $present[$item->getTargetType()->value] = true;
+        }
+
+        return array_values(array_filter(
+            $defaultItems,
+            static fn (array $itemConfig): bool => !isset($present[$itemConfig['targetType']->value]),
+        ));
+    }
+
+    /**
+     * @param list<array{targetType: MenuItemTargetTypeEnum, visibility?: MenuItemVisibilityEnum}> $itemConfigs
+     */
+    private function createDefaultItems(Menu $menu, array $itemConfigs): void
+    {
+        foreach ($itemConfigs as $itemConfig) {
+            $this->menuManager->createItem($menu, new MenuItemInput(
+                targetType: $itemConfig['targetType'],
+                targetId: null,
+                customUrl: null,
+                parentId: null,
+                openInNewTab: false,
+                cssClass: null,
+                visibility: $itemConfig['visibility'] ?? MenuItemVisibilityEnum::Always,
+                translations: [],
+            ));
+        }
     }
 }

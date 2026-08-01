@@ -34,7 +34,6 @@ final readonly class PageViewBuilder
             'locale' => $locale,
             'context' => $this->context,
             'themeContext' => $this->themeContext,
-            'showFrontMenus' => true,
             'alternates' => $this->alternatesBuilder->forRoute('editorial_home'),
             'initialPosts' => array_map(fn (PostInterface $p): array => $this->postSerializer->serializeCard($p, $locale), $result['items']),
             'initialPage' => $result['page'],
@@ -67,7 +66,6 @@ final readonly class PageViewBuilder
             'locale' => $locale,
             'context' => $this->context,
             'themeContext' => $this->themeContext,
-            'showFrontMenus' => true,
             'postType' => [
                 'label' => $postType->getLabel(),
                 'slug' => $postType->getSlug(),
@@ -105,7 +103,6 @@ final readonly class PageViewBuilder
             'locale' => $locale,
             'context' => $this->context,
             'themeContext' => $this->themeContext,
-            'showFrontMenus' => true,
             'taxonomy' => [
                 'slug' => $taxonomy->getSlug(),
             ],
