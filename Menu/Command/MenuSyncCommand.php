@@ -12,6 +12,7 @@ use Aurora\Module\Editorial\Menu\Enum\MenuItemVisibilityEnum;
 use Aurora\Module\Editorial\Menu\Manager\MenuManagerInterface;
 use Aurora\Module\Editorial\Menu\Repository\MenuRepository;
 use Aurora\Module\Editorial\Menu\Service\MenuLocationRegistry;
+use Aurora\Module\Editorial\PostType\Repository\PostTypeRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -30,6 +31,7 @@ class MenuSyncCommand extends Command
         private readonly MenuLocationRegistry $registry,
         private readonly MenuRepository $menuRepository,
         private readonly MenuManagerInterface $menuManager,
+        private readonly PostTypeRepository $postTypeRepository,
     ) {
         parent::__construct();
     }
@@ -56,13 +58,22 @@ class MenuSyncCommand extends Command
             $menu = $this->menuRepository->findByLocation($location);
 
             if ($menu instanceof Menu) {
-                // Existing menu: top up the declared default items it's still
-                // missing, rather than skipping the location outright. A menu
-                // created by something other than this command — the demo
-                // fixtures create the `account` menu and add no item to it —
-                // used to stay empty forever, because "menu exists" was read as
-                // "location is done".
-                $missing = $this->missingDefaultItems($menu, $meta['defaultItems']);
+                // Existing menu: top up the *protected* defaults it's missing,
+                // rather than skipping the location outright. A menu created by
+                // something other than this command — the demo fixtures create
+                // the `account` menu and add no item to it — used to stay empty
+                // forever, because "menu exists" was read as "location is done".
+                //
+                // Unprotected defaults are deliberately not backfilled: they are
+                // a starting point offered once, so re-adding one the user chose
+                // to delete would read as the deletion having failed.
+                $missing = $this->missingDefaultItems(
+                    $menu,
+                    array_values(array_filter(
+                        $meta['defaultItems'],
+                        static fn (array $itemConfig): bool => true === ($itemConfig['protected'] ?? false),
+                    )),
+                );
 
                 if ([] === $missing) {
                     $symfonyStyle->writeln(sprintf('  <comment>=</comment> %s (déjà présent)', $location));
@@ -111,11 +122,10 @@ class MenuSyncCommand extends Command
     /**
      * Declared default items the menu doesn't already carry.
      *
-     * Matched on targetType, which is what identifies a default item — they
-     * are declared with no targetId, customUrl or translation of their own.
-     * An item the user has since removed on purpose therefore comes back on
-     * the next sync; that is the same trade-off the command already makes for
-     * a deleted menu, which it recreates.
+     * Matched on targetType, which is what identifies a default item. Only
+     * protected defaults are ever passed here, so an entry the user deleted on
+     * purpose stays deleted — the unprotected ones are seeded once, when the
+     * menu is created, and never reinstated.
      *
      * @param list<array{targetType: MenuItemTargetTypeEnum, visibility?: MenuItemVisibilityEnum}> $defaultItems
      *
@@ -135,14 +145,24 @@ class MenuSyncCommand extends Command
     }
 
     /**
-     * @param list<array{targetType: MenuItemTargetTypeEnum, visibility?: MenuItemVisibilityEnum}> $itemConfigs
+     * @param list<array{targetType: MenuItemTargetTypeEnum, visibility?: MenuItemVisibilityEnum, targetSlug?: string}> $itemConfigs
      */
     private function createDefaultItems(Menu $menu, array $itemConfigs): void
     {
         foreach ($itemConfigs as $itemConfig) {
+            $targetId = $this->resolveTargetId($itemConfig);
+
+            // A default that names a target it cannot find is skipped rather
+            // than created pointing at nothing: an archive entry with a null
+            // targetId resolves to no URL and would be dropped from the site
+            // anyway, while still occupying a row the user has to clean up.
+            if (isset($itemConfig['targetSlug']) && null === $targetId) {
+                continue;
+            }
+
             $this->menuManager->createItem($menu, new MenuItemInput(
                 targetType: $itemConfig['targetType'],
-                targetId: null,
+                targetId: $targetId,
                 customUrl: null,
                 parentId: null,
                 openInNewTab: false,
@@ -151,5 +171,25 @@ class MenuSyncCommand extends Command
                 translations: [],
             ));
         }
+    }
+
+    /**
+     * Resolves a default item's `targetSlug` to a concrete id.
+     *
+     * The registry is static configuration and cannot know database ids, so a
+     * default pointing at a post type archive names the slug and has it looked
+     * up here.
+     *
+     * @param array{targetType: MenuItemTargetTypeEnum, visibility?: MenuItemVisibilityEnum, targetSlug?: string} $itemConfig
+     */
+    private function resolveTargetId(array $itemConfig): ?int
+    {
+        $slug = $itemConfig['targetSlug'] ?? null;
+
+        if (null === $slug || MenuItemTargetTypeEnum::PostTypeArchive !== $itemConfig['targetType']) {
+            return null;
+        }
+
+        return $this->postTypeRepository->findOneBy(['slug' => $slug])?->getId();
     }
 }

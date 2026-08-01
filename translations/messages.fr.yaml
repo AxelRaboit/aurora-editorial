@@ -94,6 +94,8 @@ backend:
     system_item_hint: Entrée fournie par Aurora — non supprimable. Passe sa visibilité à « Masqué » pour la retirer du site.
     target_trashed: En corbeille
     target_trashed_hint: "Cette entrée n'apparaît pas sur le site : le contenu vers lequel elle pointe est dans la corbeille. Restaure ce contenu, ou fais pointer l'entrée ailleurs."
+    target_archive_off: Archive désactivée
+    target_archive_off_hint: "Cette entrée n'apparaît pas sur le site : la page d'archive de ce type de contenu est désactivée. Réactive-la depuis les types de contenu, ou fais pointer l'entrée ailleurs."
     target_missing: Contenu supprimé
     target_missing_hint: "Cette entrée n'apparaît pas sur le site : le contenu vers lequel elle pointait a été supprimé définitivement. Fais-la pointer ailleurs, ou supprime-la."
     errors:

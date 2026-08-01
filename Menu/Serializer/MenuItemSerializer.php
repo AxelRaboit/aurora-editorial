@@ -58,27 +58,27 @@ class MenuItemSerializer implements MenuItemSerializerInterface
             'parentId' => $item->getParent()?->getId(),
             'translations' => $translations,
             'targetPreview' => $this->resolveTargetPreview($item, $postCache, $termCache, $postTypeCache),
-            'isDefault' => $this->isDefaultItem($item),
+            'isProtected' => $this->isProtectedItem($item),
             'children' => $children,
         ];
     }
 
     /**
-     * Whether this item is one of the defaults its location declares.
+     * Whether this item is one its location declares as protected.
      *
-     * Derived from the registry rather than stored on the entity: a default is
-     * identified by its targetType — that is what MenuSyncCommand matches on
-     * when it backfills — so there is no second source of truth to keep in
-     * step. Consumed by the UI to disable deletion; the entity itself is
+     * Derived from the registry rather than stored on the entity, matched on
+     * targetType — the key MenuSyncCommand backfills on — so there is no second
+     * source of truth to keep in step. Seeded-but-removable defaults are not
+     * protected and report false here. Drives the UI only; the entity itself is
      * guarded in MenuManager.
      */
-    private function isDefaultItem(MenuItemInterface $item): bool
+    private function isProtectedItem(MenuItemInterface $item): bool
     {
         $location = $item->getMenu()->getLocation();
         $meta = $this->locationRegistry->all()[$location] ?? null;
 
         foreach ($meta['defaultItems'] ?? [] as $default) {
-            if ($default['targetType'] === $item->getTargetType()) {
+            if (true === ($default['protected'] ?? false) && $default['targetType'] === $item->getTargetType()) {
                 return true;
             }
         }
@@ -237,6 +237,14 @@ class MenuItemSerializer implements MenuItemSerializerInterface
             ];
         }
 
-        return ['label' => $postType->getLabel(), 'hint' => '/'.$postType->getSlug()];
+        return [
+            'label' => $postType->getLabel(),
+            'hint' => '/'.$postType->getSlug(),
+            // The post type may exist and still have its archive switched off,
+            // in which case the route 404s and MenuRenderer drops the entry.
+            // Reported separately from a deleted target: the fix is different
+            // — turn the archive back on rather than repoint the entry.
+            'archiveDisabled' => !$postType->hasArchive(),
+        ];
     }
 }

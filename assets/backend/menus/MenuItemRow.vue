@@ -62,8 +62,15 @@ const isOverridden = computed(() => effectiveLabel.value !== targetLabel.value);
 
 const isTrashed = computed(() => props.item.targetPreview?.trashed === true);
 const isMissing = computed(() => props.item.targetPreview?.missing === true);
-// Broken either way: MenuRenderer drops both from the frontend.
-const isBroken = computed(() => isTrashed.value || isMissing.value);
+const isArchiveOff = computed(() => props.item.targetPreview?.archiveDisabled === true);
+// All three mean the same thing to a visitor — MenuRenderer drops the entry —
+// but each is fixed differently, so they get their own wording.
+const isBroken = computed(() => isTrashed.value || isMissing.value || isArchiveOff.value);
+const brokenKey = computed(() => {
+    if (isTrashed.value) return "target_trashed";
+    if (isArchiveOff.value) return "target_archive_off";
+    return "target_missing";
+});
 </script>
 
 <template>
@@ -104,19 +111,16 @@ const isBroken = computed(() => isTrashed.value || isMissing.value);
                     <span class="text-sm truncate" :class="{ 'text-rose-400': isMissing }">
                         {{ effectiveLabel }}
                     </span>
-                    <AppBadge v-if="item.isDefault" color="gray" class="shrink-0">
+                    <AppBadge v-if="item.isProtected" color="gray" class="shrink-0">
                         <Lock class="w-3 h-3" :stroke-width="2.5" /> {{ t("backend.menus.system_item") }}
                     </AppBadge>
                     <!-- The badge names the state; the tooltip says why the entry
                          is absent from the site and what to do about it, which is
                          the part a reader can't infer from two words. -->
-                    <AppTooltip
-                        v-if="isBroken"
-                        :text="t(isTrashed ? 'backend.menus.target_trashed_hint' : 'backend.menus.target_missing_hint')"
-                    >
+                    <AppTooltip v-if="isBroken" :text="t(`backend.menus.${brokenKey}_hint`)">
                         <AppBadge color="amber" class="shrink-0">
                             <AlertTriangle class="w-3 h-3" :stroke-width="2.5" />
-                            {{ t(isTrashed ? "backend.menus.target_trashed" : "backend.menus.target_missing") }}
+                            {{ t(`backend.menus.${brokenKey}`) }}
                         </AppBadge>
                     </AppTooltip>
                     <AppBadge v-if="item.openInNewTab" color="gray" class="shrink-0">
@@ -137,11 +141,12 @@ const isBroken = computed(() => isTrashed.value || isMissing.value);
                 <AppButton variant="secondary" size="sm" v-on:click.stop="emit('edit', item)">
                     <Pencil class="w-3.5 h-3.5" :stroke-width="2" />
                 </AppButton>
-                <!-- A default item can't be deleted: the sync command would
-                     backfill it on its next run, so the deletion would look
-                     like it silently failed. Hiding it is the way to take it
-                     off the site, and it's reversible. -->
-                <AppTooltip v-if="item.isDefault" :text="t('backend.menus.system_item_hint')">
+                <!-- Protected entries can't be deleted: the sync backfills them,
+                     so the deletion would look like it silently failed. Hiding
+                     one is the way to take it off the site, and it's reversible.
+                     Seeded-but-removable defaults are not protected and keep a
+                     working delete button. -->
+                <AppTooltip v-if="item.isProtected" :text="t('backend.menus.system_item_hint')">
                     <AppButton variant="danger" size="sm" disabled>
                         <Trash2 class="w-3.5 h-3.5" :stroke-width="2" />
                     </AppButton>

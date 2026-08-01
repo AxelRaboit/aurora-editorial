@@ -194,7 +194,11 @@ final class MenuRenderer
     private function resolveArchiveUrl(MenuItemInterface $item, string $locale): ?string
     {
         $postType = $this->postTypeRepository->find($item->getTargetId());
-        if (!$postType instanceof PostTypeInterface) {
+        // hasArchive() is a toggle, editable even on a built-in post type, and
+        // PageController answers 404 when it is off. Generating the link anyway
+        // put a visible entry in the menu leading to a dead page — worse than
+        // the trashed-target case, which at least disappears quietly.
+        if (!$postType instanceof PostTypeInterface || !$postType->hasArchive()) {
             return null;
         }
 

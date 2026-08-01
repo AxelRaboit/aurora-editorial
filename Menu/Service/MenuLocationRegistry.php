@@ -19,7 +19,7 @@ final class MenuLocationRegistry
      * @var array<string, array{
      *     name: string,
      *     description: ?string,
-     *     defaultItems: array<int, array{targetType: MenuItemTargetTypeEnum, visibility?: MenuItemVisibilityEnum}>,
+     *     defaultItems: array<int, array{targetType: MenuItemTargetTypeEnum, visibility?: MenuItemVisibilityEnum, protected?: bool, targetSlug?: string}>,
      * }>
      */
     private array $locations = [];
@@ -43,7 +43,7 @@ final class MenuLocationRegistry
     }
 
     /**
-     * @param array<int, array{targetType: MenuItemTargetTypeEnum, visibility?: MenuItemVisibilityEnum}> $defaultItems
+     * @param array<int, array{targetType: MenuItemTargetTypeEnum, visibility?: MenuItemVisibilityEnum, protected?: bool, targetSlug?: string}> $defaultItems
      */
     public function register(string $location, string $name, ?string $description = null, array $defaultItems = []): void
     {

@@ -48,7 +48,16 @@ final class EditorialFrontendDescriptor implements FrontendInterface, MenuLocati
             'primary' => [
                 'name' => 'Menu principal',
                 'description' => 'Navigation affichée dans le header du site public.',
-                'defaultItems' => [],
+                // Seeded on a fresh install as a sensible starting point, and
+                // freely removable: what belongs in a site's main navigation is
+                // the site's call, not Aurora's. A brochure site with no blog
+                // should not be stuck with an Articles link — and the header
+                // already links home through the logo, so even Home is a
+                // suggestion rather than a requirement.
+                'defaultItems' => [
+                    ['targetType' => MenuItemTargetTypeEnum::Home, 'protected' => false],
+                    ['targetType' => MenuItemTargetTypeEnum::PostTypeArchive, 'targetSlug' => 'article', 'protected' => false],
+                ],
             ],
             'footer' => [
                 'name' => 'Menu pied de page',
@@ -58,11 +67,15 @@ final class EditorialFrontendDescriptor implements FrontendInterface, MenuLocati
             'account' => [
                 'name' => 'Menu compte',
                 'description' => 'Dropdown utilisateur dans le header (connexion, profil, déconnexion).',
+                // Protected: this location exists in order to carry these four.
+                // Strip them and it has no purpose, so deletion is refused and
+                // the sync backfills any that go missing. Hiding one is the
+                // supported way to take it off the site.
                 'defaultItems' => [
-                    ['targetType' => MenuItemTargetTypeEnum::FrontAccount, 'visibility' => MenuItemVisibilityEnum::AuthenticatedOnly],
-                    ['targetType' => MenuItemTargetTypeEnum::FrontLogin, 'visibility' => MenuItemVisibilityEnum::GuestsOnly],
-                    ['targetType' => MenuItemTargetTypeEnum::FrontRegister, 'visibility' => MenuItemVisibilityEnum::GuestsOnly],
-                    ['targetType' => MenuItemTargetTypeEnum::FrontLogout, 'visibility' => MenuItemVisibilityEnum::AuthenticatedOnly],
+                    ['targetType' => MenuItemTargetTypeEnum::FrontAccount, 'visibility' => MenuItemVisibilityEnum::AuthenticatedOnly, 'protected' => true],
+                    ['targetType' => MenuItemTargetTypeEnum::FrontLogin, 'visibility' => MenuItemVisibilityEnum::GuestsOnly, 'protected' => true],
+                    ['targetType' => MenuItemTargetTypeEnum::FrontRegister, 'visibility' => MenuItemVisibilityEnum::GuestsOnly, 'protected' => true],
+                    ['targetType' => MenuItemTargetTypeEnum::FrontLogout, 'visibility' => MenuItemVisibilityEnum::AuthenticatedOnly, 'protected' => true],
                 ],
             ],
         ];

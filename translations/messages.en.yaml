@@ -100,6 +100,8 @@ backend:
     system_item_hint: Entry provided by Aurora — it cannot be deleted. Set its visibility to "Hidden" to take it off the site.
     target_trashed: In trash
     target_trashed_hint: "This entry does not appear on the site: the content it points to is in the trash. Restore that content, or point the entry somewhere else."
+    target_archive_off: Archive disabled
+    target_archive_off_hint: "This entry does not appear on the site: the archive page for that post type is switched off. Turn it back on from the post types screen, or point the entry somewhere else."
     target_missing: Content deleted
     target_missing_hint: "This entry does not appear on the site: the content it pointed to was permanently deleted. Point it somewhere else, or remove it."
     errors:

@@ -139,7 +139,7 @@ class MenuManager implements MenuManagerInterface
 
     public function deleteItem(MenuItemInterface $item): void
     {
-        if ($this->isDefaultItem($item)) {
+        if ($this->isProtectedItem($item)) {
             throw new InvalidArgumentException('backend.menus.errors.item_protected');
         }
 
@@ -150,22 +150,27 @@ class MenuManager implements MenuManagerInterface
     }
 
     /**
-     * Whether the item is one of the defaults its location declares.
+     * Whether the item is one its location declares as protected.
      *
-     * Deleting one is refused rather than allowed and then undone: the sync
-     * command backfills missing defaults, so a deletion would quietly come back
-     * on the next run and read as a bug. Setting the item's visibility to
-     * Hidden removes it from the site instead, and is reversible.
+     * Not every default is protected. Some are seeded once as a starting point
+     * and meant to be removable — what belongs in a site's main navigation is
+     * the site's call. Protection is for locations that exist in order to carry
+     * a specific set: strip `account` of its four entries and it has no purpose.
+     *
+     * Deleting a protected item is refused rather than allowed and then undone:
+     * the sync backfills those, so a deletion would quietly come back on the
+     * next run and read as a bug. Setting visibility to Hidden takes it off the
+     * site instead, and is reversible.
      *
      * Matched on targetType — the same key MenuSyncCommand backfills on — so
-     * the two cannot disagree about what counts as a default.
+     * the two cannot disagree about what is protected.
      */
-    protected function isDefaultItem(MenuItemInterface $item): bool
+    protected function isProtectedItem(MenuItemInterface $item): bool
     {
         $meta = $this->locationRegistry->all()[$item->getMenu()->getLocation()] ?? null;
 
         foreach ($meta['defaultItems'] ?? [] as $default) {
-            if ($default['targetType'] === $item->getTargetType()) {
+            if (true === ($default['protected'] ?? false) && $default['targetType'] === $item->getTargetType()) {
                 return true;
             }
         }
