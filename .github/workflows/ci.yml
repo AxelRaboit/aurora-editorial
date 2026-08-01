@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: PHP ${{ matrix.php-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: [8.4]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          tools: composer:v2
+          extensions: mbstring, xml, ctype, iconv, intl, dom, filter, json, tokenizer
+        env:
+          update: true
+
+      # This package requires axelraboit/aurora, a private repo, so a plain
+      # `composer install` here would need a deploy key. Everything below is
+      # deliberately built to avoid that: the tools carry their own tiny
+      # composer.json, and the test suite reads files rather than booting a
+      # kernel. `composer validate` still checks this manifest itself.
+      - name: Validate composer.json
+        run: composer validate --no-check-publish --no-check-lock
+
+      - name: Lint PHP syntax
+        run: |
+          set -euo pipefail
+          find . -name '*.php' \
+            -not -path './vendor/*' -not -path './tools/*/vendor/*' \
+            -print0 | xargs -0 -n1 -P4 php -l > /dev/null
+
+      - name: Cache tool dependencies
+        uses: actions/cache@v4
+        with:
+          path: tools/*/vendor
+          key: ${{ runner.os }}-php${{ matrix.php-version }}-tools-${{ hashFiles('tools/*/composer.json') }}
+
+      - name: Install PHP-CS-Fixer
+        run: composer install --working-dir=tools/php-cs-fixer --no-interaction --no-progress
+
+      - name: Install PHPUnit
+        run: composer install --working-dir=tools/phpunit --no-interaction --no-progress
+
+      - name: Check code style
+        run: php tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --diff --config=.php-cs-fixer.dist.php
+
+      - name: Lint translation YAML
+        run: |
+          set -euo pipefail
+          find translations -name '*.yaml' -print0 \
+            | xargs -0 -n1 php -r 'require "tools/phpunit/vendor/autoload.php"; Symfony\Component\Yaml\Yaml::parseFile($argv[1]);'
+
+      - name: Tests
+        run: php tools/phpunit/vendor/bin/phpunit -c phpunit.dist.xml

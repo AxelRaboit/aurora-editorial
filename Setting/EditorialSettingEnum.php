@@ -6,6 +6,8 @@ namespace Aurora\Module\Editorial\Setting;
 
 use Aurora\Core\Sequence\SequencePrefixEnum;
 use Aurora\Module\Configuration\Setting\Enum\ApplicationParameterEnumInterface;
+use Aurora\Module\Editorial\Menu\Enum\MenuItemVisibilityEnum;
+use Aurora\Module\Editorial\Menu\Twig\MenuExtension;
 
 enum EditorialSettingEnum: string implements ApplicationParameterEnumInterface
 {
@@ -18,11 +20,13 @@ enum EditorialSettingEnum: string implements ApplicationParameterEnumInterface
 
     /**
      * Frontend rendering of each menu location, one switch per location so a
-     * site can keep its footer nav while dropping the header one. Enforced in
-     * {@see \Aurora\Module\Editorial\Menu\Twig\MenuExtension::menuItems()} —
-     * an off location yields an empty list — so every template honours it
-     * without asking. Hiding a single item instead lives on the item itself,
-     * @see \Aurora\Module\Editorial\Menu\Enum\MenuItemVisibilityEnum::Hidden
+     * site can keep its footer nav while dropping the header one.
+     *
+     * Enforced in {@see MenuExtension::menuItems()} — an off location yields an
+     * empty list — so every template honours it without having to ask. Hiding a
+     * single item instead lives on the item itself.
+     *
+     * @see MenuItemVisibilityEnum::Hidden
      */
     case ShowPrimaryMenu = 'editorial_show_primary_menu';
     case ShowFooterMenu = 'editorial_show_footer_menu';

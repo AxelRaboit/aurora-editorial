@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="tools/phpunit/vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="tools/phpunit/vendor/autoload.php"
+         cacheDirectory=".phpunit.cache"
+         executionOrder="depends,defects"
+         failOnRisky="true"
+         failOnWarning="true"
+         colors="true">
+    <!--
+        These suites deliberately need nothing but PHPUnit and symfony/yaml:
+        they read the package's own files as text and parse its translation
+        YAML. No Symfony kernel, no Doctrine, and no resolving of the
+        axelraboit/aurora dependency — which is a private repo, so requiring it
+        would mean handing CI a deploy key just to check for drift.
+    -->
+    <testsuites>
+        <testsuite name="unit">
+            <directory>tests/Unit</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
