@@ -1,4 +1,31 @@
 backend:
+  audit:
+    actions:
+      editorial:
+        post:
+          created: Content created
+          updated: Content updated
+          deleted: Content moved to trash
+          restored: Content restored
+          force_deleted: Content permanently deleted
+          revision_restored: Revision restored
+        post_type:
+          created: Post type created
+          updated: Post type updated
+          deleted: Post type deleted
+        taxonomy:
+          created: Taxonomy created
+          updated: Taxonomy updated
+          deleted: Taxonomy deleted
+          term:
+            created: Term created
+            updated: Term updated
+            deleted: Term deleted
+        comment:
+          submitted: Comment submitted
+          approved: Comment approved
+          spam: Comment marked as spam
+          deleted: Comment deleted
   parameters:
     editorial_post_prefix:
       label: Post reference prefix

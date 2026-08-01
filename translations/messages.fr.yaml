@@ -1,4 +1,31 @@
 backend:
+  audit:
+    actions:
+      editorial:
+        post:
+          created: Contenu créé
+          updated: Contenu modifié
+          deleted: Contenu mis à la corbeille
+          restored: Contenu restauré
+          force_deleted: Contenu supprimé définitivement
+          revision_restored: Révision restaurée
+        post_type:
+          created: Type de contenu créé
+          updated: Type de contenu modifié
+          deleted: Type de contenu supprimé
+        taxonomy:
+          created: Taxonomie créée
+          updated: Taxonomie modifiée
+          deleted: Taxonomie supprimée
+          term:
+            created: Terme créé
+            updated: Terme modifié
+            deleted: Terme supprimé
+        comment:
+          submitted: Commentaire soumis
+          approved: Commentaire approuvé
+          spam: Commentaire marqué comme spam
+          deleted: Commentaire supprimé
   parameters:
     editorial_post_prefix:
       label: Préfixe des numéros d'articles
