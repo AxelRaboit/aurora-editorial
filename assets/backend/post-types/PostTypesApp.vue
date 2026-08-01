@@ -5,7 +5,7 @@ import { usePostTypeSelect } from "@editorial/backend/post-types/composables/use
 import { usePostTypeModal } from "@editorial/backend/post-types/composables/usePostTypeModal.js";
 import { usePostTypeDelete } from "@editorial/backend/post-types/composables/usePostTypeDelete.js";
 import { usePostTypeFields } from "@editorial/backend/post-types/composables/usePostTypeFields.js";
-import { Plus, Pencil, Trash2, Layers, Lock, GripVertical, Save, X, ClipboardList } from "lucide-vue-next";
+import { Plus, Pencil, Trash2, Layers, GripVertical, Save, X, ClipboardList } from "lucide-vue-next";
 import AppButton from "@/shared/components/action/AppButton.vue";
 import AppIconButton from "@/shared/components/action/AppIconButton.vue";
 import AppInput from "@/shared/components/form/input/AppInput.vue";
@@ -17,6 +17,7 @@ import AppModalFooter from "@/shared/components/overlay/AppModalFooter.vue";
 import AppMessage from "@/shared/components/feedback/AppMessage.vue";
 import AppNoData from "@/shared/components/feedback/AppNoData.vue";
 import AppBadge from "@/shared/components/feedback/AppBadge.vue";
+import SystemBadge from "@editorial/backend/shared/SystemBadge.vue";
 import { PostFieldType } from "@editorial/shared/enums/postFieldType.js";
 import { usePrivileges } from "@/shared/composables/usePrivileges.js";
 
@@ -67,7 +68,7 @@ const { fieldModal, fieldForm, openCreateField, openEditField, submitField, dele
                 >
                     <Layers class="w-4 h-4 shrink-0" :stroke-width="2" />
                     <span class="flex-1 font-medium truncate">{{ postType.label }}</span>
-                    <Lock v-if="postType.isBuiltIn" class="w-3.5 h-3.5 text-muted shrink-0" :stroke-width="2" :title="t('backend.post_types.built_in')" />
+                    <SystemBadge v-if="postType.isBuiltIn" />
                 </AppButton>
             </div>
         </aside>
@@ -81,10 +82,7 @@ const { fieldModal, fieldForm, openCreateField, openEditField, submitField, dele
                             <h3 class="text-lg font-semibold text-primary">{{ selected.label }}</h3>
                             <p class="text-xs text-muted font-mono mt-0.5">{{ selected.slug }}</p>
                             <div class="flex items-center gap-2 mt-2 flex-wrap">
-                                <AppBadge v-if="selected.isBuiltIn" color="amber">
-                                    <Lock class="w-3 h-3" :stroke-width="2" />
-                                    {{ t("backend.post_types.built_in") }}
-                                </AppBadge>
+                                <SystemBadge v-if="selected.isBuiltIn" :hint="t('backend.post_types.errors.builtin_protected')" />
                                 <AppBadge v-if="selected.hasArchive" color="sky">{{ t("backend.post_types.has_archive") }}</AppBadge>
                                 <AppBadge v-for="support in selected.supports" :key="support" color="gray">{{ support }}</AppBadge>
                             </div>

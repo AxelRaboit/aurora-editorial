@@ -7,7 +7,7 @@ import { useTaxonomySelect } from "@editorial/backend/taxonomies/composables/use
 import { useTaxonomyTree } from "@editorial/backend/taxonomies/composables/useTaxonomyTree.js";
 import { useTaxonomyDelete } from "@editorial/backend/taxonomies/composables/useTaxonomyDelete.js";
 import { useTermDelete } from "@editorial/backend/taxonomies/composables/useTermDelete.js";
-import { Plus, Pencil, Trash2, FolderTree, Folder, ChevronDown, ChevronRight, GripVertical, Lock, Save, X, Tag } from "lucide-vue-next";
+import { Plus, Pencil, Trash2, FolderTree, Folder, ChevronDown, ChevronRight, GripVertical, Save, X, Tag } from "lucide-vue-next";
 import AppButton from "@/shared/components/action/AppButton.vue";
 import AppIconButton from "@/shared/components/action/AppIconButton.vue";
 import AppTab from "@/shared/components/nav/AppTab.vue";
@@ -21,6 +21,7 @@ import AppMessage from "@/shared/components/feedback/AppMessage.vue";
 import AppNoData from "@/shared/components/feedback/AppNoData.vue";
 import AppBadge from "@/shared/components/feedback/AppBadge.vue";
 import AppNavListItem from "@/shared/components/nav/AppNavListItem.vue";
+import SystemBadge from "@editorial/backend/shared/SystemBadge.vue";
 import TermNode from "@editorial/backend/taxonomies/TermNode.vue";
 import { useTermFormHelpers } from "@editorial/backend/taxonomies/composables/useTermFormHelpers.js";
 import { required } from "@/shared/utils/validation/validators.js";
@@ -164,7 +165,7 @@ const parentOptions = computed(() => parentOptionsForTerm(termModal.entity));
                     </template>
                     {{ translationLabel(taxonomy, activeLocale) }}
                     <template v-if="taxonomy.isBuiltIn" #trailing>
-                        <Lock class="w-3.5 h-3.5 text-muted" :stroke-width="2" :title="t('backend.taxonomies.built_in')" />
+                        <SystemBadge />
                     </template>
                 </AppNavListItem>
             </div>
@@ -183,10 +184,7 @@ const parentOptions = computed(() => parentOptionsForTerm(termModal.entity));
                                     <FolderTree class="w-3 h-3" :stroke-width="2" />
                                     {{ t("backend.taxonomies.hierarchical") }}
                                 </AppBadge>
-                                <AppBadge v-if="selected.isBuiltIn" color="amber">
-                                    <Lock class="w-3 h-3" :stroke-width="2" />
-                                    {{ t("backend.taxonomies.built_in") }}
-                                </AppBadge>
+                                <SystemBadge v-if="selected.isBuiltIn" :hint="t('backend.taxonomies.errors.builtin_protected')" />
                             </div>
                         </div>
                         <div class="flex gap-2">

@@ -1,4 +1,5 @@
 backend:
+  system_badge: System
   audit:
     actions:
       editorial:
@@ -96,7 +97,6 @@ backend:
     editorial_frontend: Editorial site
     editorial_frontend_description: 'Enables the public Editorial site served by Aurora (public pages, posts, front menus). Disable to take the front offline.'
   menus:
-    system_item: System
     system_item_hint: Entry provided by Aurora — it cannot be deleted. Set its visibility to "Hidden" to take it off the site.
     target_trashed: In trash
     target_trashed_hint: "This entry does not appear on the site: the content it points to is in the trash. Restore that content, or point the entry somewhere else."
@@ -150,7 +150,6 @@ backend:
     delete_confirm: 'Delete "{label}"?'
     delete_has_posts: Cannot delete a post type that still contains posts.
     empty: Select a post type on the left.
-    built_in: Built-in
     slug: Slug
     slug_placeholder: e.g. article
     label: Label
@@ -353,7 +352,6 @@ backend:
     delete_taxonomy_confirm: 'Delete "{label}"? All related terms will be removed.'
     empty: Select a taxonomy on the left.
     hierarchical: Hierarchical
-    built_in: Built-in
     slug: Slug
     slug_placeholder: e.g. category
     translations: Translations

@@ -1,11 +1,12 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { ChevronDown, ChevronRight, Pencil, Trash2, ExternalLink, EyeOff, Eye, Link, Lock, AlertTriangle } from "lucide-vue-next";
+import { ChevronDown, ChevronRight, Pencil, Trash2, ExternalLink, EyeOff, Eye, Link, AlertTriangle } from "lucide-vue-next";
 import AppIconButton from "@/shared/components/action/AppIconButton.vue";
 import AppButton from "@/shared/components/action/AppButton.vue";
 import AppBadge from "@/shared/components/feedback/AppBadge.vue";
 import AppTooltip from "@/shared/components/overlay/AppTooltip.vue";
+import SystemBadge from "@editorial/backend/shared/SystemBadge.vue";
 
 const { t, locale } = useI18n();
 
@@ -111,9 +112,7 @@ const brokenKey = computed(() => {
                     <span class="text-sm truncate" :class="{ 'text-rose-400': isMissing }">
                         {{ effectiveLabel }}
                     </span>
-                    <AppBadge v-if="item.isProtected" color="gray" class="shrink-0">
-                        <Lock class="w-3 h-3" :stroke-width="2.5" /> {{ t("backend.menus.system_item") }}
-                    </AppBadge>
+                    <SystemBadge v-if="item.isProtected" :hint="t('backend.menus.system_item_hint')" />
                     <!-- The badge names the state; the tooltip says why the entry
                          is absent from the site and what to do about it, which is
                          the part a reader can't infer from two words. -->
