@@ -5,6 +5,12 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Bootstrap;
 
 use Aurora\Core\Bootstrap\BootstrapProviderInterface;
+use Aurora\Module\Configuration\Setting\Entity\Setting;
+use Aurora\Module\Configuration\Setting\Enum\ApplicationParameterEnum;
+use Aurora\Module\Editorial\Post\Entity\Post;
+use Aurora\Module\Editorial\Post\Entity\PostTranslation;
+use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
+use Aurora\Module\Editorial\Post\Service\PostTextExtractor;
 use Aurora\Module\Editorial\PostType\Entity\PostType;
 use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
 use Doctrine\ORM\EntityManagerInterface;
@@ -40,8 +46,14 @@ final readonly class EditorialBootstrapProvider implements BootstrapProviderInte
 
     private const array SUPPORTS = ['blocks', 'thumbnail', 'excerpt'];
 
+    private const array HOME_PAGE = [
+        'fr' => ['title' => 'Accueil', 'slug' => 'accueil', 'heading' => 'Bienvenue sur Aurora', 'paragraph' => 'Votre CMS moderne propulsé par Symfony et Vue 3.'],
+        'en' => ['title' => 'Home', 'slug' => 'home', 'heading' => 'Welcome to Aurora', 'paragraph' => 'Your modern CMS powered by Symfony and Vue 3.'],
+    ];
+
     public function __construct(
         private EntityManagerInterface $entityManager,
+        private PostTextExtractor $textExtractor,
     ) {}
 
     public function getPriority(): int
@@ -89,6 +101,73 @@ final readonly class EditorialBootstrapProvider implements BootstrapProviderInte
         }
 
         $this->entityManager->flush();
+
+        yield from $this->seedHomePage();
+
+        $this->entityManager->flush();
+    }
+
+    /**
+     * A landing page, and the setting that points the site at it.
+     *
+     * Without this a fresh install answers `/` with the article listing —
+     * Aurora's fallback when no homepage is designated — so a brand new site
+     * greets its first visitor with an empty "Articles" screen and a search
+     * box. WordPress ships a sample page for the same reason.
+     *
+     * Deliberately plain: it exists so the site has somewhere to land, and is
+     * meant to be rewritten. It carries no demo styling that an administrator
+     * would have to undo.
+     *
+     * @return iterable<string>
+     */
+    private function seedHomePage(): iterable
+    {
+        $pageType = $this->entityManager->getRepository(PostType::class)->findOneBy(['slug' => 'page']);
+        $settingRepository = $this->entityManager->getRepository(Setting::class);
+        $setting = $settingRepository->findOneBy(['key' => ApplicationParameterEnum::HomepagePostId->value]);
+
+        // An administrator who has chosen a homepage keeps it, and one who
+        // deliberately cleared the setting to get the article listing back is
+        // not overruled on the next deploy. Only an untouched install is seeded.
+        if (!$pageType instanceof PostType || (null !== $setting && '' !== (string) $setting->getValue())) {
+            return;
+        }
+
+        if (null !== $this->entityManager->getRepository(Post::class)->findOneBy(['postType' => $pageType])) {
+            return;
+        }
+
+        $page = new Post()->setPostType($pageType)->setStatus(PostStatusEnum::Published);
+        $this->entityManager->persist($page);
+
+        foreach (self::HOME_PAGE as $locale => $content) {
+            $translation = new PostTranslation()
+                ->setPost($page)
+                ->setLocale($locale)
+                ->setTitle($content['title'])
+                ->setSlug($content['slug'])
+                ->setBlocks([
+                    ['type' => 'heading', 'data' => ['text' => $content['heading'], 'level' => 1]],
+                    ['type' => 'paragraph', 'data' => ['text' => $content['paragraph']]],
+                ]);
+            $translation->setSearchContent($this->textExtractor->extract($translation));
+            $this->entityManager->persist($translation);
+        }
+
+        $this->entityManager->flush();
+
+        if (!$setting instanceof Setting) {
+            $setting = new Setting()
+                ->setKey(ApplicationParameterEnum::HomepagePostId->value)
+                ->setType(ApplicationParameterEnum::HomepagePostId->getType())
+                ->setGroup(ApplicationParameterEnum::HomepagePostId->getGroup());
+            $this->entityManager->persist($setting);
+        }
+
+        $setting->setValue((string) $page->getId());
+
+        yield "page d'accueil";
     }
 
     /**

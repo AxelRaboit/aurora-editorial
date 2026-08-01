@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 namespace Aurora\Module\Editorial\DataFixtures;
 
-use Aurora\Core\Locale\Enum\LocaleEnum;
-use Aurora\Module\Editorial\Post\Entity\Post;
-use Aurora\Module\Editorial\Post\Entity\PostTranslation;
-use Aurora\Module\Editorial\Post\Enum\PostStatusEnum;
-use Aurora\Module\Editorial\Post\Service\PostTextExtractor;
 use Aurora\Module\Editorial\PostType\Entity\PostType;
 use Aurora\Module\Editorial\Taxonomy\Entity\Taxonomy;
 use Aurora\Module\Editorial\Taxonomy\Entity\TaxonomyTerm;
@@ -21,7 +16,17 @@ use RuntimeException;
 use function assert;
 
 /**
- * Built-in editorial post types (page/article) + built-in taxonomies
+ * Sample editorial content for local work.
+ *
+ * The built-in post types, the built-in taxonomies and the landing page moved
+ * to EditorialBootstrapProvider: they are what the module needs to function,
+ * and fixtures never run in production. What is left here illustrates the
+ * product — sample tag terms — and expects `aurora:install` to have run.
+ *
+ * Historical note, kept because the name still says "Bootstrap": this class
+ * used to declare itself "bootstrap data the Editorial module needs to
+ * function" and "Dev/test only" three lines apart. Both were true, which is
+ * exactly why a production install came up unusable.
  * (tag/category). This is bootstrap data the Editorial module needs to
  * function — previously seeded by the core AppFixtures, extracted here so the
  * core stays decoupled from Editorial. Exposes the "article" type via
@@ -31,10 +36,6 @@ use function assert;
  */
 class EditorialBootstrapFixtures extends Fixture implements FixtureGroupInterface
 {
-    public function __construct(
-        private readonly PostTextExtractor $textExtractor,
-    ) {}
-
     public static function articleTypeRef(): string
     {
         return 'editorial_bootstrap_article_type';
@@ -74,33 +75,6 @@ class EditorialBootstrapFixtures extends Fixture implements FixtureGroupInterfac
                 $manager->persist($term);
             }
         }
-
-        // Default home page (a sample Page) — was part of the core AppFixtures.
-        $homePage = new Post()->setPostType($pageType)->setStatus(PostStatusEnum::Published);
-        $homePageFrench = new PostTranslation()
-            ->setPost($homePage)
-            ->setLocale(LocaleEnum::French->value)
-            ->setTitle('Accueil')
-            ->setSlug('accueil')
-            ->setBlocks([
-                ['type' => 'heading', 'data' => ['text' => 'Bienvenue sur Aurora', 'level' => 1]],
-                ['type' => 'paragraph', 'data' => ['text' => 'Votre CMS moderne propulsé par Symfony et Vue 3.']],
-            ]);
-        $homePageEnglish = new PostTranslation()
-            ->setPost($homePage)
-            ->setLocale(LocaleEnum::English->value)
-            ->setTitle('Home')
-            ->setSlug('home')
-            ->setBlocks([
-                ['type' => 'heading', 'data' => ['text' => 'Welcome to Aurora', 'level' => 1]],
-                ['type' => 'paragraph', 'data' => ['text' => 'Your modern CMS powered by Symfony and Vue 3.']],
-            ]);
-        $homePageFrench->setSearchContent($this->textExtractor->extract($homePageFrench));
-        $homePageEnglish->setSearchContent($this->textExtractor->extract($homePageEnglish));
-
-        $manager->persist($homePage);
-        $manager->persist($homePageFrench);
-        $manager->persist($homePageEnglish);
 
         $manager->flush();
 
