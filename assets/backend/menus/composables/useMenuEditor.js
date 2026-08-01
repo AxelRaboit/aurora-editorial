@@ -67,7 +67,7 @@ export function useMenuEditor(paths, initialMenus) {
             if (data.menu) await selectMenu(data.menu);
             return true;
         }
-        if (data) toast.error(t(data.error ?? "common.error"));
+        if (data) toast.error(t(data.error ?? "shared.common.error"));
         return false;
     }
 
@@ -120,7 +120,7 @@ export function useMenuEditor(paths, initialMenus) {
             await refreshList();
             return true;
         }
-        if (data) toast.error(t(data.error ?? "common.error"));
+        if (data) toast.error(t(data.error ?? "shared.common.error"));
         return false;
     }
 

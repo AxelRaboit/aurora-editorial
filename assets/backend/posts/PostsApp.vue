@@ -414,7 +414,7 @@ const { termMap, postTermLabels } = usePostTermLabels({ parsedTaxonomies, defaul
                             <X class="w-3.5 h-3.5" :stroke-width="2" /> {{ t("shared.common.cancel") }}
                         </AppButton>
                         <AppButton variant="danger" size="md" :loading="deletePost.loading.value" v-on:click="deletePost.submit()">
-                            <Trash2 class="w-3.5 h-3.5" :stroke-width="2" /> {{ t(trashed ? "backend.posts.force_delete" : "common.delete") }}
+                            <Trash2 class="w-3.5 h-3.5" :stroke-width="2" /> {{ t(trashed ? "backend.posts.force_delete" : "shared.common.delete") }}
                         </AppButton>
                     </AppModalFooter>
                 </template>
