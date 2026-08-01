@@ -18,7 +18,7 @@ use Doctrine\ORM\EntityManagerInterface;
 /**
  * The post types and taxonomies Editorial cannot work without.
  *
- * These lived in EditorialBootstrapFixtures, whose own docblock called them
+ * These lived in the Editorial bootstrap fixture, whose own docblock called them
  * "bootstrap data the Editorial module needs to function" and, two lines later,
  * "Dev/test only". Both statements were true, which is the problem: a
  * production install came up with no post type, so no content could be created

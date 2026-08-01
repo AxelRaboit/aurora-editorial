@@ -33,6 +33,7 @@ use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
+use RuntimeException;
 
 /**
  * Demo editorial content: built-in post types & taxonomies, sample posts,
@@ -53,7 +54,7 @@ class EditorialDemoFixtures extends Fixture implements DependentFixtureInterface
 
     public function getDependencies(): array
     {
-        return [CoreDemoFixtures::class, GedDemoFixtures::class, EditorialBootstrapFixtures::class];
+        return [CoreDemoFixtures::class, GedDemoFixtures::class];
     }
 
     public function load(ObjectManager $manager): void
@@ -70,7 +71,18 @@ class EditorialDemoFixtures extends Fixture implements DependentFixtureInterface
             $media[] = $this->getReference(GedDemoFixtures::mediaRef($i), Document::class);
         }
 
-        $articleType = $this->getReference(EditorialBootstrapFixtures::articleTypeRef(), PostType::class);
+        // Looked up rather than taken from a fixture reference: the built-in
+        // types come from EditorialBootstrapProvider now, so `aurora:install`
+        // must have run. Loading fixtures with the default purger wipes them
+        // first, which is why the Makefile targets pass --append.
+        $articleType = $manager->getRepository(PostType::class)->findOneBy(['slug' => 'article']);
+        $tagTaxonomy = $manager->getRepository(Taxonomy::class)->findOneBy(['slug' => 'tag']);
+
+        if (!$articleType instanceof PostType) {
+            throw new RuntimeException('Les types de contenu intégrés sont absents. Lance `php bin/console aurora:install` avant de charger les fixtures.');
+        }
+
+        $this->createSampleTerms($manager, $tagTaxonomy);
         $terms = $this->createTaxonomies($manager, $articleType);
         $posts = $this->createEditorial($manager, $articleType, $media, $users, $terms);
         $this->createComments($manager, $posts);
@@ -78,6 +90,27 @@ class EditorialDemoFixtures extends Fixture implements DependentFixtureInterface
         $this->createMenuItems($manager, $media);
 
         $manager->flush();
+    }
+
+    /**
+     * A couple of tags to have something to attach content to. Came from the
+     * fixture that also carried the built-in types; those moved to
+     * EditorialBootstrapProvider and this is all that was left of it.
+     */
+    private function createSampleTerms(EntityManagerInterface $manager, ?Taxonomy $tagTaxonomy): void
+    {
+        if (!$tagTaxonomy instanceof Taxonomy) {
+            return;
+        }
+
+        foreach (['Nouveauté' => 'nouveaute', 'Tutoriel' => 'tutoriel'] as $name => $slug) {
+            $term = new TaxonomyTerm()->setTaxonomy($tagTaxonomy);
+            foreach (['fr', 'en'] as $locale) {
+                $term->translate($locale)->setName($name)->setSlug($slug);
+            }
+
+            $manager->persist($term);
+        }
     }
 
     private function createTaxonomies(EntityManagerInterface $em, ?PostType $postType): array
