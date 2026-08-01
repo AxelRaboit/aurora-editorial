@@ -96,6 +96,23 @@ backend:
     editorial_frontend: Editorial site
     editorial_frontend_description: 'Enables the public Editorial site served by Aurora (public pages, posts, front menus). Disable to take the front offline.'
   menus:
+    system_item: System
+    system_item_hint: Entry provided by Aurora — it cannot be deleted. Set its visibility to "Hidden" to take it off the site.
+    target_trashed: Target in trash
+    target_missing: Target deleted
+    errors:
+      item_protected: This entry is provided by Aurora and cannot be deleted. Set its visibility to "Hidden" to take it off the site.
+      menu_protected: This menu backs a theme location and cannot be deleted.
+      location_locked: An existing menu's location cannot be changed.
+      location_taken: Another menu already occupies this location.
+      location_required: Location is required.
+      location_format: 'Location may only contain lowercase letters, digits and underscores (e.g. primary_nav).'
+      name_required: Name is required.
+      target_required: This entry must point at a target.
+      target_type_invalid: Unknown target type.
+      custom_url_required: A URL is required for a "Custom URL" entry.
+      parent_invalid: The chosen parent does not belong to this menu.
+      parent_cycle: An entry cannot be nested under one of its own sub-entries.
     preview:
       untitled: (untitled)
       unnamed: (unnamed)

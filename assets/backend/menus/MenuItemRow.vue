@@ -1,9 +1,13 @@
 <script setup>
 import { ref, computed } from "vue";
-import { ChevronDown, ChevronRight, Pencil, Trash2, ExternalLink, EyeOff, Eye, Link } from "lucide-vue-next";
+import { useI18n } from "vue-i18n";
+import { ChevronDown, ChevronRight, Pencil, Trash2, ExternalLink, EyeOff, Eye, Link, Lock, AlertTriangle } from "lucide-vue-next";
 import AppIconButton from "@/shared/components/action/AppIconButton.vue";
 import AppButton from "@/shared/components/action/AppButton.vue";
 import AppBadge from "@/shared/components/feedback/AppBadge.vue";
+import AppTooltip from "@/shared/components/overlay/AppTooltip.vue";
+
+const { t, locale } = useI18n();
 
 const props = defineProps({
     item: { type: Object, required: true },
@@ -34,9 +38,32 @@ const isBeingDragged = computed(() => props.draggingId === props.item.id);
 const indentStyle = computed(() => ({ marginLeft: `${props.depth * 1}rem` }));
 
 function visibilityIcon(item) {
+    if (item.visibility === "hidden") return EyeOff;
     if (item.visibility === "guests_only" || item.visibility === "authenticated_only") return EyeOff;
     return Eye;
 }
+
+/**
+ * The label a visitor actually sees, resolved the way MenuRenderer does it:
+ * the item's own translation wins, and the target's name is only the fallback.
+ *
+ * The row used to show `targetPreview.label` — the target's name, always — so
+ * an item titled "Blog" pointing at the "Articles" post type read as "Articles"
+ * here and "Blog" on the site, with only a locale badge hinting that an
+ * override existed at all.
+ */
+const effectiveLabel = computed(
+    () => props.item.translations?.[locale.value] || props.item.targetPreview?.label || "—",
+);
+
+/** Shown underneath, so the target stays visible now that it lost the main line. */
+const targetLabel = computed(() => props.item.targetPreview?.label ?? null);
+const isOverridden = computed(() => effectiveLabel.value !== targetLabel.value);
+
+const isTrashed = computed(() => props.item.targetPreview?.trashed === true);
+const isMissing = computed(() => props.item.targetPreview?.missing === true);
+// Broken either way: MenuRenderer drops both from the frontend.
+const isBroken = computed(() => isTrashed.value || isMissing.value);
 </script>
 
 <template>
@@ -74,11 +101,15 @@ function visibilityIcon(item) {
 
             <div class="flex-1 min-w-0">
                 <div class="flex items-center gap-2 flex-wrap">
-                    <span class="text-sm truncate" :class="{ 'text-rose-400': item.targetPreview?.missing }">
-                        {{ item.targetPreview?.label ?? "—" }}
+                    <span class="text-sm truncate" :class="{ 'text-rose-400': isMissing }">
+                        {{ effectiveLabel }}
                     </span>
-                    <AppBadge v-if="item.translations?.fr || item.translations?.en" color="accent" class="shrink-0">
-                        {{ Object.keys(item.translations).filter((l) => item.translations[l]).join(", ") }}
+                    <AppBadge v-if="item.isDefault" color="gray" class="shrink-0">
+                        <Lock class="w-3 h-3" :stroke-width="2.5" /> {{ t("backend.menus.system_item") }}
+                    </AppBadge>
+                    <AppBadge v-if="isBroken" color="amber" class="shrink-0">
+                        <AlertTriangle class="w-3 h-3" :stroke-width="2.5" />
+                        {{ t(isTrashed ? "backend.menus.target_trashed" : "backend.menus.target_missing") }}
                     </AppBadge>
                     <AppBadge v-if="item.openInNewTab" color="gray" class="shrink-0">
                         <ExternalLink class="w-3 h-3" :stroke-width="2.5" />
@@ -87,14 +118,27 @@ function visibilityIcon(item) {
                         <component :is="visibilityIcon(item)" class="w-3 h-3" :stroke-width="2.5" />
                     </AppBadge>
                 </div>
-                <p v-if="item.targetPreview?.hint" class="text-xs text-muted truncate font-mono mt-0.5">{{ item.targetPreview.hint }}</p>
+                <p class="text-xs text-muted truncate mt-0.5">
+                    <span v-if="isOverridden && targetLabel">{{ targetLabel }}</span>
+                    <span v-if="isOverridden && targetLabel && item.targetPreview?.hint"> · </span>
+                    <span v-if="item.targetPreview?.hint" class="font-mono">{{ item.targetPreview.hint }}</span>
+                </p>
             </div>
 
             <div class="opacity-0 group-hover:opacity-100 flex gap-0.5 transition-opacity shrink-0">
                 <AppButton variant="secondary" size="sm" v-on:click.stop="emit('edit', item)">
                     <Pencil class="w-3.5 h-3.5" :stroke-width="2" />
                 </AppButton>
-                <AppButton variant="danger" size="sm" v-on:click.stop="emit('delete', item)">
+                <!-- A default item can't be deleted: the sync command would
+                     backfill it on its next run, so the deletion would look
+                     like it silently failed. Hiding it is the way to take it
+                     off the site, and it's reversible. -->
+                <AppTooltip v-if="item.isDefault" :text="t('backend.menus.system_item_hint')">
+                    <AppButton variant="danger" size="sm" disabled>
+                        <Trash2 class="w-3.5 h-3.5" :stroke-width="2" />
+                    </AppButton>
+                </AppTooltip>
+                <AppButton v-else variant="danger" size="sm" v-on:click.stop="emit('delete', item)">
                     <Trash2 class="w-3.5 h-3.5" :stroke-width="2" />
                 </AppButton>
             </div>

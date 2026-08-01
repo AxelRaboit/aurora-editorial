@@ -139,10 +139,38 @@ class MenuManager implements MenuManagerInterface
 
     public function deleteItem(MenuItemInterface $item): void
     {
+        if ($this->isDefaultItem($item)) {
+            throw new InvalidArgumentException('backend.menus.errors.item_protected');
+        }
+
         $this->auditMenuItemDeleted($item);
 
         $this->entityManager->remove($item);
         $this->entityManager->flush();
+    }
+
+    /**
+     * Whether the item is one of the defaults its location declares.
+     *
+     * Deleting one is refused rather than allowed and then undone: the sync
+     * command backfills missing defaults, so a deletion would quietly come back
+     * on the next run and read as a bug. Setting the item's visibility to
+     * Hidden removes it from the site instead, and is reversible.
+     *
+     * Matched on targetType — the same key MenuSyncCommand backfills on — so
+     * the two cannot disagree about what counts as a default.
+     */
+    protected function isDefaultItem(MenuItemInterface $item): bool
+    {
+        $meta = $this->locationRegistry->all()[$item->getMenu()->getLocation()] ?? null;
+
+        foreach ($meta['defaultItems'] ?? [] as $default) {
+            if ($default['targetType'] === $item->getTargetType()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

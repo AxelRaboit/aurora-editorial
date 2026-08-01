@@ -6,6 +6,7 @@ namespace Aurora\Module\Editorial\Menu\Serializer;
 
 use Aurora\Module\Editorial\Menu\Entity\MenuItemInterface;
 use Aurora\Module\Editorial\Menu\Enum\MenuItemTargetTypeEnum;
+use Aurora\Module\Editorial\Menu\Service\MenuLocationRegistry;
 use Aurora\Module\Editorial\Post\Entity\PostInterface;
 use Aurora\Module\Editorial\Post\Repository\PostRepository;
 use Aurora\Module\Editorial\PostType\Entity\PostTypeInterface;
@@ -22,6 +23,7 @@ class MenuItemSerializer implements MenuItemSerializerInterface
         private readonly PostRepository $postRepository,
         private readonly TaxonomyTermRepository $termRepository,
         private readonly PostTypeRepository $postTypeRepository,
+        private readonly MenuLocationRegistry $locationRegistry,
         private readonly TranslatorInterface $translator,
     ) {}
 
@@ -56,8 +58,32 @@ class MenuItemSerializer implements MenuItemSerializerInterface
             'parentId' => $item->getParent()?->getId(),
             'translations' => $translations,
             'targetPreview' => $this->resolveTargetPreview($item, $postCache, $termCache, $postTypeCache),
+            'isDefault' => $this->isDefaultItem($item),
             'children' => $children,
         ];
+    }
+
+    /**
+     * Whether this item is one of the defaults its location declares.
+     *
+     * Derived from the registry rather than stored on the entity: a default is
+     * identified by its targetType — that is what MenuSyncCommand matches on
+     * when it backfills — so there is no second source of truth to keep in
+     * step. Consumed by the UI to disable deletion; the entity itself is
+     * guarded in MenuManager.
+     */
+    private function isDefaultItem(MenuItemInterface $item): bool
+    {
+        $location = $item->getMenu()->getLocation();
+        $meta = $this->locationRegistry->all()[$location] ?? null;
+
+        foreach ($meta['defaultItems'] ?? [] as $default) {
+            if ($default['targetType'] === $item->getTargetType()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -161,6 +187,11 @@ class MenuItemSerializer implements MenuItemSerializerInterface
         return [
             'label' => $translation?->getTitle() ?? $this->translator->trans('backend.menus.preview.untitled'),
             'hint' => sprintf('/%s/%s', $post->getPostType()->getSlug(), $translation?->getSlug() ?? ''),
+            // A trashed post is still found here — only a permanently deleted
+            // one returns null above — but MenuRenderer drops the item on the
+            // frontend. Without this the admin shows a healthy-looking entry
+            // for a link no visitor will ever see.
+            'trashed' => $post->isTrashed(),
         ];
     }
 

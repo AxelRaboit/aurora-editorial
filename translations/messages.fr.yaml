@@ -90,6 +90,23 @@ backend:
           view: Voir le sitemap
           regenerate: Régénérer le sitemap
   menus:
+    system_item: Système
+    system_item_hint: Entrée fournie par Aurora — non supprimable. Passe sa visibilité à « Masqué » pour la retirer du site.
+    target_trashed: Cible à la corbeille
+    target_missing: Cible supprimée
+    errors:
+      item_protected: Cette entrée est fournie par Aurora et ne peut pas être supprimée. Passe sa visibilité à « Masqué » pour la retirer du site.
+      menu_protected: Ce menu correspond à un emplacement du thème et ne peut pas être supprimé.
+      location_locked: L'emplacement d'un menu existant ne peut pas être modifié.
+      location_taken: Un menu occupe déjà cet emplacement.
+      location_required: L'emplacement est obligatoire.
+      location_format: 'L''emplacement ne peut contenir que des minuscules, des chiffres et des underscores (ex : primary_nav).'
+      name_required: Le nom est obligatoire.
+      target_required: Cette entrée doit désigner une cible.
+      target_type_invalid: Type de cible inconnu.
+      custom_url_required: Une URL est obligatoire pour une entrée de type « URL personnalisée ».
+      parent_invalid: Le parent choisi n'appartient pas à ce menu.
+      parent_cycle: Une entrée ne peut pas être placée sous l'une de ses propres sous-entrées.
     preview:
       untitled: (sans titre)
       unnamed: (sans nom)
