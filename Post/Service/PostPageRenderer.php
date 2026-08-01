@@ -87,6 +87,9 @@ final readonly class PostPageRenderer
             'noindex' => $translation->isNoindex(),
             'ogImage' => $ogImageData,
             'jsonLd' => $translation->getJsonLd(),
+            // Same gap as the archive cards had: a post type whose meaning
+            // lives in its custom fields could not render them on its own page.
+            'customFields' => $translation->getCustomFields(),
         ];
 
         $body = $this->twig->render($this->themeResolver->resolve('editorial/post/index'), [
@@ -97,6 +100,7 @@ final readonly class PostPageRenderer
             'translationData' => $translationData,
             'featuredMediaData' => $featuredMediaData,
             'content' => $this->blocksRenderer->render($translation->getBlocks(), $locale),
+            'terms' => $this->postTerms($post, $locale),
             'alternates' => $this->alternatesBuilder->forPost($post),
             'commentsEnabled' => $commentsEnabled,
             'commentErrors' => $commentErrors,
@@ -106,5 +110,26 @@ final readonly class PostPageRenderer
         $response->headers->set('Content-Language', $locale);
 
         return $response;
+    }
+
+    /**
+     * Term names grouped by taxonomy, for a theme that wants to show them
+     * without reaching back into the entity graph from Twig.
+     *
+     * @return array<string, list<string>>
+     */
+    private function postTerms(PostInterface $post, string $locale): array
+    {
+        $terms = [];
+
+        foreach ($post->getTerms() as $term) {
+            $name = $term->getTranslation($locale)?->getName();
+
+            if (null !== $name) {
+                $terms[$term->getTaxonomy()->getSlug()][] = $name;
+            }
+        }
+
+        return $terms;
     }
 }

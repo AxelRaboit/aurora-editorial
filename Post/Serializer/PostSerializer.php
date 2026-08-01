@@ -122,6 +122,33 @@ class PostSerializer implements PostSerializerInterface
             'postTypeSlug' => $post->getPostType()->getSlug(),
             'featuredMediaUrl' => $this->documentUrlGenerator->variantUrl($featured, 'medium') ?? $this->documentUrlGenerator->publicUrl($featured),
             'featuredMediaFocalPosition' => $this->documentUrlGenerator->focalPositionCss($featured),
+            // A card carried only what a blog post needs — title, teaser,
+            // image. A post type whose meaning lives in its custom fields (a
+            // room's price, a product's weight) could therefore not be listed
+            // usefully at all: the archive had nothing to show but a headline.
+            'customFields' => $translation?->getCustomFields() ?? [],
+            'terms' => $this->cardTerms($post, $locale),
         ];
+    }
+
+    /**
+     * Term names for a card, flat and per taxonomy — enough to render a row of
+     * badges without a second query per post.
+     *
+     * @return array<string, list<string>> keyed by taxonomy slug
+     */
+    protected function cardTerms(PostInterface $post, string $locale): array
+    {
+        $terms = [];
+
+        foreach ($post->getTerms() as $term) {
+            $name = $term->getTranslation($locale)?->getName();
+
+            if (null !== $name) {
+                $terms[$term->getTaxonomy()->getSlug()][] = $name;
+            }
+        }
+
+        return $terms;
     }
 }
