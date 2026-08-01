@@ -168,14 +168,19 @@ final class AuditActionLabelTest extends TestCase
 
         foreach ($walker as $file) {
             $path = $file->getPathname();
-            // tests/ is excluded, not merely for tidiness: this very file
+            // Tests/ is excluded, not merely for tidiness: this very file
             // contains the literal "auditLogger->log(" three times — in a
             // docblock, in the substring count, and in the failure message —
             // and scanning itself made the blind-spot assertion count three
             // call sites it could never parse. Core's copy never hit this
             // because it scans src/ while its tests live outside it.
+            //
+            // Capitalised to match the namespace: this package maps PSR-4 onto
+            // its own root, so a lowercase tests/ resolves to ...\tests\... and
+            // Symfony's DebugClassLoader aborts the consuming app over the case
+            // mismatch — which is exactly how it was first noticed.
             if (str_contains($path, '/vendor/') || str_contains($path, '/tools/')
-                || str_contains($path, '/tests/') || str_contains($path, '/node_modules/')) {
+                || str_contains($path, '/Tests/') || str_contains($path, '/node_modules/')) {
                 continue;
             }
 
