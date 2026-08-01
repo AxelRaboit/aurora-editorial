@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Aurora\Module\Editorial\Menu\Serializer;
 
 use Aurora\Module\Editorial\Menu\Entity\MenuInterface;
+use Aurora\Module\Editorial\Menu\Service\MenuDefaultsSeeder;
 use Aurora\Module\Editorial\Menu\Service\MenuLocationRegistry;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 
@@ -14,6 +15,7 @@ class MenuSerializer implements MenuSerializerInterface
     public function __construct(
         protected readonly MenuItemSerializer $itemSerializer,
         protected readonly MenuLocationRegistry $locationRegistry,
+        protected readonly MenuDefaultsSeeder $defaultsSeeder,
     ) {}
 
     /** @return array<string, mixed> */
@@ -56,6 +58,11 @@ class MenuSerializer implements MenuSerializerInterface
         return [
             ...$this->serialize($menu),
             'items' => $rootItems,
+            // Drives the empty-menu offer in the editor. Counted rather than
+            // assumed: a location may declare no defaults at all (footer), or
+            // declare one whose target doesn't exist on this install, and
+            // offering to add nothing would be worse than offering nothing.
+            'availableDefaults' => count($this->defaultsSeeder->missingFor($menu)),
         ];
     }
 }

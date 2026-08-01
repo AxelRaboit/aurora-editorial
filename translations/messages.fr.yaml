@@ -91,6 +91,10 @@ backend:
           view: Voir le sitemap
           regenerate: Régénérer le sitemap
   menus:
+    empty_title: Ce menu est vide
+    empty_hint: 'Aurora propose {count} entrée(s) pour démarrer. Tu pourras les modifier ou les supprimer ensuite.'
+    add_defaults: Ajouter les entrées suggérées
+    defaults_added: Entrées suggérées ajoutées.
     system_item_hint: Entrée fournie par Aurora — non supprimable. Passe sa visibilité à « Masqué » pour la retirer du site.
     target_trashed: En corbeille
     target_trashed_hint: "Cette entrée n'apparaît pas sur le site : le contenu vers lequel elle pointe est dans la corbeille. Restaure ce contenu, ou fais pointer l'entrée ailleurs."
@@ -99,6 +103,7 @@ backend:
     target_missing: Contenu supprimé
     target_missing_hint: "Cette entrée n'apparaît pas sur le site : le contenu vers lequel elle pointait a été supprimé définitivement. Fais-la pointer ailleurs, ou supprime-la."
     errors:
+      no_defaults_available: Aucune entrée suggérée à ajouter pour ce menu.
       item_protected: Cette entrée est fournie par Aurora et ne peut pas être supprimée. Passe sa visibilité à « Masqué » pour la retirer du site.
       menu_protected: Ce menu correspond à un emplacement du thème et ne peut pas être supprimé.
       location_locked: L'emplacement d'un menu existant ne peut pas être modifié.

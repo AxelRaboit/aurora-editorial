@@ -27,6 +27,7 @@ const props = defineProps({
     showPath: { type: String, required: true },
     updatePath: { type: String, required: true },
     deletePath: { type: String, required: true },
+    seedDefaultsPath: { type: String, required: true },
     itemCreatePath: { type: String, required: true },
     itemUpdatePath: { type: String, required: true },
     itemDeletePath: { type: String, required: true },
@@ -42,13 +43,14 @@ const paths = {
     show: props.showPath,
     update: props.updatePath,
     delete: props.deletePath,
+    seedDefaults: props.seedDefaultsPath,
     itemCreate: props.itemCreatePath,
     itemUpdate: props.itemUpdatePath,
     itemDelete: props.itemDeletePath,
     itemReorder: props.itemReorderPath,
 };
 
-const { menus, selectedMenu, selectMenu, updateMenu, deleteMenu, reorderItems, saveItem, deleteItem } =
+const { menus, selectedMenu, selectMenu, updateMenu, deleteMenu, reorderItems, saveItem, deleteItem, seedDefaults } =
     useMenuEditor(paths, props.initialMenus);
 
 const { menuModal, menuForm, openEditMenu, submitMenu } = useMenuEditModal(updateMenu);
@@ -73,6 +75,7 @@ const { itemModal, openCreateItem, openEditItem, submitItem } = useMenuItemModal
             v-on:edit-item="openEditItem"
             v-on:delete-item="confirmDeleteItem = $event"
             v-on:reorder-root="reorderItems"
+            v-on:seed-defaults="seedDefaults"
         />
 
         <AppModal

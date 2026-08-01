@@ -14,6 +14,7 @@ use Aurora\Module\Editorial\Menu\Entity\Menu;
 use Aurora\Module\Editorial\Menu\Manager\MenuManagerInterface;
 use Aurora\Module\Editorial\Menu\Repository\MenuRepository;
 use Aurora\Module\Editorial\Menu\Serializer\MenuSerializerInterface;
+use Aurora\Module\Editorial\Menu\Service\MenuDefaultsSeeder;
 use Aurora\Module\Editorial\Menu\View\MenusViewBuilder;
 use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -38,6 +39,7 @@ class MenusController extends AbstractController
         private readonly MenusViewBuilder $viewBuilder,
         private readonly MenuInputFactoryInterface $menuInputFactory,
         private readonly LocaleContextInterface $localeContext,
+        private readonly MenuDefaultsSeeder $defaultsSeeder,
     ) {}
 
     // ── Page (Vue SPA) ────────────────────────────────────────────────────────
@@ -73,6 +75,30 @@ class MenusController extends AbstractController
     #[Route('/{id}', name: '_show', requirements: ['id' => '\d+|__id__'], methods: [HttpMethodEnum::Get->value])]
     public function show(Menu $menu): JsonResponse
     {
+        return $this->jsonSuccess(['menu' => $this->menuSerializer->serializeFull($menu)]);
+    }
+
+    /**
+     * Adds the entries this location suggests, for a menu that has none.
+     *
+     * Unprotected defaults are seeded once when a menu is created and never
+     * reinstated by the sync — a deletion has to stick, or the command would
+     * quietly undo a deliberate choice. The cost was that emptying a menu left
+     * no way back except rebuilding it by hand. This offers the suggestions
+     * again on demand, which keeps the deletion honest and the recovery easy.
+     */
+    #[Route('/{id}/seed-defaults', name: '_seed_defaults', requirements: ['id' => '\d+|__id__'], methods: [HttpMethodEnum::Post->value])]
+    #[IsGranted('editorial.menus.edit')]
+    public function seedDefaults(Menu $menu): JsonResponse
+    {
+        $missing = $this->defaultsSeeder->missingFor($menu);
+
+        if ([] === $missing) {
+            return $this->jsonFailure('backend.menus.errors.no_defaults_available');
+        }
+
+        $this->defaultsSeeder->seed($menu, $missing);
+
         return $this->jsonSuccess(['menu' => $this->menuSerializer->serializeFull($menu)]);
     }
 

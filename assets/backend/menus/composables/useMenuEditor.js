@@ -124,6 +124,27 @@ export function useMenuEditor(paths, initialMenus) {
         return false;
     }
 
+    /**
+     * Adds the entries the location suggests, for a menu the user has emptied.
+     *
+     * The sync deliberately never reinstates them — a deletion has to stick —
+     * so this is the only way back short of rebuilding by hand.
+     */
+    async function seedDefaults() {
+        if (!selectedMenu.value) return false;
+        const data = await request(
+            replacePath(paths.seedDefaults, selectedMenu.value.id),
+        );
+        if (data?.success) {
+            toast.success(t("backend.menus.defaults_added"));
+            selectedMenu.value = data.menu;
+            await refreshList();
+            return true;
+        }
+        if (data) toast.error(t(data.error ?? "shared.common.error"));
+        return false;
+    }
+
     async function deleteItem(item) {
         const data = await request(replacePath(paths.itemDelete, item.id));
         if (data?.success) {
@@ -153,5 +174,6 @@ export function useMenuEditor(paths, initialMenus) {
         reorderItems,
         saveItem,
         deleteItem,
+        seedDefaults,
     };
 }

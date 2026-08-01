@@ -2,7 +2,7 @@
  
 import { toRef } from "vue";
 import { useI18n } from "vue-i18n";
-import { Plus, Trash2, Pencil, ListTree } from "lucide-vue-next";
+import { Plus, Trash2, Pencil, ListTree, Sparkles } from "lucide-vue-next";
 import { useMenuTree } from "@editorial/backend/menus/composables/useMenuTree.js";
 import { useMenuDragDrop } from "@editorial/backend/menus/composables/useMenuDragDrop.js";
 import AppButton from "@/shared/components/action/AppButton.vue";
@@ -24,6 +24,7 @@ const emit = defineEmits([
     "edit-item",
     "delete-item",
     "reorder-root",
+    "seed-defaults",
 ]);
 
 const menuRef = toRef(props, "menu");
@@ -87,7 +88,29 @@ const {
                     </AppButton>
                 </div>
 
-                <AppNoData v-if="!menu.items?.length" :message="t('backend.menus.items_empty')" />
+                <!-- An empty menu is the moment the user most needs a hand:
+                     nothing on screen says what a menu entry even is. When the
+                     location declares suggestions, offer them rather than
+                     leaving an empty panel — and say plainly that they can be
+                     removed, so the offer doesn't read as a commitment. -->
+                <div
+                    v-if="!menu.items?.length && menu.availableDefaults > 0"
+                    class="rounded-lg border border-dashed border-line p-6 text-center space-y-3"
+                >
+                    <Sparkles class="w-6 h-6 mx-auto text-muted" :stroke-width="1.75" />
+                    <div>
+                        <p class="text-sm text-primary font-medium">{{ t("backend.menus.empty_title") }}</p>
+                        <p class="text-xs text-muted mt-1">
+                            {{ t("backend.menus.empty_hint", { count: menu.availableDefaults }) }}
+                        </p>
+                    </div>
+                    <AppButton variant="secondary" size="md" v-on:click="$emit('seed-defaults')">
+                        <Sparkles class="w-3.5 h-3.5" :stroke-width="2" />
+                        {{ t("backend.menus.add_defaults") }}
+                    </AppButton>
+                </div>
+
+                <AppNoData v-else-if="!menu.items?.length" :message="t('backend.menus.items_empty')" />
 
                 <div
                     v-else
