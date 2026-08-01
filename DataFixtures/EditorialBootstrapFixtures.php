@@ -16,6 +16,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
+use RuntimeException;
 
 use function assert;
 
@@ -48,54 +49,29 @@ class EditorialBootstrapFixtures extends Fixture implements FixtureGroupInterfac
     {
         assert($manager instanceof EntityManagerInterface);
 
-        $pageType = new PostType()
-            ->setSlug('page')
-            ->setLabel('Pages')
-            ->setIcon('file')
-            ->setHasArchive(false)
-            ->setIsBuiltIn(true)
-            ->setSupports(['blocks', 'thumbnail', 'excerpt']);
+        // The built-in types and taxonomies are no longer created here: they
+        // are structural, so EditorialBootstrapProvider owns them and
+        // `aurora:install` creates them in every environment. This fixture
+        // only adds the sample content that sits on top, and therefore expects
+        // that command to have run first — every Makefile target that loads
+        // fixtures does so.
+        $pageType = $manager->getRepository(PostType::class)->findOneBy(['slug' => 'page']);
+        $articleType = $manager->getRepository(PostType::class)->findOneBy(['slug' => 'article']);
 
-        $articleType = new PostType()
-            ->setSlug('article')
-            ->setLabel('Articles')
-            ->setIcon('file-text')
-            ->setHasArchive(true)
-            ->setIsBuiltIn(true)
-            ->setSupports(['blocks', 'thumbnail', 'excerpt']);
+        if (!$pageType instanceof PostType || !$articleType instanceof PostType) {
+            throw new RuntimeException('Les types de contenu intégrés sont absents. Lance `php bin/console aurora:install` avant de charger les fixtures.');
+        }
 
-        $manager->persist($pageType);
-        $manager->persist($articleType);
+        $tagTaxonomy = $manager->getRepository(Taxonomy::class)->findOneBy(['slug' => 'tag']);
 
-        $taxonomyLabels = [
-            'tag' => ['fr' => 'Étiquette', 'en' => 'Tag'],
-            'category' => ['fr' => 'Catégorie', 'en' => 'Category'],
-        ];
-
-        foreach ($taxonomyLabels as $slug => $labels) {
-            $taxonomy = new Taxonomy()
-                ->setSlug($slug)
-                ->setHierarchical('category' === $slug)
-                ->setIsBuiltIn(true);
-
-            foreach ($labels as $locale => $label) {
-                $taxonomy->translate($locale)->setLabel($label);
-            }
-
-            $pageType->addTaxonomy($taxonomy);
-            $articleType->addTaxonomy($taxonomy);
-
-            $manager->persist($taxonomy);
-
-            if ('tag' === $slug) {
-                foreach (['Nouveauté' => 'nouveaute', 'Tutoriel' => 'tutoriel'] as $name => $termSlug) {
-                    $term = new TaxonomyTerm()->setTaxonomy($taxonomy);
-                    foreach (array_keys($labels) as $locale) {
-                        $term->translate($locale)->setName($name)->setSlug($termSlug);
-                    }
-
-                    $manager->persist($term);
+        if ($tagTaxonomy instanceof Taxonomy) {
+            foreach (['Nouveauté' => 'nouveaute', 'Tutoriel' => 'tutoriel'] as $name => $termSlug) {
+                $term = new TaxonomyTerm()->setTaxonomy($tagTaxonomy);
+                foreach (['fr', 'en'] as $locale) {
+                    $term->translate($locale)->setName($name)->setSlug($termSlug);
                 }
+
+                $manager->persist($term);
             }
         }
 

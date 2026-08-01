@@ -7,6 +7,7 @@ declare(strict_types=1);
  * AuroraEditorialBundle::loadExtension when the module is a standalone package.
  */
 
+use Aurora\Core\Bootstrap\BootstrapProviderInterface;
 use Aurora\Core\Dashboard\DashboardStatsProviderInterface;
 use Aurora\Core\Frontend\Contract\FrontendInterface;
 use Aurora\Core\Module\Contract\ModuleInterface;
@@ -32,6 +33,7 @@ return static function (ContainerConfigurator $container): void {
     $services->instanceof(MenuLocationProviderInterface::class)->tag('aurora.menu_location_provider');
     $services->instanceof(ConfigurationTabProviderInterface::class)->tag('aurora.configuration_tab_provider');
     $services->instanceof(ApplicationParameterProviderInterface::class)->tag('aurora.application_parameter_provider');
+    $services->instanceof(BootstrapProviderInterface::class)->tag('aurora.bootstrap_provider');
     $services->instanceof(SearchProviderInterface::class)->tag('aurora.search_provider');
     $services->instanceof(DashboardStatsProviderInterface::class)->tag('aurora.dashboard_stats_provider');
     $services->instanceof(BackendSearchProviderInterface::class)->tag('aurora.backend_search_provider');
