@@ -129,6 +129,12 @@ export function useMenuEditor(paths, initialMenus) {
         if (data?.success) {
             toast.success(t("shared.common.deleted"));
             selectedMenu.value = data.menu;
+            // The sidebar renders each menu's itemCount, which ships with the
+            // list payload and is never recomputed client-side. Without this
+            // the editor emptied while the list kept claiming 17 entries — and
+            // since deleting a parent cascades to its children, the drift grew
+            // faster than one per click. saveItem() already does both.
+            await refreshList();
             return true;
         }
         if (data) toast.error(t("shared.common.error"));
