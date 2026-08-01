@@ -37,6 +37,15 @@ final class MenuRenderer
     /** @var array<string, MenuInterface>|null */
     private ?array $menusByLocation = null;
 
+    /** @var array<int, PostInterface|null> */
+    private array $postCache = [];
+
+    /** @var array<int, TaxonomyTermInterface|null> */
+    private array $termCache = [];
+
+    /** @var array<int, PostTypeInterface|null> */
+    private array $postTypeCache = [];
+
     public function __construct(
         private readonly MenuRepository $menuRepository,
         private readonly PostRepository $postRepository,
@@ -67,6 +76,15 @@ final class MenuRenderer
         }
 
         $rootItems = $menu->getItems()->filter(static fn (MenuItemInterface $item): bool => !$item->getParent() instanceof MenuItemInterface);
+
+        // Each item looks its target up twice — once for the label, once for
+        // the URL — and every lookup lazily loaded that entity's translations.
+        // A six-entry menu therefore cost six post queries plus six translation
+        // queries before a single link was rendered, on every page of the site.
+        // One round trip per target type instead: findByIds() already joins the
+        // translations and the post type the resolvers go on to read.
+        $this->prefetchTargets($rootItems);
+
         $rendered = [];
         foreach ($rootItems as $item) {
             $resolved = $this->resolveItem($item, $locale, $isAuthenticated);
@@ -128,6 +146,108 @@ final class MenuRenderer
         ];
     }
 
+    /**
+     * Loads every target the tree points at, one query per target type.
+     *
+     * @param iterable<MenuItemInterface> $items
+     */
+    private function prefetchTargets(iterable $items): void
+    {
+        $ids = [];
+        $this->collectTargetIds($items, $ids);
+
+        $this->warm(
+            $ids[MenuItemTargetTypeEnum::Post->value] ?? [],
+            $this->postCache,
+            fn (array $missing): array => $this->postRepository->findByIds($missing),
+        );
+
+        $this->warm(
+            $ids[MenuItemTargetTypeEnum::Term->value] ?? [],
+            $this->termCache,
+            fn (array $missing): array => $this->termRepository->findByIds($missing),
+        );
+
+        $this->warm(
+            $ids[MenuItemTargetTypeEnum::PostTypeArchive->value] ?? [],
+            $this->postTypeCache,
+            fn (array $missing): array => $this->postTypeRepository->findByIds($missing),
+        );
+    }
+
+    /**
+     * @param iterable<MenuItemInterface> $items
+     * @param array<string, list<int>>    $ids
+     */
+    private function collectTargetIds(iterable $items, array &$ids): void
+    {
+        foreach ($items as $item) {
+            $targetId = $item->getTargetId();
+            if (null !== $targetId) {
+                $ids[$item->getTargetType()->value][] = $targetId;
+            }
+
+            $this->collectTargetIds($item->getChildren(), $ids);
+        }
+    }
+
+    /**
+     * @param list<int>                             $ids
+     * @param array<int, object|null>               $cache
+     * @param callable(list<int>): iterable<object> $loader
+     */
+    private function warm(array $ids, array &$cache, callable $loader): void
+    {
+        $missing = array_values(array_filter(
+            array_unique($ids),
+            static fn (int $id): bool => !array_key_exists($id, $cache),
+        ));
+
+        if ([] === $missing) {
+            return;
+        }
+
+        foreach ($loader($missing) as $entity) {
+            $cache[$entity->getId()] = $entity;
+        }
+
+        // A target that no longer exists is recorded as absent too, so the
+        // per-item fallback below does not re-query it once per menu entry.
+        foreach ($missing as $id) {
+            $cache[$id] ??= null;
+        }
+    }
+
+    private function post(?int $id): ?PostInterface
+    {
+        if (null === $id) {
+            return null;
+        }
+
+        // Reached only when prefetching missed the id, which the tree walk
+        // makes impossible today. Kept so a future caller cannot turn a missing
+        // prefetch into a wrong answer — only into a slower one.
+        return $this->postCache[$id] ??= $this->postRepository->find($id);
+    }
+
+    private function term(?int $id): ?TaxonomyTermInterface
+    {
+        if (null === $id) {
+            return null;
+        }
+
+        return $this->termCache[$id] ??= $this->termRepository->find($id);
+    }
+
+    private function postType(?int $id): ?PostTypeInterface
+    {
+        if (null === $id) {
+            return null;
+        }
+
+        return $this->postTypeCache[$id] ??= $this->postTypeRepository->find($id);
+    }
+
     private function isVisible(MenuItemInterface $item, bool $isAuthenticated): bool
     {
         return match ($item->getVisibility()) {
@@ -155,7 +275,7 @@ final class MenuRenderer
 
     private function resolvePostUrl(MenuItemInterface $item, string $locale): ?string
     {
-        $post = $this->postRepository->find($item->getTargetId());
+        $post = $this->post($item->getTargetId());
         if (!$post instanceof PostInterface || $post->isTrashed() || !$post->isPublished()) {
             return null;
         }
@@ -174,7 +294,7 @@ final class MenuRenderer
 
     private function resolveTermUrl(MenuItemInterface $item, string $locale): ?string
     {
-        $term = $this->termRepository->find($item->getTargetId());
+        $term = $this->term($item->getTargetId());
         if (!$term instanceof TaxonomyTermInterface) {
             return null;
         }
@@ -193,7 +313,7 @@ final class MenuRenderer
 
     private function resolveArchiveUrl(MenuItemInterface $item, string $locale): ?string
     {
-        $postType = $this->postTypeRepository->find($item->getTargetId());
+        $postType = $this->postType($item->getTargetId());
         // hasArchive() is a toggle, editable even on a built-in post type, and
         // PageController answers 404 when it is off. Generating the link anyway
         // put a visible entry in the menu leading to a dead page — worse than
@@ -225,33 +345,36 @@ final class MenuRenderer
             MenuItemTargetTypeEnum::FrontLogout => $this->translator->trans('frontend.menu.logout', [], 'messages', $locale),
             MenuItemTargetTypeEnum::Post => $this->postLabel($item, $locale),
             MenuItemTargetTypeEnum::Term => $this->termLabel($item, $locale),
-            MenuItemTargetTypeEnum::PostTypeArchive => $this->postTypeRepository->find($item->getTargetId())?->getLabel(),
+            MenuItemTargetTypeEnum::PostTypeArchive => $this->postType($item->getTargetId())?->getLabel(),
             MenuItemTargetTypeEnum::CustomUrl => null, // Custom URL items must have a translation override
         };
     }
 
     private function postLabel(MenuItemInterface $item, string $locale): ?string
     {
-        $post = $this->postRepository->find($item->getTargetId());
+        $post = $this->post($item->getTargetId());
         if (!$post instanceof PostInterface) {
             return null;
         }
 
         $translation = $post->getTranslation($locale) ?? $post->getTranslations()->first();
 
-        return $translation->getTitle();
+        // first() answers false on an untranslated post, which read as a title
+        // lookup on a boolean. Only reachable through a hand-built row, but it
+        // was a fatal rather than a dropped entry.
+        return $translation ? $translation->getTitle() : null;
     }
 
     private function termLabel(MenuItemInterface $item, string $locale): ?string
     {
-        $term = $this->termRepository->find($item->getTargetId());
+        $term = $this->term($item->getTargetId());
         if (!$term instanceof TaxonomyTermInterface) {
             return null;
         }
 
         $translation = $term->getTranslation($locale) ?? $term->getTranslations()->first();
 
-        return $translation->getName();
+        return $translation ? $translation->getName() : null;
     }
 
     /** @param array<int, array<string, mixed>> $items */
