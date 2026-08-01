@@ -68,3 +68,21 @@ jobs:
 
       - name: Tests
         run: php tools/phpunit/vendor/bin/phpunit -c phpunit.dist.xml
+
+      # —— Frontend lint ——————————————————————————————————————————————————
+      # The assets are compiled by aurora-core's Vite build, not here; node is
+      # installed purely to lint them. Indent width comes from .editorconfig,
+      # which prettier reads — drop that file and every indented line in the
+      # package is reported as an error (4109 of them), which is exactly what
+      # happened before it existed.
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install lint tooling
+        run: npm ci --no-audit --no-fund
+
+      - name: Lint JavaScript and Vue
+        run: npm run lint

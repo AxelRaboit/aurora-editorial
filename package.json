@@ -1,0 +1,15 @@
+{
+    "name": "@axelraboit/aurora-editorial",
+    "private": true,
+    "description": "Lint tooling only — the assets themselves are compiled by aurora-core's Vite build.",
+    "scripts": {
+        "lint": "eslint --config eslint.config.cjs assets"
+    },
+    "devDependencies": {
+        "eslint": "^9.0.0",
+        "eslint-plugin-prettier": "^5.0.0",
+        "eslint-plugin-vue": "^9.0.0",
+        "globals": "^15.0.0",
+        "prettier": "^3.0.0"
+    }
+}
