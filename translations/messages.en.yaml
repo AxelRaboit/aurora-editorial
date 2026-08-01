@@ -98,8 +98,10 @@ backend:
   menus:
     system_item: System
     system_item_hint: Entry provided by Aurora — it cannot be deleted. Set its visibility to "Hidden" to take it off the site.
-    target_trashed: Target in trash
-    target_missing: Target deleted
+    target_trashed: In trash
+    target_trashed_hint: "This entry does not appear on the site: the content it points to is in the trash. Restore that content, or point the entry somewhere else."
+    target_missing: Content deleted
+    target_missing_hint: "This entry does not appear on the site: the content it pointed to was permanently deleted. Point it somewhere else, or remove it."
     errors:
       item_protected: This entry is provided by Aurora and cannot be deleted. Set its visibility to "Hidden" to take it off the site.
       menu_protected: This menu backs a theme location and cannot be deleted.

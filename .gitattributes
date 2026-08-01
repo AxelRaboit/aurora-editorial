@@ -1,0 +1,21 @@
+# Keep development tooling out of the Composer archive.
+#
+# This package maps its Doctrine mapping `dir` onto its own root, and Doctrine's
+# attribute driver `require`s every .php file under that directory to discover
+# entities. Any executable PHP shipped here therefore runs inside the consuming
+# application at schema-build time: .php-cs-fixer.dist.php did exactly that and
+# aborted `doctrine:schema:create` on PhpCsFixer\Finder not existing there.
+#
+# The same reasoning covers Tests/ and tools/ — nothing a consumer installs
+# should contain code it never calls but Doctrine will still load.
+/Tests                  export-ignore
+/tools                  export-ignore
+/.github                export-ignore
+/.php-cs-fixer.dist.php export-ignore
+/phpunit.dist.xml       export-ignore
+/eslint.config.cjs      export-ignore
+/package.json           export-ignore
+/package-lock.json      export-ignore
+/.editorconfig          export-ignore
+/.gitattributes         export-ignore
+/.gitignore             export-ignore

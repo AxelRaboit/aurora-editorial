@@ -107,10 +107,18 @@ const isBroken = computed(() => isTrashed.value || isMissing.value);
                     <AppBadge v-if="item.isDefault" color="gray" class="shrink-0">
                         <Lock class="w-3 h-3" :stroke-width="2.5" /> {{ t("backend.menus.system_item") }}
                     </AppBadge>
-                    <AppBadge v-if="isBroken" color="amber" class="shrink-0">
-                        <AlertTriangle class="w-3 h-3" :stroke-width="2.5" />
-                        {{ t(isTrashed ? "backend.menus.target_trashed" : "backend.menus.target_missing") }}
-                    </AppBadge>
+                    <!-- The badge names the state; the tooltip says why the entry
+                         is absent from the site and what to do about it, which is
+                         the part a reader can't infer from two words. -->
+                    <AppTooltip
+                        v-if="isBroken"
+                        :text="t(isTrashed ? 'backend.menus.target_trashed_hint' : 'backend.menus.target_missing_hint')"
+                    >
+                        <AppBadge color="amber" class="shrink-0">
+                            <AlertTriangle class="w-3 h-3" :stroke-width="2.5" />
+                            {{ t(isTrashed ? "backend.menus.target_trashed" : "backend.menus.target_missing") }}
+                        </AppBadge>
+                    </AppTooltip>
                     <AppBadge v-if="item.openInNewTab" color="gray" class="shrink-0">
                         <ExternalLink class="w-3 h-3" :stroke-width="2.5" />
                     </AppBadge>
