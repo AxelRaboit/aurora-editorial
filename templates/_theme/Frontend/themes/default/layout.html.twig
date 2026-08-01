@@ -22,6 +22,12 @@
         {% set localeUrls = localeUrls|merge({ (alt.locale): alt.url }) %}
     {% endfor %}
 
+    {# localeSwitcher.locales follows LocaleSwitcher.vue's documented contract:
+       {code, name, flagCode, url}. Any other key is ignored — `name` and
+       `flagCode` in particular, get them wrong and the switcher renders blank
+       labels next to `fi fi-undefined` flag boxes. The component marks the
+       current entry itself from currentLocale. #}
+
     <div {{ vue_component('editorial/frontend/site/SiteHeaderApp', {
         locale: locale,
         siteName: context.siteName,
@@ -35,9 +41,9 @@
             enabled: context.activeLocales|length > 1,
             locales: context.activeLocales|map(loc => {
                 code: loc.code,
-                label: locale_name(loc.code) ?? loc.code|upper,
+                name: locale_name(loc.code) ?? loc.code|upper,
+                flagCode: locale_flag(loc.code) ?? loc.code,
                 url: localeUrls[loc.code] ?? default_front_home_path(loc.code),
-                current: loc.code == locale,
             }),
         },
     }) }}></div>
