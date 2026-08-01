@@ -1,0 +1,51 @@
+{# Editorial's replacement for Core's deliberately menu-less default theme
+   layout. Core ships chrome that knows nothing about any content module; this
+   override adds the header/footer navigation backed by Editorial's Menu
+   entity, and is picked up automatically because AbstractAuroraModuleBundle
+   registers templates/_theme/ under the null namespace ahead of Core's own.
+
+   Extends via the @AuroraTheme alias, NOT this file's own logical name — the
+   latter resolves back to this very file and recurses forever. Only the two
+   chrome blocks are overridden, so the head, seo_define, body and layout
+   classes keep coming from Core and stay in sync with it.
+
+   Each location renders unconditionally: menu_items() already returns an empty
+   list when that location's backend switch is off. #}
+{% extends '@AuroraTheme/default/layout.html.twig' %}
+
+{% block frontend_header %}
+    {# Rebuilt locally rather than reusing the parent body's alternatesByLocale:
+       an overridden block shouldn't depend on a variable the parent happens to
+       set before calling it. #}
+    {% set localeUrls = {} %}
+    {% for alt in alternates|default([]) %}
+        {% set localeUrls = localeUrls|merge({ (alt.locale): alt.url }) %}
+    {% endfor %}
+
+    <div {{ vue_component('editorial/frontend/site/SiteHeaderApp', {
+        locale: locale,
+        siteName: context.siteName,
+        homePath: default_front_home_path(locale),
+        headerLogoUrl: themeContext.headerLogoUrl() ?: '',
+        headerCustomText: themeContext.headerCustomText() ?: '',
+        currentUser: app.user ? { name: app.user.name } : null,
+        primaryMenuItems: menu_items('primary', locale),
+        accountMenuItems: menu_items('account', locale),
+        localeSwitcher: {
+            enabled: context.activeLocales|length > 1,
+            locales: context.activeLocales|map(loc => {
+                code: loc.code,
+                label: locale_name(loc.code) ?? loc.code|upper,
+                url: localeUrls[loc.code] ?? default_front_home_path(loc.code),
+                current: loc.code == locale,
+            }),
+        },
+    }) }}></div>
+{% endblock %}
+
+{% block frontend_footer %}
+    <div {{ vue_component('editorial/frontend/site/SiteFooterApp', {
+        footerText: themeContext.footerText(context.siteName),
+        footerMenuItems: menu_items('footer', locale),
+    }) }}></div>
+{% endblock %}

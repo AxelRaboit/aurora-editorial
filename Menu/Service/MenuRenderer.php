@@ -127,6 +127,7 @@ final class MenuRenderer
             MenuItemVisibilityEnum::Always => true,
             MenuItemVisibilityEnum::GuestsOnly => !$isAuthenticated,
             MenuItemVisibilityEnum::AuthenticatedOnly => $isAuthenticated,
+            MenuItemVisibilityEnum::Hidden => false,
         };
     }
 

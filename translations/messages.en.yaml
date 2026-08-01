@@ -27,6 +27,15 @@ backend:
           spam: Comment marked as spam
           deleted: Comment deleted
   parameters:
+    editorial_show_primary_menu:
+      label: Show primary menu
+      description: Renders the 'primary' location's navigation in the site header.
+    editorial_show_footer_menu:
+      label: Show footer menu
+      description: Renders the 'footer' location's navigation at the bottom of the site.
+    editorial_show_account_menu:
+      label: Show account menu
+      description: Renders the 'account' location's navigation, shown to signed-in visitors.
     editorial_post_prefix:
       label: Post reference prefix
       description: Auto-generated post reference prefix (e.g. ART).
@@ -107,6 +116,7 @@ backend:
       always: Always visible
       guests_only: Guests only
       authenticated_only: Authenticated only
+      hidden: Hidden
   post_types:
     errors:
       slug_taken: 'A post type with slug "{slug}" already exists.'

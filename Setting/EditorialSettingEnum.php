@@ -16,6 +16,18 @@ enum EditorialSettingEnum: string implements ApplicationParameterEnumInterface
     case FormFieldPrefix = 'editorial_form_field_prefix';
     case TaxonomyTermPrefix = 'editorial_taxonomy_term_prefix';
 
+    /**
+     * Frontend rendering of each menu location, one switch per location so a
+     * site can keep its footer nav while dropping the header one. Enforced in
+     * {@see \Aurora\Module\Editorial\Menu\Twig\MenuExtension::menuItems()} —
+     * an off location yields an empty list — so every template honours it
+     * without asking. Hiding a single item instead lives on the item itself,
+     * @see \Aurora\Module\Editorial\Menu\Enum\MenuItemVisibilityEnum::Hidden
+     */
+    case ShowPrimaryMenu = 'editorial_show_primary_menu';
+    case ShowFooterMenu = 'editorial_show_footer_menu';
+    case ShowAccountMenu = 'editorial_show_account_menu';
+
     public function getKey(): string
     {
         return $this->value;
@@ -30,6 +42,9 @@ enum EditorialSettingEnum: string implements ApplicationParameterEnumInterface
             self::CommentPrefix => 'backend.parameters.editorial_comment_prefix.label',
             self::FormFieldPrefix => 'backend.parameters.editorial_form_field_prefix.label',
             self::TaxonomyTermPrefix => 'backend.parameters.editorial_taxonomy_term_prefix.label',
+            self::ShowPrimaryMenu => 'backend.parameters.editorial_show_primary_menu.label',
+            self::ShowFooterMenu => 'backend.parameters.editorial_show_footer_menu.label',
+            self::ShowAccountMenu => 'backend.parameters.editorial_show_account_menu.label',
         };
     }
 
@@ -42,6 +57,9 @@ enum EditorialSettingEnum: string implements ApplicationParameterEnumInterface
             self::CommentPrefix => 'backend.parameters.editorial_comment_prefix.description',
             self::FormFieldPrefix => 'backend.parameters.editorial_form_field_prefix.description',
             self::TaxonomyTermPrefix => 'backend.parameters.editorial_taxonomy_term_prefix.description',
+            self::ShowPrimaryMenu => 'backend.parameters.editorial_show_primary_menu.description',
+            self::ShowFooterMenu => 'backend.parameters.editorial_show_footer_menu.description',
+            self::ShowAccountMenu => 'backend.parameters.editorial_show_account_menu.description',
         };
     }
 
@@ -54,17 +72,24 @@ enum EditorialSettingEnum: string implements ApplicationParameterEnumInterface
             self::CommentPrefix => SequencePrefixEnum::Comment->value,
             self::FormFieldPrefix => SequencePrefixEnum::FormField->value,
             self::TaxonomyTermPrefix => SequencePrefixEnum::TaxonomyTerm->value,
+            self::ShowPrimaryMenu, self::ShowFooterMenu, self::ShowAccountMenu => '1',
         };
     }
 
     public function getType(): string
     {
-        return 'string';
+        return match ($this) {
+            self::ShowPrimaryMenu, self::ShowFooterMenu, self::ShowAccountMenu => 'bool',
+            default => 'string',
+        };
     }
 
     public function getGroup(): string
     {
-        return 'sequences';
+        return match ($this) {
+            self::ShowPrimaryMenu, self::ShowFooterMenu, self::ShowAccountMenu => 'navigation',
+            default => 'sequences',
+        };
     }
 
     /**

@@ -27,6 +27,15 @@ backend:
           spam: Commentaire marqué comme spam
           deleted: Commentaire supprimé
   parameters:
+    editorial_show_primary_menu:
+      label: Afficher le menu principal
+      description: Affiche la navigation de l'emplacement « primary » dans l'en-tête du site.
+    editorial_show_footer_menu:
+      label: Afficher le menu de pied de page
+      description: Affiche la navigation de l'emplacement « footer » en bas du site.
+    editorial_show_account_menu:
+      label: Afficher le menu compte
+      description: Affiche la navigation de l'emplacement « account » réservée aux visiteurs connectés.
     editorial_post_prefix:
       label: Préfixe des numéros d'articles
       description: 'Préfixe de la référence article auto-générée (ex: ART).'
@@ -101,6 +110,7 @@ backend:
       always: Toujours visible
       guests_only: Invités uniquement
       authenticated_only: Connectés uniquement
+      hidden: Masqué
   post_types:
     errors:
       slug_taken: 'Un type de contenu avec le slug "{slug}" existe déjà.'
