@@ -85,7 +85,24 @@ const {
     loading, errors, conflict,
     handleSave, forceSave, applyMergeResolution,
 } = usePostEditor({ props, emit, t });
-</script>
+
+
+/**
+ * Whether the selected post type declares a capability.
+ *
+ * `supports` was persisted by the post type screen and read by nothing: the
+ * editor rendered every section regardless, so unchecking "blocks" or
+ * "thumbnail" changed nothing at all. Reading it here is what makes those
+ * checkboxes mean something.
+ *
+ * Unknown type — none selected yet, or a payload without it — shows everything
+ * rather than hiding the editor behind missing data.
+ */
+function supports(capability) {
+    const postType = props.postTypes.find((type) => type.id === form.postTypeId);
+
+    return !postType?.supports ? true : postType.supports.includes(capability);
+}</script>
 
 <template>
     <div v-if="fetching" class="flex items-center justify-center py-20 text-secondary text-sm">
@@ -235,8 +252,12 @@ const {
 
                 <slot name="extra-form-fields" :form="form" :errors="errors" />
 
-                <!-- Blocks editor — full height of the main column (the writing surface). -->
-                <div class="border-t border-line pt-4">
+                <!-- Blocks editor — full height of the main column (the writing
+                     surface). Hidden when the post type doesn't declare `blocks`:
+                     a type holding structured data (rooms, products) has nothing
+                     to write here, and the checkbox on the post type screen used
+                     to persist a preference nothing acted on. -->
+                <div v-if="supports('blocks')" class="border-t border-line pt-4">
                     <label class="block text-xs text-secondary uppercase tracking-wide mb-2">
                         {{ t("backend.posts.blocks") }}
                     </label>
@@ -304,7 +325,7 @@ const {
                 </section>
 
                 <!-- Featured image. -->
-                <section class="rounded-xl border border-line bg-surface p-4 space-y-3">
+                <section v-if="supports('thumbnail')" class="rounded-xl border border-line bg-surface p-4 space-y-3">
                     <h3 class="text-xs font-semibold text-secondary uppercase tracking-wide">{{ t("backend.posts.featured_image") }}</h3>
                     <PostFeaturedImagePanel
                         v-model:media-id="form.featuredMediaId"

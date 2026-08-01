@@ -1,7 +1,11 @@
 import { buildPath } from "@/shared/utils/http/buildPath.js";
 import { useFormModal } from "@/shared/composables/form/useFormModal.js";
 
-const SUPPORTS = ["blocks", "thumbnail", "excerpt"];
+// "excerpt" used to sit here with nothing behind it: PostTranslation has no
+// such column, and Aurora's own fixtures write their excerpt into
+// metaDescription. Offering a checkbox for a field that does not exist is
+// worse than not offering it — the teaser is metaDescription.
+const SUPPORTS = ["blocks", "thumbnail"];
 
 export function usePostTypeModal(
     props,
