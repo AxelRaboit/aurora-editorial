@@ -99,7 +99,17 @@ class PageController extends AbstractController
                 return $redirect;
             }
 
-            throw $this->createNotFoundException();
+            // `/{locale}/{a}/{b}` is genuinely ambiguous: it is a post under a
+            // post type, and it is equally a term under a taxonomy. Routing
+            // cannot tell the two apart without asking the database, so this
+            // route wins on priority and the term route was never reached —
+            // every taxonomy page on every Aurora site answered 404.
+            //
+            // Falling through keeps both readable. A post still wins when the
+            // slugs collide, which is the right way round: it is the more
+            // specific page, and the term listing stays reachable under any
+            // other slug.
+            return $this->term($locale, $postTypeSlug, $slug, $request);
         }
 
         if ($post->getPostType()->getSlug() !== $postTypeSlug) {
