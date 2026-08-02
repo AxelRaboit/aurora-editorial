@@ -18,6 +18,7 @@ final readonly class PostTextExtractor
     public function extract(PostTranslationInterface $translation): string
     {
         $parts = [
+            $translation->getDescription(),
             $translation->getMetaTitle(),
             $translation->getMetaDescription(),
             $translation->getFocusKeyword(),

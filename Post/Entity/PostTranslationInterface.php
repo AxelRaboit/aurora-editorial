@@ -18,6 +18,10 @@ interface PostTranslationInterface
 
     public function setTitle(?string $title): static;
 
+    public function getDescription(): ?string;
+
+    public function setDescription(?string $description): static;
+
     public function getSlug(): ?string;
 
     public function setSlug(?string $slug): static;

@@ -81,6 +81,7 @@ final readonly class PostPageRenderer
         $translationData = [
             'title' => $translation->getTitle(),
             'slug' => $translation->getSlug(),
+            'description' => $translation->getDescription(),
             'metaTitle' => $translation->getMetaTitle(),
             'metaDescription' => $translation->getMetaDescription(),
             'canonicalUrl' => $translation->getCanonicalUrl(),

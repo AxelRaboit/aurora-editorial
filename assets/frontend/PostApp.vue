@@ -22,6 +22,12 @@ defineProps({
     <article class="max-w-3xl mx-auto">
         <header class="mb-8">
             <h1 class="text-4xl font-bold text-primary mb-2">{{ translation.title }}</h1>
+            <p
+                v-if="translation.description"
+                class="text-lg text-secondary mb-3 leading-relaxed"
+            >
+                {{ translation.description }}
+            </p>
             <time
                 v-if="post.publishedAt"
                 :datetime="post.publishedAt"

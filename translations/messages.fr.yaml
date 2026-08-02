@@ -226,6 +226,9 @@ backend:
     title_placeholder: Mon titre…
     slug: Slug
     slug_placeholder: mon-titre
+    description: Description
+    description_placeholder: Une phrase ou deux qui résument la page…
+    description_hint: Affichée sous le titre et sur les cartes de listing. Facultative — ce n'est pas la meta description SEO.
     post_type: Type de contenu
     terms: Termes
     terms_picker_empty: Aucun terme dans cette taxonomie pour l'instant.

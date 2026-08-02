@@ -5,7 +5,6 @@
 export const BLOCK_TYPE_TO_TOOL_NAME = Object.freeze({
     header: "heading",
     paragraph: "text",
-    intro: "intro",
     image: "image",
     list: "list",
     code: "code",

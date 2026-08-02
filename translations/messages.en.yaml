@@ -232,6 +232,9 @@ backend:
     title_placeholder: My title…
     slug: Slug
     slug_placeholder: my-title
+    description: Description
+    description_placeholder: A sentence or two summing this page up…
+    description_hint: Shown under the title and on listing cards. Optional — not the SEO meta description.
     post_type: Content type
     terms: Terms
     terms_picker_empty: No terms in this taxonomy yet.

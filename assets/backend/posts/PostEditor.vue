@@ -236,6 +236,20 @@ function supports(capability) {
                     </p>
                 </div>
 
+                <!-- The reader's summary: under the title on the page, and the
+                     teaser on a listing card. Optional, and deliberately apart
+                     from the meta description in the SEO panel, which only ever
+                     reaches the <head>. -->
+                <div>
+                    <AppTextarea
+                        v-model="form.translations[activeLocale].description"
+                        :label="t('backend.posts.description')"
+                        :placeholder="t('backend.posts.description_placeholder')"
+                        :rows="2"
+                    />
+                    <p class="text-xs text-muted mt-1">{{ t("backend.posts.description_hint") }}</p>
+                </div>
+
                 <!-- Per-PostType custom fields. -->
                 <div v-if="customFieldsDefs.length" class="border-t border-line pt-4 space-y-3">
                     <p class="text-xs font-semibold text-secondary uppercase tracking-wide">{{ t("backend.posts.custom_fields") }}</p>

@@ -160,6 +160,7 @@ class PostManager implements PostManagerInterface
             $translation->setTitle($translationData['title'] ?? null);
             $translation->setSlug($translationData['slug'] ?? null);
             $translation->setBlocks($translationData['blocks'] ?? []);
+            $translation->setDescription($translationData['description'] ?? null);
             $translation->setMetaTitle($translationData['metaTitle'] ?? null);
             $translation->setMetaDescription($translationData['metaDescription'] ?? null);
             $translation->setCustomFields($translationData['customFields'] ?? []);
@@ -316,6 +317,7 @@ class PostManager implements PostManagerInterface
 
         $translation->setTitle($input->title);
         $translation->setBlocks($input->blocks);
+        $translation->setDescription($input->description);
         $translation->setMetaTitle($input->metaTitle);
         $translation->setMetaDescription($input->metaDescription);
         $translation->setCustomFields($input->customFields);
@@ -382,6 +384,7 @@ class PostManager implements PostManagerInterface
                 'title' => $translation->getTitle(),
                 'slug' => $translation->getSlug(),
                 'blocks' => $translation->getBlocks(),
+                'description' => $translation->getDescription(),
                 'metaTitle' => $translation->getMetaTitle(),
                 'metaDescription' => $translation->getMetaDescription(),
                 'customFields' => $translation->getCustomFields(),

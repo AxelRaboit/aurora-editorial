@@ -16,6 +16,7 @@ final readonly class PostTranslationInput
     public function __construct(
         public ?string $title,
         public ?string $slug,
+        public ?string $description,
         public array $blocks,
         public ?string $metaTitle,
         public ?string $metaDescription,
@@ -43,6 +44,7 @@ final readonly class PostTranslationInput
         return new self(
             title: Str::trimOrNull((string) ($data['title'] ?? '')),
             slug: Str::trimOrNull((string) ($data['slug'] ?? '')),
+            description: Str::trimOrNull((string) ($data['description'] ?? '')),
             blocks: is_array($data['blocks'] ?? null) ? $data['blocks'] : [],
             metaTitle: Str::trimOrNull((string) ($data['metaTitle'] ?? '')),
             metaDescription: Str::trimOrNull((string) ($data['metaDescription'] ?? '')),

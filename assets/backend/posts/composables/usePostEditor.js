@@ -81,6 +81,7 @@ export function usePostEditor({ props, emit, t }) {
         return {
             title: "",
             slug: "",
+            description: "",
             blocks: [],
             metaTitle: "",
             metaDescription: "",

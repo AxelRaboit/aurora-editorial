@@ -21,6 +21,18 @@ abstract class AbstractPostTranslation implements PostTranslationInterface
     protected ?string $slug = null;
 
     /**
+     * The short summary a reader sees: under the title on the page, and as the
+     * teaser on a listing card. Optional.
+     *
+     * Deliberately not the meta description, which is written for a search
+     * snippet and cut off around 160 characters. One field serving both is what
+     * produced 247-character "meta descriptions" that were really prose.
+     * WordPress draws the same line with post_excerpt.
+     */
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected ?string $description = null;
+
+    /**
      * Editor.js native shape: ordered list of `{id?, type, data}` entries.
      * Same shape as Notes\Block::BlockNote — both consume the shared
      * `AppBlockEditor.vue`. Identity is the Editor.js-generated id;
@@ -109,6 +121,18 @@ abstract class AbstractPostTranslation implements PostTranslationInterface
     public function setBlocks(array $blocks): static
     {
         $this->blocks = $blocks;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
 
         return $this;
     }
