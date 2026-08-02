@@ -44,7 +44,12 @@ final readonly class EditorialBootstrapProvider implements BootstrapProviderInte
         'category' => ['hierarchical' => true, 'labels' => ['fr' => 'Catégorie', 'en' => 'Category']],
     ];
 
-    private const array SUPPORTS = ['blocks', 'thumbnail', 'excerpt'];
+    // 'excerpt' sat here with nothing behind it: PostTranslation has no such
+    // column, and the backend dropped the matching checkbox for that reason.
+    // Every install was declaring a capability that did not exist. The page's
+    // visible standfirst is the Introduction block; the meta description is
+    // SEO-only.
+    private const array SUPPORTS = ['blocks', 'thumbnail'];
 
     private const array HOME_PAGE = [
         'fr' => ['title' => 'Accueil', 'slug' => 'accueil', 'heading' => 'Bienvenue sur Aurora', 'paragraph' => 'Votre CMS moderne propulsé par Symfony et Vue 3.'],
