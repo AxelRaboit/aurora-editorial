@@ -153,7 +153,7 @@ final readonly class EditorialBootstrapProvider implements BootstrapProviderInte
                 ->setTitle($content['title'])
                 ->setSlug($content['slug'])
                 ->setBlocks([
-                    ['type' => 'heading', 'data' => ['text' => $content['heading'], 'level' => 1]],
+                    ['type' => 'header', 'data' => ['text' => $content['heading'], 'level' => 1]],
                     ['type' => 'paragraph', 'data' => ['text' => $content['paragraph']]],
                 ]);
             $translation->setSearchContent($this->textExtractor->extract($translation));

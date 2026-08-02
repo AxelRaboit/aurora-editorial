@@ -61,7 +61,7 @@ final readonly class BlocksRenderer
         $data = is_array($block['data'] ?? null) ? $block['data'] : [];
 
         return match ($type) {
-            'header', 'heading' => $this->renderHeader($data),
+            'header' => $this->renderHeader($data),
             'paragraph' => $this->renderParagraph($data),
             'list' => $this->renderList($data),
             'checklist' => $this->renderChecklist($data),
@@ -259,15 +259,12 @@ final readonly class BlocksRenderer
      * emitted `.callout-info`, so the box was not even coloured. The preview
      * renderer got both right, which is why nothing looked wrong until the
      * page was published.
-     *
-     * `text` stays as a fallback: the demo fixtures wrote that shape, and
-     * existing content must not blank out on upgrade.
      */
     private function renderCallout(array $data): string
     {
         $type = (string) ($data['type'] ?? 'info');
         $title = $this->safeHtml($data['title'] ?? '');
-        $message = $this->safeHtml($data['message'] ?? $data['text'] ?? '');
+        $message = $this->safeHtml($data['message'] ?? '');
 
         return sprintf(
             '<aside class="callout callout--%s">%s%s</aside>',
