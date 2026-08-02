@@ -28,7 +28,7 @@ defineProps({
             </div>
             <div class="p-4 space-y-2">
                 <h3 class="text-lg font-semibold text-primary">{{ post.title ?? '—' }}</h3>
-                <p v-if="post.metaDescription" class="text-sm text-muted line-clamp-3">{{ post.metaDescription }}</p>
+                <p v-if="post.excerpt" class="text-sm text-muted line-clamp-3">{{ post.excerpt }}</p>
                 <time v-if="post.publishedAt" class="block text-xs text-muted">
                     {{ formatDateShort(post.publishedAt) }}
                 </time>

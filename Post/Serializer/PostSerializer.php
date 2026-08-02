@@ -6,6 +6,7 @@ namespace Aurora\Module\Editorial\Post\Serializer;
 
 use Aurora\Core\Locale\Service\LocaleContextInterface;
 use Aurora\Module\Editorial\Post\Entity\PostInterface;
+use Aurora\Module\Editorial\Post\Service\PostExcerptExtractor;
 use Aurora\Module\Ged\Document\Service\DocumentUrlGenerator;
 use DateTimeInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
@@ -16,6 +17,7 @@ class PostSerializer implements PostSerializerInterface
     public function __construct(
         protected readonly LocaleContextInterface $localeContext,
         protected readonly DocumentUrlGenerator $documentUrlGenerator,
+        protected readonly PostExcerptExtractor $excerptExtractor,
     ) {}
 
     /**
@@ -117,7 +119,10 @@ class PostSerializer implements PostSerializerInterface
             'id' => $post->getId(),
             'title' => $translation?->getTitle(),
             'slug' => $translation?->getSlug(),
-            'metaDescription' => $translation?->getMetaDescription(),
+            // Deliberately not the meta description: that string is written
+            // for a search snippet, and rendering it here made one text serve
+            // two readers. The teaser comes from the content itself.
+            'excerpt' => $this->excerptExtractor->fromBlocks($translation?->getBlocks() ?? []),
             'publishedAt' => $post->getPublishedAt()?->format(DateTimeInterface::ATOM),
             'postTypeSlug' => $post->getPostType()->getSlug(),
             'featuredMediaUrl' => $this->documentUrlGenerator->variantUrl($featured, 'medium') ?? $this->documentUrlGenerator->publicUrl($featured),
