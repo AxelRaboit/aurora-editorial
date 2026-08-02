@@ -64,7 +64,6 @@ final readonly class BlocksRenderer
             'header' => $this->renderHeader($data),
             'paragraph' => $this->renderParagraph($data),
             'list' => $this->renderList($data),
-            'checklist' => $this->renderChecklist($data),
             'quote' => $this->renderQuote($data),
             'code' => $this->renderCode($data),
             'delimiter' => '<hr class="my-8 border-line">',
@@ -133,20 +132,7 @@ final readonly class BlocksRenderer
     }
 
     /**
-     * Legacy: blocks saved with the standalone @editorjs/checklist package
-     * before it was unified into @editorjs/list v2.
-     */
-    private function renderChecklist(array $data): string
-    {
-        $items = is_array($data['items'] ?? null) ? $data['items'] : [];
-
-        return $this->renderChecklistItems($items);
-    }
-
-    /**
-     * Renders checkbox items for both list shapes:
-     *   - @editorjs/list v2:   { content, meta: { checked } }
-     *   - @editorjs/checklist: { text, checked }
+     * Renders checkbox items of an @editorjs/list v2 checklist.
      */
     private function renderChecklistItems(array $items): string
     {
@@ -156,8 +142,8 @@ final readonly class BlocksRenderer
                 continue;
             }
 
-            $text = $this->safeHtml($item['content'] ?? $item['text'] ?? '');
-            $checked = ((bool) ($item['meta']['checked'] ?? $item['checked'] ?? false)) ? 'checked' : '';
+            $text = $this->safeHtml($item['content'] ?? '');
+            $checked = ((bool) ($item['meta']['checked'] ?? false)) ? 'checked' : '';
             $html .= sprintf('<li><input type="checkbox" disabled %s> %s</li>', $checked, $text);
         }
 
@@ -307,8 +293,6 @@ final readonly class BlocksRenderer
      *     columns?: int (1..4),
      *     title?: string,
      *   }
-     *
-     * Backwards-compatible with legacy { limit } shape.
      */
     private function renderPostsList(array $data, string $locale): string
     {
@@ -349,7 +333,7 @@ final readonly class BlocksRenderer
                 }
             }
         } else {
-            $perPage = Num::clamp((int) ($data['perPage'] ?? $data['limit'] ?? 12), 1, 100);
+            $perPage = Num::clamp((int) ($data['perPage'] ?? 12), 1, 100);
             $page = max(1, (int) ($this->requestStack->getCurrentRequest()?->query->get('page') ?? 1));
             $result = $this->postRepository->findPublishedByPostTypeWithSearch($postType->getId(), $page, $perPage, $locale);
             $items = $result['items'];

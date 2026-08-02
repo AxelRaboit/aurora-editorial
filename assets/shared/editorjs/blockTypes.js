@@ -16,7 +16,6 @@ export const BLOCK_TYPE_TO_TOOL_NAME = Object.freeze({
     embed: "embed",
     table: "table",
     quote: "quote",
-    checklist: "checklist",
 });
 
 export const TEMPLATE_CATEGORIES = Object.freeze([

@@ -12,5 +12,4 @@ export const BlockType = Object.freeze({
     Embed: "embed",
     Table: "table",
     Quote: "quote",
-    Checklist: "checklist",
 });
