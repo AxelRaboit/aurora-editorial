@@ -1,6 +1,7 @@
 export const BlockType = Object.freeze({
     Header: "header",
     Paragraph: "paragraph",
+    Intro: "intro",
     Image: "image",
     List: "list",
     Code: "code",

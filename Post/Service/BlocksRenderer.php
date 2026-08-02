@@ -71,6 +71,7 @@ final readonly class BlocksRenderer
             'image' => $this->renderImage($data),
             'embed' => $this->renderEmbed($data),
             'table' => $this->renderTable($data),
+            'intro' => $this->renderIntro($data),
             'callout' => $this->renderCallout($data),
             'twoColumn' => $this->renderTwoColumn($data, $locale),
             'mediaText' => $this->renderMediaText($data),
@@ -234,6 +235,19 @@ final readonly class BlocksRenderer
         }
 
         return $html.'</table>';
+    }
+
+    /**
+     * The standfirst opening a page.
+     *
+     * Kept distinct from the meta description, which the post card used to
+     * render as the visible teaser: one text is written for a search result
+     * and truncated around 160 characters, the other for a reader already on
+     * the page. Sharing a field meant writing one and getting the other.
+     */
+    private function renderIntro(array $data): string
+    {
+        return sprintf('<p class="post-intro">%s</p>', $this->safeHtml($data['text'] ?? ''));
     }
 
     private function renderCallout(array $data): string
