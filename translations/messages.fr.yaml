@@ -249,6 +249,7 @@ backend:
       noindex: Empêcher l'indexation (noindex)
       og_image: Image Open Graph
       og_image_upload: Téléverser une image
+      pixel_hint: '{width} px sur {max} — Google tronque selon la largeur, pas le nombre de caractères'
       serp_preview: Aperçu Google
       focus_checks_title: Contrôles du mot-clé
       focus_checks:

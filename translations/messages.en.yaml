@@ -255,6 +255,7 @@ backend:
       noindex: Prevent indexing (noindex)
       og_image: Open Graph image
       og_image_upload: Upload image
+      pixel_hint: '{width}px of {max} — Google truncates on width, not character count'
       serp_preview: Google preview
       focus_checks_title: Focus keyword checks
       focus_checks:

@@ -10,7 +10,11 @@ import AppButton from "@/shared/components/action/AppButton.vue";
 import AppFilePickerButton from "@/shared/components/action/AppFilePickerButton.vue";
 import AppMessage from "@/shared/components/feedback/AppMessage.vue";
 import GoogleSerpPreview from "./GoogleSerpPreview.vue";
-import { seoCounterClass } from "@/shared/utils/seo/seoCounter.js";
+import {
+    seoFieldClass,
+    seoPixelWidth,
+    SERP_PIXEL_LIMITS,
+} from "@/shared/utils/seo/seoCounter.js";
 import { parseJsonLd, buildArticleJsonLd } from "@/shared/utils/seo/jsonLd.js";
 import { useImageUpload } from "@/shared/composables/http/backend/useImageUpload.js";
 import { openDocumentPicker } from "@shared/utils/documentPicker.js";
@@ -27,6 +31,22 @@ const props = defineProps({
 
 const metaTitleLength = computed(() => props.translation?.metaTitle?.length ?? 0);
 const metaDescLength = computed(() => props.translation?.metaDescription?.length ?? 0);
+
+/**
+ * The counter shows characters, but the colour follows the measured width —
+ * Google truncates in pixels. Without this, a red counter at 140 characters
+ * would look like a bug.
+ */
+function pixelHint(text, kind) {
+    const width = seoPixelWidth(text, kind);
+
+    return null === width
+        ? ""
+        : t("backend.posts.seo.pixel_hint", {
+              width: Math.round(width),
+              max: SERP_PIXEL_LIMITS[kind],
+          });
+}
 
 function containsCI(haystack, needle) {
     if (!haystack || !needle) return false;
@@ -137,7 +157,11 @@ async function selectOgFromLibrary() {
                         v-model="translation.metaTitle"
                         :label="t('backend.posts.meta_title')"
                     />
-                    <p class="text-right text-xs mt-1" :class="seoCounterClass(metaTitleLength, 60)">
+                    <p
+                        class="text-right text-xs mt-1"
+                        :class="seoFieldClass(translation.metaTitle, 'title', 60)"
+                        :title="pixelHint(translation.metaTitle, 'title')"
+                    >
                         {{ metaTitleLength }}/60
                     </p>
                 </div>
@@ -147,7 +171,11 @@ async function selectOgFromLibrary() {
                         :label="t('backend.posts.meta_description')"
                         :rows="3"
                     />
-                    <p class="text-right text-xs mt-1" :class="seoCounterClass(metaDescLength, 160)">
+                    <p
+                        class="text-right text-xs mt-1"
+                        :class="seoFieldClass(translation.metaDescription, 'description', 160)"
+                        :title="pixelHint(translation.metaDescription, 'description')"
+                    >
                         {{ metaDescLength }}/160
                     </p>
                 </div>
