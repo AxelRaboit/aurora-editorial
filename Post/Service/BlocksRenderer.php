@@ -250,12 +250,31 @@ final readonly class BlocksRenderer
         return sprintf('<p class="post-intro">%s</p>', $this->safeHtml($data['text'] ?? ''));
     }
 
+    /**
+     * Two mismatches with the editor lived here.
+     *
+     * The tool saves `{type, title, message}`, but this read `text` — so a
+     * callout written in the backend rendered as an empty box on the site.
+     * And the stylesheet keys its colours on `.callout--info` while this
+     * emitted `.callout-info`, so the box was not even coloured. The preview
+     * renderer got both right, which is why nothing looked wrong until the
+     * page was published.
+     *
+     * `text` stays as a fallback: the demo fixtures wrote that shape, and
+     * existing content must not blank out on upgrade.
+     */
     private function renderCallout(array $data): string
     {
         $type = (string) ($data['type'] ?? 'info');
-        $text = $this->safeHtml($data['text'] ?? '');
+        $title = $this->safeHtml($data['title'] ?? '');
+        $message = $this->safeHtml($data['message'] ?? $data['text'] ?? '');
 
-        return sprintf('<aside class="callout callout-%s">%s</aside>', htmlspecialchars($type, ENT_QUOTES, 'UTF-8'), $text);
+        return sprintf(
+            '<aside class="callout callout--%s">%s%s</aside>',
+            htmlspecialchars($type, ENT_QUOTES, 'UTF-8'),
+            '' !== $title ? sprintf('<strong>%s</strong>', $title) : '',
+            '' !== $message ? sprintf('<p>%s</p>', $message) : '',
+        );
     }
 
     private function renderTwoColumn(array $data, string $locale): string
